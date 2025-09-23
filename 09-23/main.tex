@@ -1,0 +1,359 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 23-09-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{Introduzione}
+Il corso si pone di presentare le nozioni di base sulle reti informatiche, le tecnologie di rete più diffuse, i protocolli Internet e lo sviluppo di applicazioni distribuite \textit{client-server} e \textit{peer-to-peer} (\textbf{P2P}).
+
+In particolare il programma del corso comprende:
+\begin{itemize}
+	\item Sviluppo di \textbf{applicazioni} in rete:
+		\begin{itemize}
+			\item Client-server;
+			\item Peer-to-peer.
+		\end{itemize}
+	\item Reti a \textbf{connessione diretta}:
+		\begin{itemize}
+			\item Collegamenti punto-punto;
+			\item Reti locali.
+		\end{itemize}
+	\item Reti a \textbf{commutazione di pacchetto};
+	\item \textbf{Interconnessione} di reti di tipo diverso;
+	\item \textbf{Trasporto} end-to-end e protocolli;
+	\item \textbf{Sicurezza};
+	\item Reti \textbf{wireless} e \textbf{mobili}, intese come caso particolare delle normali reti \textbf{cablate} (\textit{wired}).
+\end{itemize}
+
+\subsubsection{Applicazioni in rete}
+Nel dettaglio delle \textit{applicazioni in rete}, vedremo come già detto i paradigmi \textit{client-server} e \textit{peer-to-peer}, di cui possiamo già fare alcuni esempi:
+\begin{itemize}
+	\item Applicazioni client-server:
+		\begin{itemize}
+			\item Web;
+			\item Trasferimento file;
+			\item Posta elettronica;
+			\item DNS;
+			\item Ecc...
+		\end{itemize}
+	\item Applicazioni peer-to-peer:
+		\begin{itemize}
+			\item Ricerca di contenuti;
+			\item Torrent;
+			\item Telefonia online;
+			\item Ecc...
+		\end{itemize}
+\end{itemize}
+
+In questo ci avvarremo del concetto di \textbf{socket} come primitiva per la gestione della rete dal lato S/O.
+
+\subsubsection{Reti dirette, a commutazione e wireless}
+Inizieremo con lo studio di \textit{collegamenti punto-punto}, e quindi di trasferimento affidabile di dati fra 2 punti.
+Vedremo poi le reti locali, ad accesso multiplo, e i casi particolari come \textit{Ethernet}.
+
+Vedremo quindi le reti a \textit{commutazione di pacchetto} per la copertura di grandi regioni. Anche qui approfondiremo tecnologie come gli \textit{switch}, ancora \textit{Ethernet}, ecc...
+
+Per quanto riguarda l'\textit{interconnessione di reti} vedremo il protocollo Internet \textbf{IPv4}, il \textbf{routing} (cioè l'\textit{instradamento}) e i protocolli di trasporto (\textbf{UDP} e \textbf{TCP}).
+
+Parleremo anche di reti \textit{wireless} e \textit{mobili}, e quindi di tecnologie come \textbf{WiFi}, le \textbf{reti cellulari}, e reti senza infrastruttura come \textbf{Bluetooth}.
+
+\subsubsection{Sicurezza}
+Vedremo poi le minacce alla \textit{sicurezza} e alcune soluzioni che abbiamo a disposizione per mitigarle.
+In particolare, tratteremo di \textbf{crittografia} e \textbf{integrità} dei messaggi. 
+
+Nello specifico parleremo di tecnologie a livello applicazione (\textbf{PGP}), a livello trasporto (\textbf{TLS} (usata in \textit{HTTPS})), a livello Internet (\textbf{IP-Sec}) e difese di sicurezza come \textbf{firewall} e \textbf{IDS}.
+
+\subsection{Terminologia}
+Iniziamo quindi a definire la terminologia di base usata nel corso, usando Internet come esempio.
+
+\subsubsection{Internet}
+La prima domanda che ci poniamo è \textit{"Che cos'è Internet?"}.
+
+\par\medskip
+\textbf{\textsf{Visione ingegneristica}} \\
+\noindent
+Iniziamo col vedere la definizione di Internet agli occhi di un ingegnere che si occupa di reti: 
+\begin{itemize}
+	\item Si tratterà di una rete che connette miliardi di \textit{dispositivi}, detti \textbf{host} (\textit{"ospiti"}), che eseguono \textit{applicazioni in rete} al cosiddetto \textbf{edge} (\textit{"bordo"}) della rete.
+	\item Una visione \textbf{interna} della rete ci dirà invece che è un insieme di \textbf{pacchetti} che viaggiano attraverso infrastruttura (\textit{router}, \textit{switch}), per raggiungere il loro destinatario.
+	\item A livello \textbf{fisico} potremmo considerare le connessioni fisiche fra dispositivi, date da cavi, segnali radio, ecc...
+	\item Infine, potremo organizzare le \textbf{reti} come collezioni di dispositivi, router e connessioni gestite da determinate organizzazioni.
+\end{itemize}
+
+Non è esattamente corretto parlare di \textit{"reti di calcolatori"} in quanto oggi ad essere connessi a Internet sono tutta una gamma di dispositivi non necessariamente orientati al puro \textit{calcolo}: è questo il caso del cosiddetto \textit{Internet of Things} (\textbf{IoT}).
+
+\par\medskip
+
+Possiamo quindi intendere Internet come una "rete di reti", cioè più \textbf{ISP} (\textit{Internet Service Providers}) connessi fra di loro, che a loro volta connettono una gamma dispositivi (host, router, switch, ecc...).
+
+Per governare l'operazione di tali rete si necessita di \textbf{protocolli}, che definiscono il modo in cui si inviano e ricevono messaggi in rete.
+
+In particolare, per quanto riguarda Internet notiamo l'\textbf{IETF} (\textit{Internet Engineering Task Force}), organizzazione che gestisce diversi standard del settore (anche detti \textbf{RFC}, da \textit{Request For Comments memoranda}).
+
+\par\medskip
+\textbf{\textsf{Visione utente}} \\
+\noindent
+Per l'utente, internet sarà un insieme di \textbf{infrastrutture} che forniscono \textbf{servizi} finali, fra cui il Web, telecomunicazioni, streaming, ecc...
+Dal punto di vista delle \textbf{applicazioni} in esecuzione sui dispositivi, Internet rappresenterà un'interfaccia di programmazione per consentire la comunicazione fra processi su una o più macchine.
+In questo parleremo di \textbf{hook} che permettono alle applicazioni di \textbf{connettersi} a Internet, cioè accedere ad un qualche protocollo di trasporto dei dati. 
+
+\subsubsection{Protocolli}
+Un \textbf{protocollo} è una precisa \textit{specifica} del formato secondo il quale due dispositivi in rete si scambiano informazioni.
+Solitamente i protocolli si sviluppano in più fasi, successive nel tempo, dove si portano avanti diverse operazioni necessarie alla comunicazione.
+
+Esempi di protocollo sono il \textit{protocollo Internet} \textbf{IPv4}, e il \textit{protocollo di trasporto} \textbf{TCP} usato nel \textit{Web} e visto nel corso di progettazione web.
+
+\subsubsection{Struttura di Internet}
+Vediamo più nel dettaglio la struttura di Internet:
+\begin{itemize}
+	\item 
+	Abbiamo detto che all'\textit{edge} di internet ci sono i cosiddetti \textit{host}, cioè i \textbf{client} e i \textbf{server}. Notiamo che non vogliamo riferirci alle macchine fisiche client o server, ma ai \textbf{processi} che si comportano come tali per l'implementazione di un'applicazione distribuita.
+	\item
+	I dispositivi \textit{terminali} che abbiamo appena nominato accedono ad Internet attraverso le cosiddette \textbf{reti di accesso}, cablate o wireless e basate sulle tecnologie utilizzate (router).
+
+	Per collegare i sistemi terminali ai router si usano \textit{reti residenziali}, \textit{reti di accesso istituzionali} (scuola, lavoro, ecc...), nonché \textit{reti wireless e mobili} (Wifi, o reti come 4G solitamente fornite da privati).
+	In questo caso può interessarci la frequenza di trasmissione, in bit al secondo, di una rete di accesso, o se quella rete è ad accesso \textit{condiviso} (pensa WiFi) o \textit{dedicato} (pensa Ethernet).
+
+	Uno standard storico per le reti di accesso è quello della trasmissione sulla linea telefonica su \textbf{DSL} (\textit{Digital Subscriber Line}).
+	Negli Stati Uniti si è invece diffuso l'uso dela linea televisiva cablata.
+	Oggi, sfruttiamo invece tecnologie come \textbf{ADSL} (\textit{Asymmetric Digital Subscriber Line}) e \textbf{FTTC} (\textit{Fiber To The Cabinet}).
+	La differenza principale fra queste è che la linea in ADSL è interamente in rame, sia dalla centrale all'armadio di ripartizione che dall'armadio ripartilinea agli utenti finali, mentre nella linea FTTC si porta il segnale all'armadio attraverso cavi in fibra ottica.
+	Lo standard di ultima generazione è \textbf{FTTH} (\textit{Fiber To The Home}), che prevede una linea in fibra ottica anche dall'armadio agli utenti finali.
+
+	Possiamo quindi vedere la rete locale (\textbf{LAN} (\textit{Local Area Network})) di una comune abitazione come composta da un router, connesso a un \textbf{modem} DSL (\textit{modem} deriva da modulatore/demodulatore sulla linea telefonica dei messaggi Internet) o direttamente via cavo ad un altro centro di ripartizione, e ad eventuali dispositivi come \textit{access point WiFi} che offrono la connessione via rete mobile ai dispositivi finali (una cosiddetta \textbf{WLAN}, \textit{Wireless Local Area Network}).
+
+	Altre soluzioni per le comunicazioni wireless sono rappresentati da reti \textbf{cellulari} su larga scala, che sono quelle usate dagli operatori telefonici (tecnologie come \textbf{4G}, ecc...).
+
+	\item 
+	Dalle reti di accesso si arriva a Internet attraverso reti interconnesse di router, arrivando quindi alle \textit{reti di reti} di cui stavamo parlando.
+\end{itemize}
+
+
+\end{document}
