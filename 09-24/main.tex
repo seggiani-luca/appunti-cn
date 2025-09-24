@@ -233,7 +233,7 @@
 \subsection{Comunicazione dati su Internet}
 Abbiamo visto la struttura a livello fisico della rete Internet.
 Vediamo adesso i meccanismi secondo cui la trasmissione di dati avviene.
-La rete Internet è una rete a \textbf{commutazione di pacchetto}: compito degli host è di:
+La rete Internet è una rete a \textbf{commutazione di pacchetto}, il compito degli host è di:
 \begin{itemize}
 	\item Ottenere messaggi dalle applicazioni;
 	\item Dividere quei messaggi in frammenti più piccoli, detti \textbf{pacchetti}, di dimensione $L$ bit;
@@ -252,11 +252,11 @@ Possiamo classificare 2 tipi di link:
 
 		\begin{itemize}
 			\item 
-		Un celebre esempio di mezzo trasmissivo guidato è il classico \textbf{doppino telefonico}, o trasmettitore a \textit{Twisted Pair} (\textbf{TP}). Questo è formato da due fili di rame isolati e avvolti l'uno sull'altro, che permettono la trasmissione differenziale e quindi la riduzione dei rumori in \textit{common-mode}.
+		Un celebre esempio di mezzo trasmissivo guidato è il classico \textbf{doppino telefonico}, o trasmettitore a \textit{Twisted Pair} (\textbf{TP}). Questo è formato da due fili di rame isolati e avvolti l'uno sull'altro, che permettono la trasmissione differenziale e quindi la riduzione dei rumori in \textit{common-mode};
 			\item
-		Un altro tipo di mezzo trasmissivo guidato è il \textbf{cavo coassiale}, formato da due conduttori concentrici in rame separati da un dielettrico. Il segnale è trasferito come campo magnetico fra i due conduttori: questo permette bitrate più alti rispetto al normale doppino telefonico e una migliore schermatura dalle interferenze.
+		Un altro tipo di mezzo trasmissivo guidato è il \textbf{cavo coassiale}, formato da due conduttori concentrici in rame separati da un dielettrico. Il segnale è trasferito come campo magnetico fra i due conduttori: questo permette bitrate più alti rispetto al normale doppino telefonico e una migliore schermatura dalle interferenze;
 			\item
-		Infine, possiamo parlare della \textbf{fibra ottica}, formata da fibra di vetro che porta impulsi luminosi ad altissima velocità. Questa tecnologia presenta velocità di trasmissione estremamente alte, e vista la natura luminosa del segnale, non è suscettibile ad interferenze (alta affidabilità, cioè piccola frequenza di errore sui bit);
+		Infine, possiamo parlare della \textbf{fibra ottica}, formata da fibra di vetro che porta impulsi luminosi ad altissima velocità. Questa tecnologia presenta velocità di trasmissione estremamente alte, e vista la natura luminosa del segnale, non è suscettibile ad interferenze (alta affidabilità, cioè piccola frequenza di errore sui bit).
 		\end{itemize}
 
 	\item Mezzi \textbf{non guidati}: segnali che si propagano nell'etere (segnali radio, ecc...). Questi sono solitamente meno sicuri ma significativamente più comodi per l'utente finale (possibilità di spostarsi, mancanza di cavi, ecc...).
@@ -266,7 +266,7 @@ Possiamo classificare 2 tipi di link:
 		\begin{itemize}
 			\item Il \textbf{WiFi} è un esempio di mezzo di trasmissione non guidato che può raggiungere centinaia di Mbps su regioni locali;
 			\item Reti wireless più ampie possono essere quelle \textbf{cellulari}, usate nella telefonia mobile;
-			\item Infine si può parlare delle reti satellitari, usate per l'interconnessione di regioni geografiche fra di loro anche molto distanti.
+			\item Infine si può parlare delle \textbf{reti satellitari}, usate per l'interconnessione di regioni geografiche fra di loro anche molto distanti.
 		\end{itemize}
 
 \end{itemize}
@@ -291,32 +291,54 @@ Questo inserisce chiaramente un ritardo nel sistema, in quanto il router deve:
 
 Abbiamo quindi che il ritardo end-end immesso dal router è necessariamente di almeno $2L/R$ secondi, tralasciando il tempo necessario all'instradamento stesso. 
 
+Nel caso generale si abbiano $N$ router (quindi $N + 1$ link fra i router) e $P$ pacchetti da inviare, dovremo considerareche il primo pacchetto arriva in $(N + 1) \frac{L}{R}$ (deve attraversare tutti i link) e i successivi $P - 1$ pacchetti arrivano in $(P - 1) \frac{L}{R}$, per cui il tempo complessivo è:
+$$
+T_{end-to-end} = (N + P) \frac{L}{R}
+$$
+
 Se troppi pacchetti arrivano in un breve lasso di tempo, cioè se la frequenza di arrivo supera quella di trasmissione:
 \begin{itemize}
 	\item I pacchetti verrano messi in coda finché non sarà possibile trasmetterli;
 	\item I pacchetti possono essere persi se il buffer di memoria dedicato alla loro memorizzazione nel ruoter si riempie.
 \end{itemize}
 
-\subsection{Prestazioni della commutazione di pacchetto} # sta sezione fa schifo
-Abbiamo ottenuto il valore $T_{\text{packet}} = L / R$ per la trasmissione di un singolo pacchetto da $L$ bit su una linea con bitrate $R$.
+\subsection{Prestazioni della commutazione di pacchetto}
+Facciamo qualche considerazione ulteriore sulle prestazioni delle linee a commutazione di pacchetto.
+Abbiamo ottenuto il valore $T_{\text{packet}} = \frac{L}{R}$ per la trasmissione di un singolo pacchetto da $L$ bit su una linea con bitrate $R$, e $T_{\text{end-to-end}} = (N + P) \frac{L}{R}$ per più pacchetti su un numero arbitrario di router.
+
 Da quanto abbiamo detto nella scorsa sezione, un modello più sofisticato del packet-switching terrà conto di 4 sorgenti di ritardo:
 \begin{itemize}
-	\item Ritardo di trasmissione $T_{\text{trans}}$, dato dalle caratteristiche del link;
-	\item Ritardo di propagazione $T_{\text{prop}}$, dato dalle proprietà fisiche del mezzo di trasmissione; # diverso da trans come mai
-	\item Ritardo di elaborazione (instradamento) $T_{\text{proc}}$;
-	\item Ritardo di queueing dato dalla presenza di code $T_{\text{queue}}$.
+	\item Ritardo di \textbf{trasmissione} $T_{\text{trans}}$, dato dalle caratteristiche del link. Come abbiamo già detto, questo vale:
+		$$
+		T_{\text{trans}} = \frac{L}{R}
+		$$
+		con $L$ lunghezza del pacchetto in bit e $R$ bitrate del link;
+	\item Ritardo di \textbf{propagazione} $T_{\text{prop}}$, dato dalle proprietà fisiche del mezzo di trasmissione. In particolare, questo è il tempo fisico di trasmissione del segnale su un link, dato da:
+		$$
+		T_{\text{prop}} = \frac{d}{s}
+		$$
+con $d$ distanza del link e $s$ velocità del mezzo di trasmissione. Chiaramente, per i nostri scopi $s$ sara una frazione significativa della velocità della luce $c \approx 3 \cdot 10^8$;
+	\item Ritardo di \textbf{laborazione} (instradamento) $T_{\text{proc}}$, dipende dalle caratteristiche del router ed è perlopiù costante;
+	\item Ritardo di \textbf{accodamento} dato dalla presenza di code $T_{\text{queue}}$. Questo è il più complicato da trattare, in quanto dipende dal numero di pacchetti presenti nel buffer del router. Come vedremo fra poco, una buona euristica per la valutazione di questo ritardo (che è comunque trattabile solo in maniera statistica) è l'\textit{intensità di traffico} sulla linea di trasmissione.
 \end{itemize}
-e dà il tempo $T_{\text{node}}$:
+Sommando queste sorgenti di ritardo potremo ottenere una stima del ritardo complessivo su un router (nodo) $T_{\text{node}}$:
 $$
 T_{\text{node}} = T_{\text{trans}} + T_{\text{prop}} + T_{\text{proc}} + T_{\text{queue}}
 $$
 
+Dati $N$ nodi, il ritardo end-to-end potrà quindi essere calcolato semplicemente come:
+$$
+T_{\text{end-to-end}} = N T_{\text{node}}
+$$
+
 \subsubsection{Ritardo di accodamento}
-Possiamo calcolare la probabilità di ritardi di accodamenti usando l'intensità di traffico, presa $\alpha$ come la probabilità di trasmissione di pacchetti sull'istante temporale:
+Come anticipatp, possiamo valutare statisticamente il ritardo di accodamento $T_{\text{queue}}$ calcolando l'\textit{intensità di traffico} su una linea:
 $$
-??? = \frac{L \alpha}{R}
+I_{\text{traffic}} = \frac{L \alpha}{R}
 $$
-# intensità di traffico, chiarisci su libro
+presa $\alpha$ come la frequenza media di trasmissione di pacchetti sull'istante temporale.
+
+Semplicemente tracciando la funzione si nota che se $I_{\text{traffic}} >= 1$ il tempo di di accodamento tende a infinito (si ha necessariamente perdita di pacchetti), per cui vorremo mantenere $I_{\text{traffic}} < 1$, e idealmente $I_{\text{traffic}} << 1$.
 
 \subsubsection{Traceroute}
 Per fare diagnostica in situazioni reali, si possono usare software di \textbf{traceroute}, che inviano pacchetti con lo scopo di tracciare gli host incontrati e misurare il tempo impiegato nella trasmissione \textit{round-trip}, o almeno capire se i pacchetti sono stati inviati o persi. 
@@ -349,8 +371,6 @@ $$
 R_F = \min(R_S, R_C, \frac{R}{N})
 $$
 
-# schemini
-
 \subsection{Struttura di Internet}
 Abbiamo detto che Internet è una rete di reti.
 \begin{itemize}
@@ -371,9 +391,9 @@ Abbiamo quindi una struttura gerarchica:
 \subsection{Sicurezza Internet}
 La struttura di Internet espone i suoi utenti a diversi pericoli, fra cui:
 \begin{itemize}
-	\item \textbf{Virus}:
-	\item \textbf{Worm}:
-	\item \textbf{Spyware}:
+	\item \textbf{Virus}: programmi maligni che si replicano modificando altri programmi;
+	\item \textbf{Worm}: programmi maligni che si replicano con lo scopo di diffondersi in altri computer;
+	\item \textbf{Spyware}: programmi maligni che cercano di ottenere informazioni che violano la privacy;
 \end{itemize}
 ed altre svariate categorie di \textit{malware}.
 
