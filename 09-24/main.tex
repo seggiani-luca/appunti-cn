@@ -317,7 +317,7 @@ Da quanto abbiamo detto nella scorsa sezione, un modello più sofisticato del pa
 		$$
 		T_{\text{prop}} = \frac{d}{s}
 		$$
-con $d$ distanza del link e $s$ velocità del mezzo di trasmissione. Chiaramente, per i nostri scopi $s$ sara una frazione significativa della velocità della luce $c \approx 3 \cdot 10^8$;
+con $d$ distanza del link e $s$ velocità del mezzo di trasmissione. Chiaramente, per i nostri scopi $s$ sara una frazione significativa della velocità della luce $c \approx 3 \cdot 10^8$ m/s;
 	\item Ritardo di \textbf{laborazione} (instradamento) $T_{\text{proc}}$, dipende dalle caratteristiche del router ed è perlopiù costante;
 	\item Ritardo di \textbf{accodamento} dato dalla presenza di code $T_{\text{queue}}$. Questo è il più complicato da trattare, in quanto dipende dal numero di pacchetti presenti nel buffer del router. Come vedremo fra poco, una buona euristica per la valutazione di questo ritardo (che è comunque trattabile solo in maniera statistica) è l'\textit{intensità di traffico} sulla linea di trasmissione.
 \end{itemize}
@@ -326,9 +326,9 @@ $$
 T_{\text{node}} = T_{\text{trans}} + T_{\text{prop}} + T_{\text{proc}} + T_{\text{queue}}
 $$
 
-Dati $N$ nodi, il ritardo end-to-end potrà quindi essere calcolato semplicemente come:
+Dati $N$ nodi e $P$ pacchetti, il ritardo end-to-end potrà quindi essere calcolato semplicemente come:
 $$
-T_{\text{end-to-end}} = N T_{\text{node}}
+T_{\text{end-to-end}} = (N + P) T_{\text{node}}
 $$
 
 \subsubsection{Ritardo di accodamento}
@@ -339,6 +339,10 @@ $$
 presa $\alpha$ come la frequenza media di trasmissione di pacchetti sull'istante temporale.
 
 Semplicemente tracciando la funzione si nota che se $I_{\text{traffic}} >= 1$ il tempo di di accodamento tende a infinito (si ha necessariamente perdita di pacchetti), per cui vorremo mantenere $I_{\text{traffic}} < 1$, e idealmente $I_{\text{traffic}} << 1$.
+
+\begin{center}
+	\includegraphics[scale=0.3]{../figures/traf_intensity.png}
+\end{center}
 
 \subsubsection{Traceroute}
 Per fare diagnostica in situazioni reali, si possono usare software di \textbf{traceroute}, che inviano pacchetti con lo scopo di tracciare gli host incontrati e misurare il tempo impiegato nella trasmissione \textit{round-trip}, o almeno capire se i pacchetti sono stati inviati o persi. 
