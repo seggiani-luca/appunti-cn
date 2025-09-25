@@ -345,7 +345,51 @@ Semplicemente tracciando la funzione si nota che se $I_{\text{traffic}} >= 1$ il
 \end{center}
 
 \subsubsection{Traceroute}
-Per fare diagnostica in situazioni reali, si possono usare software di \textbf{traceroute}, che inviano pacchetti con lo scopo di tracciare gli host incontrati e misurare il tempo impiegato nella trasmissione \textit{round-trip}, o almeno capire se i pacchetti sono stati inviati o persi. 
+Per fare diagnostica in situazioni reali, si possono usare software di \textbf{traceroute}, che inviano pacchetti con lo scopo di tracciare gli host incontrati e misurare il tempo impiegato nella trasmissione \textit{round-trip}, o almeno capire se i pacchetti sono stati inviati o persi.
+
+Più nello specifico, ipotizziamo di avere $N$ router fra sorgente e destinazione.
+Traceroute invierà $N + 1$ pacchetti speciali sulla linea fra sorgente e destinazione, e ogni router reinvierà il primo di questo che riceve (l'$n$-esimo) indietro alla sorgente, assieme a informazioni temporali e il suo indirizzo.
+In questo modo, l'$N + 1$ pacchetto arriverà effettivamente alla destinazione, mentre gli $N$ pacchetti precedenti scandaglieranno ognuno dei router sulla via per la destinazione.
+
+In verità, questo procedimento viene ripetuto 3 volte, per avere risultati più accurati.
+
+Vediamo ad esempio il traceroute che dal portatile su cui sto scrivendo gli appunti arriva ai server dell'Università di Pisa:
+\begin{lstlisting}[style=shellstyle]
+luca@lucarch3 ~ » traceroute www.unipi.it
+traceroute to www.unipi.it (131.114.104.6), 30 hops max, 60 byte packets
+ 1  _gateway (10.178.37.4)  3.745 ms  3.552 ms  3.494 ms
+ 2  172.16.133.129 (172.16.133.129)  300.183 ms  300.156 ms  300.133 ms
+ 3  172.16.133.38 (172.16.133.38)  60.081 ms  59.673 ms  60.235 ms
+ 4  172.16.17.50 (172.16.17.50)  52.910 ms  60.413 ms  59.354 ms
+ 5  151.7.56.70 (151.7.56.70)  61.571 ms  62.259 ms  60.645 ms
+ 6  151.7.56.66 (151.7.56.66)  89.876 ms  55.029 ms  86.501 ms
+ 7  151.6.3.199 (151.6.3.199)  52.064 ms 151.6.1.27 (151.6.1.27)  51.777 ms 151.6.3.199 (151.6.3.199)  44.325 ms
+ 8  151.6.5.139 (151.6.5.139)  52.076 ms 151.6.1.213 (151.6.1.213)  52.842 ms 151.6.5.139 (151.6.5.139)  52.399 ms
+ 9  garr.rom.namex.it (193.201.28.15)  52.662 ms  51.836 ms  52.516 ms
+10  re1-rm02-rs1-rm02.rm02.garr.net (185.191.181.70)  52.317 ms  52.470 ms  52.278 ms
+11  rs1-rm02-rs1-pi01.pi01.garr.net (185.191.181.34)  56.893 ms  56.872 ms  56.526 ms
+12  rs1-pi01-rl1-pi01.pi01.garr.net (185.191.181.39)  56.495 ms  49.338 ms  50.169 ms
+13  rl1-pi01-ru-unipi.pi01.garr.net (193.206.136.90)  49.919 ms  49.808 ms  50.003 ms
+14  jser-jspg.unipi.it (131.114.191.90)  51.377 ms  50.215 ms  51.243 ms
+15  * * *
+16  * * *
+17  * * *
+18  * * *
+19  * * *
+20  * * *
+21  * * *
+22  * * *
+23  * * *
+24  * * *
+25  * * *
+26  * * *
+27  * * *
+28  * * *
+29  * * *
+30  * * *
+\end{lstlisting}
+I numeri a sinistra indicano l'indice del router raggiunto, seguiti dall'indirizzo e le misurazioni temporali nei 3 tentativi effettuati dal traceroute.
+In praticolare, notiamo come i router da 2 a 8 sono anonimi, al 9 siamo arrivati nella rete del \textit{GARR}, e dal router 15 in poi non abbiamo più ottenuto risposte ai pacchetti traceroute (probabilmente per via della configurazione dei router, il traffico passa comunque).
 
 \subsubsection{Troughput}
 Introduciamo il concetto di \textbf{troughput} come la frequenza (bit al secondo) con cui i bit vengono spediti da trasmettitore a ricevitore.
