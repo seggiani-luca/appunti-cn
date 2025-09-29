@@ -1,0 +1,402 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 29-09-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Continuiamo a vedere nel dettaglio l'ambito delo \textit{sviluppo di applicazioni}.
+
+\subsection{Comunicazione fra processi}
+Abbiamo visto come, sebbene debbano girare su una vasta gamma di dispositivi ed interagire con svariate tecnologie di collegamento, queste possono essere riassunte nei paradigmi \text{client-server} e \textit{peer-to-peer}.
+Inoltre, abbiamo visto come maggior parte della complessità dell'infrastruttura di rete sia astratta via nei moderni S/O dietro il meccanismo dei \textit{socket}.
+
+In particolare, vediamo i nostri applicativi come composti da \textbf{processi} in esecuzione su macchine fisiche, da cui \textbf{processi client} su macchine client e \textbf{processi server} su macchine server.
+Le modalità secondo la quale questi processi si scambieranno \textbf{messaggi} saranno rappresentate dalla cosiddetta \textbf{IPC} (\textit{Inter Process Communication}).
+
+Notiamo che non è necessario che la IPC sia su macchine diverse, due processi nella stessa macchina possono infatti comunicare fra di loro come se si trovassero su macchine diverse collegate in rete.
+
+Quello che vanno ad implementare i \textbf{socket}, standard \textit{de facto} apparso in origine nei sistemi operativi BSD, è appunto l'IPC fra più processi.
+
+\subsubsection{Modalità di indirizzamento}
+Per ricevere messaggi, i processi devono avere degli \textit{identificatori}.
+Questi sono rappresentati da \textbf{indirizzi IP} su 32 bit.
+L'indirizzo IP della macchina su cui i processi girano non basta, in quanto chiaramente una macchina può avere più di un processo in esecuzione.
+
+\subsubsection{Protocolli livello application}
+Un protocollo di livello \textit{application} dovrà a questo punto definire diverse specifiche sul'IPC:
+\begin{itemize}
+	\item Il \textbf{tipo} di messaggi scambiati: questi possono solitamente essere \textit{richieste} e \textit{risposte};
+	\item \textbf{Sintassi} dei messaggi: quali campi presentano i messaggi e come i campi sono delineati nella struttura del messaggio;
+	\item \textbf{Semantica} dei messaggi: il significato dell'informazione contenuta nei campi;
+	\item \textbf{Regole}: su come e quando i processi possono ricevere o inviare messaggi.
+\end{itemize}
+
+Esistono diversi protocolli application, sia \textbf{aperti} (interoperabili per applicazioni di più sviluppatori, lo sono il protcollo HTTP, i protocolli di posta, ecc...) che \textbf{proprietari} (lo sono ad esempio i protocolli associati a prodotti software proprietari come Skype, ecc...).
+In particolare, i protocolli aperti possono essere sia \textbf{ufficiali} (supportati da agenzie come l'RFC), o \textbf{non ufficiali} (basati su documenti non ufficiali ma di pubblico accesso, diventati standard \textit{de facto} dopo grande adozione, ad esempio BitTorrent).
+
+\subsubsection{Servizi ad applicazioni}
+Iniziamo a vedere quali tipi di servizi potrebbero servire ad un applicazione in rete.
+
+\begin{itemize}
+	\item \textbf{Integrità dati}: alcune applicazioni (trasferimento dati, transazioni, ecc...) potrebbero richiedere un trasferimento sicuro al 100\%. Altre (videogiochi, streaming, ecc...) potrebbero invece poter tollerare perdite paraziale dei dati in fase di trasmissione.
+	\item \textbf{Throughput}: alcune applicazioni (multimedia, ecc...) richiedono una quantità minima di throughput per essere efficaci. Altre (le cosiddette applicazioni \textit{elastiche}) ne prendono quanto non hanno a disposizione.
+	\item \textbf{Tempo}: alcune applicazioni (ancora videogiochi, telefonia online, ecc...) potrebbero richiedere delay temporali molto contenuti per essere efficaci.
+	\item \textbf{Sicurezza}: servizi più o meno critici richiedono livelli variabili di sicurezza (crittografia, ecc...).
+\end{itemize}
+
+Su questa base, potremmo classificare alcune applicazioni sulla base dei requisiti di trasporto che hanno:
+\begin{table}[H]
+	\center \rowcolors{2}{white}{black!10}
+	\begin{tabular} { p{3cm} || p{2.5cm} | p{2.5cm} | p{2.5cm} | p{2.5cm} }
+		\bfseries Applicazione & \bfseries Perdita dati & \bfseries Throughput & \bfseries Tempo & \bfseries Sicurezza \\ 
+		\hline
+		Trasferimento file/download & Nessuna & Elastico & Indifferente & Dipende \\
+		E-mail & Nessuna & Elastico & Indifferente & Dipende \\ 
+		Web & Nessuna & Elastico & Indifferente & Dipende \\ 
+		Streaming & Tollerante & 5 Kbps - 5 Mbps & Pochi secondi & Non importante \\ 
+		Videogiochi & Tollerante & 5 Kbps - 5 Mbps & Pochi millisecondi & Dipende \\ 
+		Messaggistica istantanea & Nessuna & Elastico & Perlopiù indifferente & Critica \\ 
+	\end{tabular}
+\end{table}
+
+\subsubsection{Protocolli livello transport}
+Potrebbe essere utile, per capire come realizzare le specifiche sopra descritte, studiare ad alto livello i due protocolli di trasporto principali:
+\begin{itemize}
+	\item \textbf{TCP} (\textit{Transmission Control Protocol}): assicura il trasporto \textit{affidabile} di messaggi tra processi, controllo del \textit{flusso} e delle \textit{congestioni}, ma ha promesse più scarse nel campo della temporizzazione e del throughput (sebbene assicuri un \textit{throughput minimo}).
+		Orientato alla \textit{connessione} fra processi client e server, è più sicuro dell'alternativa;
+	\item \textbf{UDP} (\textit{User Datagram Protocol}): meno sicuro e affidabile, non fornisce servizi di controllo flussi o congestioni, né throughput minimo. Questo lo rende adatto per soluzioni a basso overhead, dove le prestazioni sono più significative della correttezza dei dati.
+\end{itemize}
+
+Il controllo del flusso e delle congestioni si collega a quanto visto nella sezione 2.2:
+\begin{itemize}
+	\item Il controllo del \textbf{flusso} si assicura che il mittente non potrà sopraffare il destinatario con una mole troppo grande di messaggi;
+	\item Il controllo delle \textbf{congestioni} assicura che i ruoter nell'infrastruttura fra mittente e destinatario non vengano sovraccaricati, o se lo sono l'informazione venga deviata in modo da assicurare che i pacchetti arrivino in maniera affidabile. 
+\end{itemize}
+
+\par\smallskip
+
+Possiamo quindi assegnare ad ognuna delle applicazioni viste nella tabella di sezione 4.13 un protocollo adatto:
+\begin{table}[H]
+	\center \rowcolors{2}{white}{black!10}
+	\begin{tabular} { p{3cm} || p{5cm} | p{5cm} }
+		\bfseries Applicazione & \bfseries Protocollo application & \bfseries Protocollo transport \\ 
+		\hline
+		Trasferimento file/download & FTP & TCP \\
+		E-mail & SMTP & TCP \\ 
+		Web & HTTP & TCP \\ 
+		Streaming & HTTP, DASH & TCP \\ 
+		Videogiochi & WOW, FPS o proprietario & TCP o UDP \\ 
+		Messaggistica istantanea & HTTP o proprietario & TCP o UDP (telefonia) \\ 
+	\end{tabular}
+\end{table}
+
+\subsubsection{Sicurezza in TCP}
+I socket TCP e UDP di base non forniscono particolari funzionalità di sicurezza: i dati sono trasmessi senza crittografia, per cui dati sensibili sono visibili in chiaro.
+
+Si può sfruttare il protocollo (in verità protocollo \textit{middleware}, che sta fra livello transport e livello application) \textbf{TLS} (\textit{Transport Layer Security}) per fornire connessioni TCP crittografate, con integrità dei dati assicurata e autenticazione del destinatario.
+
+Possiamo sfruttare TLS in 2 modi principali:
+\begin{itemize}
+	\item TSL implementato in applicazione, che a sua volta interagisce con socket TCP;
+	\item API che fornisce socket TLS, che ricevono dati in chiaro e li inviano su Internet crittografati.
+\end{itemize}
+
+La manifestazione più comune del protocollo TLS si vede negli URL delle pagine web, che iniziano con \lstinline|http://| quando si usa HTTP su TCP puro, e con \lstinline|https://| quando si usa HTTP su TCP con TLS.
+
+\subsection{Web e HTTP}
+Veniamo quindi a dettagliare la più famosa applicazione sviluppata su Internet, cioè il Web.
+Come abbiamo visto il Web è supportato dal protocollo \textbf{HTTP} (\textit{HyperText Transfer Protocol}).
+
+Ricordiamo quindi che una \textbf{pagina} Web consiste di oggetti di diversi formati che possono essere allocati su più Web server.
+Le pagine in sé per se sono anch'esse oggetti, consistono di file \textbf{HTML} (\textit{Hypertext Markup Language}), indirizzabili assieme come tutti gli altri oggetti che le compongono da un \textbf{URL} (\textit{Uniform Resource Locator}), in forma:
+\begin{lstlisting}[language=html, style=codestyle]	
+<schema>//<nome-host>/<percorso_risorsa>
+\end{lstlisting}
+ad esempio, \lstinline|https://www.bittorrent.org/index.html|.
+
+\subsubsection{Protocollo HTTP}
+Il protocollo HTTP è basato sul modello client-server (richiede un protocollo di livello transport che supporti connessioni client-server, quasi sempre TCP).
+In questo, il client è rappresentato dal \textit{browser}, che compila richieste per ottenere pagine web, mentre il server è rappresentato dal \textit{Web server}, che riceve le richieste dei browser e risponde inviando oggetti.
+
+Nello specifico, una connessione HTTP si svolge come segue:
+\begin{itemize}
+	\item Il client inizia la connessione TCP (lato applicazione, crea il socket) col server, alla porta 80;
+	\item Il server accetta la connessione TCP del client;
+	\item Messaggi HTTP vengono scambiati fra client (browser) e server sulla linea TCP;
+	\item La connessione TCP viene chiusa.
+\end{itemize}
+
+Il protocollo HTTP è \textit{privo di stato}, cioè non si mantiene nessuna informazione riguardo alle richieste passate del client.
+
+Esistono 2 tipi di connessioni HTTP:
+\begin{itemize}
+	\item HTTP \textbf{non persistente}: si apre la connessione TCP e si invia al più un oggetto sulla connessione prima di chiudere. In questo caso scaricare più oggetti richiede più connessioni TCP; 
+	\item HTTP \textbf{persistente}: si apre la connessione TCP e si inviano più oggetti sulla connessione prima di chiudere.
+\end{itemize}
+
+Definiamo il \textbf{RTT} (\textit{Round-Trip Time}) come il tempo che un piccolo pacchetto impiega per viaggiare da client a server e ritorno.
+
+\begin{itemize}
+	\item 
+Nel caso dell'HTTP non persistente, richiediamo un RTT per iniziare la connessione TCP, un RTT per richiedere il file, più il tempo necessario a trasferire il file vero e proprio, per cui si impiega:
+$$
+T_{\text{non-pers}} = 2 \text{RTT} + T_{\text{tras}}
+$$
+per ottenere ogni file.
+	\item
+Nel caso dell'HTTP persistente, dovremmo comunque usare 2 RTT per iniziare la connessione e chiedere il primo file, ma ogni file successivo richiederà solamente il tempo RTT necessario a richiedere la risorsa, per cui risparmieremo tempo.
+
+Chiaramente in questo caso avremo il problema di dover capire \textit{quando} chiudere la trasmissione: magari dopo $n$ richieste, dopo un tempo $T$ (\textit{Timeout}), ecc...
+\end{itemize}
+
+\subsubsection{Richieste HTTP}
+Abbiamo visto come i messaggi HTTP appartengono a 2 tipi, \textit{richieste} e \textit{risposte}.
+I messaggi sono in formato ASCII, quindi leggibile dall'uomo.
+
+In particolare, l'header di una richiesta HTTP ha la seguente forma generale:
+\begin{lstlisting}[language=html,style=codestyle]	
+GET /index.html HTTP/1.1
+Host: www-net.cs.umass.edu
+User-Agent: Firefox/3.6.10
+Accept: text/html,application/xhtml+xml
+Accept-Language: en-US,en
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+\end{lstlisting}
+
+Ogni riga è terminata da \lstinline|\r\n|, cartteri di ritorno carrello e nuova linea, non riportati nell'esempio.
+
+La prima riga definisce il \textbf{tipo} di richiesta (GET, POST, HEAD, ecc...), la \textbf{risorsa} richiesta e la \textbf{versione} del protocollo che il client vuole utilizzare. 
+La seconda linea contiene poi l'host del server richiesto, e la terza il processo (qui il browser Firefox) che effettua la richiesta.
+Le successive rige definiscono il tipo di oggetto che il client è disposto ad ottenere (tipo MIME, lingua, codifica e compressione, ecc...).
+Infine, l'ultima riga stabilisce le regole di connessione richieste dal client, in questo caso \lstinline|keep-alive| (quindi HTTP persistente).
+
+Un doppio ritorno carrello e nuova linea segnala la fine delle linee di header e l'inizio dei dati veri e propri.
+
+\end{document}
