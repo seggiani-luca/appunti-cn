@@ -299,6 +299,20 @@ Il controllo del flusso e delle congestioni si collega a quanto visto nella sezi
 	\item Il controllo delle \textbf{congestioni} assicura che i ruoter nell'infrastruttura fra mittente e destinatario non vengano sovraccaricati, o se lo sono l'informazione venga deviata in modo da assicurare che i pacchetti arrivino in maniera affidabile. 
 \end{itemize}
 
+Vediamo quindi una tabella riassuntiva delle differenze fra TCP e UDP:
+\begin{table}[h!]
+	\center \rowcolors{2}{white}{black!10}
+	\begin{tabular} { p{5cm} | p{5cm} | p{5cm} }
+		& \bfseries TCP & \bfseries UDP \\ 
+		\hline
+		Integrità & Assicurata & Non assicurata \\ 
+		Velocità & Minima assicurata & Massima \\ 
+		Controllo flusso & Si & No \\ 
+		Controllo congestioni & Si & No \\ 
+		Paradigma & Connessioni & Senza connessioni
+	\end{tabular}
+\end{table}
+
 \par\smallskip
 
 Possiamo quindi assegnare ad ognuna delle applicazioni viste nella tabella di sezione 4.13 un protocollo adatto:
