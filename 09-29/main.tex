@@ -404,11 +404,13 @@ Accept-Encoding: gzip, deflate
 Connection: keep-alive
 \end{lstlisting}
 
-Ogni riga è terminata da \lstinline|\r\n|, cartteri di ritorno carrello e nuova linea, non riportati nell'esempio.
+Ogni riga è terminata da \lstinline|\r\n|, caratteri di ritorno carrello e nuova linea, non riportati nell'esempio.
 
 La prima riga definisce il \textbf{tipo} di richiesta (GET, POST, HEAD, ecc...), la \textbf{risorsa} richiesta e la \textbf{versione} del protocollo che il client vuole utilizzare. 
 La seconda linea contiene poi l'host del server richiesto, e la terza il processo (qui il browser Firefox) che effettua la richiesta.
+
 Le successive rige definiscono il tipo di oggetto che il client è disposto ad ottenere (tipo MIME, lingua, codifica e compressione, ecc...).
+
 Infine, l'ultima riga stabilisce le regole di connessione richieste dal client, in questo caso \lstinline|keep-alive| (quindi HTTP persistente).
 
 Un doppio ritorno carrello e nuova linea segnala la fine delle linee di header e l'inizio dei dati veri e propri.
