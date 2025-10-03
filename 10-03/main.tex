@@ -231,7 +231,7 @@
 
 % testo
 \subsection{E-mail}
-L'\textbf{e-mail} è un'altra delle applicazioni di largo uso sviluppate su Internet. Come ogni altra applicazione, è supportata da diversi \textit{protocolli}, fra cui \textbf{SMTP} (\textit{Simple Mail Transfer Protocol}), \textbf{IMAP} (\textit{Internet Message Access Protocol}), \textbf{POP} (\textit{Post Office Protocol}).
+L'\textbf{e-mail} è un'altra delle applicazioni di largo uso sviluppate su Internet. Come ogni altra applicazione, è supportata da diversi \textit{protocolli}, fra cui \textbf{SMTP} (\textit{Simple Mail Transfer Protocol}), \textbf{IMAP} (\textit{Internet Message Access Protocol}), \textbf{POP} (\textit{Post Office Protocol}, di cui la più nota è la versione \textit{POP3}).
 
 Nel sistema della posta elettronica ci sono 3 componenti principali:
 \begin{itemize}
@@ -244,7 +244,7 @@ I mail server supportano:
 \begin{itemize}
 	\item Una \textbf{mailbox} che contiene i messaggi in arrivo per ogni utente;
 	\item Una \textbf{coda} di messaggi in uscita: questi vengono poi smistati nelle mailbox dei vari utenti;
-	\item Il \textbf{protocollo} SMTP per scambiare messaggi con i client.
+	\item Il \textbf{protocollo} SMTP per ricevere i messaggi dai client e inviarli ad altri mail server (vedremo che i client non usano direttamente SMTP per richiedere la posta, ma sfruttano altri protocolli).
 \end{itemize}
 
 Come sempre, notiamo che con \textit{mail server} si intende nello specifico il processo che gestisce le richieste degli utenti (e per estensione tutta la macchina (o macchine) che lo eseguono).
@@ -270,41 +270,47 @@ Ci sono 3 fasi di trasferimento:
 
 L'interazione è richiesta/risposta come in HTTP (anche se le richieste vengono dette \textit{comandi}), con messaggi codificati in ASCII a 7 bit.
 
-I comandi contengono testo ASCII, mentre le risposte contengono un codice di stato e testo.
+I comandi contengono solo testo ASCII, mentre le risposte contengono un codice di stato seguito da testo, sempre ASCII, in linguaggio naturale.
+Questo è per un motivo diagnostico: i comandi client sono letti dalla macchina, mentre del server la macchina legge solo il codice di stato e il commento ASCII è di debug per i tecnici. 
 
 \par\smallskip
 
-Facciamo un'esempio pratico per capire meglio il funzionamento. Poniamo che Alice voglia inviare un messaggio a Biagio:
+Facciamo un'esempio pratico per capire meglio il funzionamento del protocollo. Poniamo che Alice voglia inviare un messaggio a Biagio:
 \begin{enumerate}
-	\item Alice usa l'user agent per comporre un messaggio e-mail al destinatario \lstinline|biagio@unipi.it|;
-	\item L'user agent di alice invia il messaggio al mail server di \lstinline|unipi|, che lo mettte nella coda dei messaggi;
-	\item Il mail server di \lstinline|unipi| apre una connessione TCP, comportandosi come client, con il mail server di Biagio;
+	\item Alice \lstinline|alice@unipi.it| usa l'user agent per comporre un messaggio e-mail al destinatario Biagio \lstinline|biagio@altroente.edu|;
+	\item L'user agent di alice invia il messaggio al mail server di \lstinline|unipi.it| via SMTP, che lo mettte nella coda dei messaggi;
+	\item Il mail server di Alice apre una connessione TCP, comportandosi come client, con il mail server \lstinline|altroente.edu|;
 	\item Il messaggio di Alice viene trasferito verso tale mail server sulla rete TCP;
 	\item Il mail server di Biagio mette il messaggio nella mailbox di Biagio;
 	\item In un secondo momento, l'user agent di Biagio richiede la mailbox al suo mail server, che quindi gli invia il messaggio di Alice. 
 \end{enumerate}
 
+Qui il protcollo SMTP viene usato nella comunicazione fra l'UA di Alice ai server di \lstinline|unipi.it|, e nella comunicazione fra questi e i server di \lstinline|altroente.edu|.
+Per portare la posta dai server di \lstinline|altroente.edu| all'UA di Biagio, invece, verrà usato un altro protocollo (come già detto IMAP o POP3).
+
 Abbiamo quindi, per riassumere un ultima volta, che i mail server si comportano come \textit{client} quando devono \textit{inviare} messaggi ad altri mail server, e come \textit{server} quando devono \textit{ricevere} messaggi da altri mail server.
-Verso gli user agent, invece, sono sempre server: si richiede al server di \textit{inviare} una mail, e si richiede al server di \textit{scaricare la mailbo} corrente (il server non ci contatterà come client per inviarci la posta come farebbe con un altro mail server, ma siamo noi a doverlo invocare). 
+Verso gli user agent, invece, sono sempre server: si richiede al server di \textit{inviare} una mail, e si richiede al server di \textit{scaricare la mailbox} corrente (il server non ci contatterà come client per inviarci la posta come farebbe con un altro mail server, ma siamo noi a doverlo invocare). 
 
 \subsubsection{Parole chiave SMTP}
-Vediamo l'esempio di una connessione SMTP:
+Vediamo l'esempio dei messaggi che viaggiano in una connessione TCP, in plain text, durante lo svolgimento del protocollo TCP.
+Mettiamo ad esempio di leggere la comunicazione fra il server \lstinline|unipi.it| al servizio di Alice dell'esempio precedente, quando questo inoltra la posta al mail server \lstinline|altroente.edu| di Biagio.
+
+Qui \lstinline|S:| significa server (\lstinline|altroente.edu|) e \lstinline|C:| significa client (\lstinline|unipi.it|):
 \begin{lstlisting}[language=html, style=codestyle]	
-S: 220 hamburger.edu
-C: HELO crepes.fr
-S: 250 Hello crepes.fr, pleased to meet you
-C: MAIL FROM: <alice@crepes.fr>
-S: 250 alice@crepes.fr... Sender ok
-C: RCPT TO: <bob@hamburger.edu>
-S: 250 bob@hamburger.edu ... Recipient ok
+S: 220 altroente.edu
+C: HELO unipi.it 
+S: 250 Hello unipi.it, pleased to meet you
+C: MAIL FROM: <alice@unipi.it>
+S: 250 alice@unipi.it... Sender ok
+C: RCPT TO: <biagio@altroente.edu>
+S: 250 biagio@altroente.edu ... Recipient ok
 C: DATA
 S: 354 Enter mail, end with "." on a line by itself
-C: Do you like ketchup?
-C: How about pickles?
+C: Ciao Biagio ! 
 C: .
 S: 250 Message accepted for delivery
 C: QUIT
-S: 221 hamburger.edu closing connection
+S: 221 altroente.edu closing connection
 \end{lstlisting}
 
 Iniziamo con l'handshake: il server invia 220 (tutto ok) e il client si introduce con \lstinline|HELO| e il suo indirizzo: a questo punto il server risponde con \lstinline|250| (acknowledge dell'\lstinline|HELO|).
@@ -314,50 +320,60 @@ Con \lstinline|MAIL FROM| si indica l'indirizzo di posta elettronica dell'utente
 Con \lstinline|RCPT TO| si indica poi l'indirizzo di posta elettronica dell'utente destinatario, a cui segue un'altra risposta 250 dal server che segnala se quell'utente è presente sul mail server. 
 
 Segue poi la sezione \lstinline|DATA|, a cui il server risponde con 354, e quindi la mail vera e propria.
-Alla fine del messaggio (chiuso con un . su una nuova linea) il server risponde con un'altro 250, e il client chiude la connessione con 250. L'ultimo acknowledge è del server con 221 (chiudo connessione).
+Alla fine del messaggio (chiuso con un . su una nuova linea) il server risponde con un'altro 250, e il client chiude la connessione con \lstinline|QUIT|. L'ultimo acknowledge è del server con 221 (chiudo connessione).
 
 \subsubsection{Confronto fra SMTP e HTTP}
 Si può dire che HTTP è un protocollo di tipo \textbf{pull}, mentre SMTP è un protocollo di tipo \textbf{push}: in HTTP lato client si richiedono risorse, in SMTP si inviano.
 Inoltre, in SMTP si usano connessioni \textit{persistenti}.
 
-Abbiamo poi che in HTTP ogni oggetto è incapsulato in una risposta, mentre in SMTP si possono inviare messaggi \textit{multipart}, e che in SMTP si usa ASCII su 7 bit.
+Abbiamo poi che in HTTP ogni oggetto è incapsulato in una risposta, mentre in SMTP si possono avere trasferimenti \textit{multipart} (più messaggi di posta per connessione TCP), e che in SMTP si usa ASCII su 7 bit.
 
-\subsubsection{Protocolli di accesso}
-Il protocollo SMTP è effettivamente usato per la comunicazione fra mail server e per inviare messaggi a mail server: per richiedere la posta dal server si usano altri protocolli come \textbf{IMAP} (\textit{Internet Messagge Access Protocol}) e \textbf{POP} (\textit{Post Office Protocol}).
-In questo IMAP fornisce richieste di messaggi, eliminazione, accesso a directory di messaggi presenti sul server.
+\subsubsection{Protocolli di richiesta}
+Come abbiamo detto, il protocollo SMTP è effettivamente usato solo per la comunicazione fra mail server e per inviare messaggi a mail server: per richiedere la posta dal server si usano altri protocolli come \textbf{IMAP} (\textit{Internet Messagge Access Protocol}) e \textbf{POP} (\textit{Post Office Protocol}).
+Questi protocolli forniscono la possibilità di fare richieste di messaggi, eliminazione, accesso a directory di messaggi presenti sul server, ecc...
 
-Inoltre, servizi come GMail e Hotmail forniscono interfacce Web (sul protocollo HTTP) costruite su STMP (per inviare messaggi) e IMAP (o POP, in particolare POP3) per richiedere messaggi. 
+Inoltre, servizi come Gmail e Hotmail forniscono interfacce Web (via il protocollo HTTP) costruite su SMTP (per inviare messaggi) e IMAP (o POP, in particolare POP3) per richiedere messaggi. 
 
 La differenza principale fra IMAP e POP è che \textit{POP} era pensato per singoli dispositivi: la posta veniva scaricata su locale e rimossa dal server, per cui non vi si poteva accedere da altri dispositivi.
 \textit{IMAP} risolve questo problema mantenendo i messaggi sul server e concedendone l'accesso da parte di più dispositivi.
+In verità, oggi la maggior parte dei mail server è configurato per mantenere in remoto anche la posta scaricata via POP3.
+Per client locali questo significa che IMAP e POP3 distinguono fondamentalmente fra due politiche più o meno aggresive di caching, mentre i client su HTTP usavano in ogni caso IMAP (non si scarica mai nessun messaggio sul disco locale).
 
-Da quello che abbiamo appreso in 4.2.1, possiamo dire che POP è \textit{stateless}, mentre IMAP è \textit{stateful}. 
+Per concludere, da quello che abbiamo appreso in 4.2.1, possiamo dire che POP è \textit{stateless}, mentre IMAP è \textit{stateful} (mantiene stato sotto forma di mail precedenti). 
 
 \subsection{Il DNS}
-\textbf{DNS} (\textit{Domain Name System}) è il sistema che usiamo per tradurre indirizzi DNS, semplici da ricordare per gli umani, in indirizzi IP.
+\textbf{DNS} (\textit{Domain Name System}) è il sistema che usiamo per tradurre \textit{nomi di dominio} DNS, semplici da ricordare per gli umani, in \textit{indirizzi IP}, semplici da usare per le macchine.
 
-Di base, un'indirizzo IPv4 (IP versione 4) è rappresentato da un numero a 32 bit, diviso in 4 numeri da 8 bit rappresentati come unsigned e separati da punti: 8.8.8.8 sarebbe \lstinline|00001000_00001000_00001000_00001000|.
-Un certo numero di bit dal più significativo vengono detti \textbf{maschera} di rete, ed identificano la parte dell'IP che identifica la rete locale: i bit successivi identificano host.
+\subsubsection{Motivazione del DNS}
+Di base, un'\textbf{indirizzo IP}v4 (IP versione 4) è rappresentato da un numero a 32 bit, diviso in 4 numeri da 8 bit rappresentati come unsigned e separati da punti: 8.8.8.8 (il servizio DNS di Google) sarebbe \lstinline|00001000_00001000_00001000_00001000|.
+Un certo numero di bit dal più significativo vengono detti \textbf{maschera} di rete, ed identificano la parte dell'IP che identifica la rete locale: i bit successivi identificano gli host.
+Ad esempio, \lstinline|10.104.111.163/24| significa che i primi 24 bit identificano la rete, e i successivi 8 gli host su quella rete. 
 
 Il problema è che gli indirizzi IP sono difficili da ricordare: gli umani preferiscono indirizzi leggibili come \lstinline|tizio.caio.com|, cioè i cosiddetti \textbf{nomi di dominio}.
 
+\subsubsection{Realizzazione del DNS}
+
 Per tradurre da indirizzi leggibili a indirizzi IP (necessari per aprire connessioni TCP o UDP e quindi comunicare effettivamente col server) si usa il DNS.
 
-I problemi sono quindi:
+I problemi del DNS sono quindi:
 \begin{enumerate}
 	\item Mantenere l'\textbf{univocità} dei nomi di dominio verso gli indirizzi IP;
-	\item Permettere di risalire da un nome DNS all'indirizzo IP corrispondente.
+	\item Permettere di risalire (\textbf{risolvere}) da un nome DNS all'indirizzo IP corrispondente.
 \end{enumerate}
 
 La soluzione che è stata data è di creare un \textit{database distribuito} implementato con una gerarchia di tanti \textit{name server} che contengono \textbf{registri} di nomi di dominio. Protocolli a livello application permettono quindi agli host (e a loro volta i name server) di \textbf{risolvere} nomi di domini DNS in indirizzi.
+
 Questo rappresenta una funzione base di Internet, implementata al livello application, e che distribuisce la maggior parte della complessità all'\textit{"edge"} di internet.
 
-Per assicurare l'univocità si sono formate \textit{autorità} come \textbf{ICANN} (\textit{Internet Corporation for Assigned Numbers and Names}), e la sussidiaria \textbf{IANA} (\textit{Internet Assigned Numbers Authority}) che definisce quali domini possono essere usati.
-Queste autorità top-level delegano quindi ad altre autorità il compito di assegnare nomi a determinate regioni geografiche (\lstinline|.uk|, \lstinline|.io|, ecc...), e la cosa può chiaramente ripetersi ricorsivamente.
-In particolare l'autorità di registrazione italiana (\lstinline|.it|) risiede a Pisa all'interno del CNR. 
+Per assicurare l'univocità si sono formate \textit{autorità} come \textbf{ICANN} (\textit{Internet Corporation for Assigned Numbers and Names}), e la sussidiaria \textbf{IANA} (\textit{Internet Assigned Numbers Authority}) che definiscono quali domini possono essere usati in base all'area di applicazione, geografica, ecc...
+Queste autorità delegano quindi ad altre autorità il compito di assegnare nomi, i cosiddetti identificatori \textit{top-level}, \textbf{TLD} (\textit{Top Level Domain}) a determinate regioni geografiche (\lstinline|.uk|, \lstinline|.io|, ecc...) e gestirne i domini, e la cosa può chiaramente ripetersi ricorsivamente, fino al cosiddetto livello \textit{autoritativo}, dove la traduzione in IP può effettivamente accadere.
+
+In particolare, l'autorità di registrazione dell'identificatore top-level (\lstinline|.it|) risiede a Pisa all'interno del CNR. 
 
 Come sappiamo, esistono anche domini top-level associati non ad entità geografiche ma generici, come \lstinline|.com|, \lstinline|.org|, ecc...
 Questi sono amministrati direttamente dall'ICANN, mentre i registri sono detenuti da compagnie private.
+
+\subsubsection{Funzionamento del DNS}
 
 La risoluzione dei nomi di dominio viene fatta in maniera simile a quella degli indirizzi IP, partendo da destra verso sinistra per risalire al name server che contiene l'IP cercato.
 Ad esempio, nel DNS \lstinline|www.google.com|, prima si controlla il \lstinline|com| per capire il primo name server da contattare. Questo a sua volta prendera il \lstinline|google| per contattare il prossimo name server, e così via.
@@ -428,7 +444,7 @@ In verità, la situazione è più complicata: i server Root sono più di uno (13
 
 Addirittura, i server sia TLD che autoritativi vengono replicati, usando configurazioni \textit{primario/secondario} o meccanismi come \textit{anycast} per assicurare la ridondanza del servizio.
 
-\subsubsecton{Server DNS locali}
+\subsubsection{Server DNS locali}
 Ogni ISP fornisce solitamente un server DNS proprio, detto anche \textit{Default Name Server}.
 Anche i DNS locali sono solitamente configurati con name server \textit{primario/secondario} da contattare nel caso l'uno o l'altro fallisca. 
 
