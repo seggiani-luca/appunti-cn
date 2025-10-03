@@ -385,7 +385,7 @@ Abbiamo quindi che i problemi prima nominati vengono risolti rispettivamente nei
 	\item La risoluzione da un nome di dominio DNS all'indirizzo IP corrispondente è assicurata da \textbf{name server} che contengono \textbf{registri} di nomi di dominio.
 \end{enumerate}
 
-Non è detto che le autorità che gestiscono un \textbf{TLD} (\textit{Top Level Domain}) gestiscono anche il registro corrispondente (abbiamo detto che questo non è il caso per i TLD generali come \lstinline|.com|).
+Non è detto che le autorità che gestiscono un TLD gestiscono anche il registro corrispondente (abbiamo detto che questo non è il caso per i TLD generali come \lstinline|.com|).
 
 \subsubsection{Risoluzione DNS}
 Vediamo i dettagli tecnici.
@@ -393,21 +393,21 @@ Un server DNS comunica con un attraverso protocollo coi client, fornendo i servi
 \begin{itemize}
 	\item \textbf{Risoluzione} da dominio a indirizzo IP;
 	\item \textbf{Aliasing} degli \textbf{host}: più nomi possono puntare allo stesso IP;
-	\item \textbf{Aliasing} dei server di \textbf{posta};
+	\item \textbf{Aliasing} dei server di \textbf{posta}: allo stesso dominio possono corrispondere web server come mail server;
 	\item \textbf{Distribuzione} del \textbf{carico}: più server (con i loro IP) possono rispondere allo stesso nome di dominio per dividersi le richieste.
 \end{itemize}
 
-Abbiamo detto che il DNS è un database \textbf{distribuito}, quindi sviluppato gerarchicamente su più \textbf{name server}.
-Questa soluzione è stata scelta, al contrario di un database \textbf{centralizzato}, per una serie di motivi:
+Abbiamo detto che il DNS è un database \textbf{distribuito}, quindi sviluppato gerarchicamente su più \textit{name server}.
+Questa soluzione è stata scelta, al contrario di un database \textit{centralizzato}, per una serie di motivi:
 \begin{itemize}
 	\item Evita un singolo punto di fallimento;
-	\item Riduce il volume di traffico su ogni name sarver;
-	\item Il database centrale potrebbe essere distante;
+	\item Riduce il volume di traffico su ogni name server;
+	\item Il database centrale risulterebbe molto distante per larga parte degli utenti (distribuiti su tutto il mondo);
 	\item La manutenzione è più semplice (si fa su unità più piccole).
 \end{itemize}
 
 \subsubsection{Database DNS}
-La struttura gerarchica del DNS è modellizzabile come segue:
+La struttura gerarchica del DNS è modellizzabile come una serie di registri che rimandano l'uno all'altro:
 \begin{center}
 	\begin{forest}
 		[DNS Root, rectstyle
@@ -426,7 +426,7 @@ La struttura gerarchica del DNS è modellizzabile come segue:
 	\end{forest}
 \end{center}
 
-I server ad ogni livello sono raggruppati in diverse categorie:
+I registri ad ogni livello sono raggruppati in diverse categorie:
 \begin{enumerate}
 	\item \textbf{Root}, il registro base che punta agli altri registri;
 	\item \textbf{TLD} (\textit{Top Level Domain}), che contiene i domini top-level nazionali (\lstinline|.jp|, \lstinline|.it|, ecc...) o generici (\lstinline|.org|, \lstinline|.edu|, ecc...);
@@ -437,7 +437,7 @@ Quando un client vuole risolvere un DNS, ad esempio per \lstinline|www.google.co
 \begin{enumerate}
 	\item Si rivolge al root server per trovare il server DNS \lstinline|.com|;
 	\item Si rivolge al server DNS \lstinline|.com| per trovare il server DNS \lstinline|google.com|;
-	\item Si rivolge al server DNS \lstinline|google.com| per ottenere l'IP di \lstinline|www.google.com|
+	\item Si rivolge al server DNS \lstinline|google.com| per ottenere l'IP di \lstinline|www.google.com|.
 \end{enumerate}
 
 In verità, la situazione è più complicata: i server Root sono più di uno (13), e sono largamente replicati (più di 200 solo negli Stati Uniti). Questo è fondamentale in quanto la sicurezza del servizio DNS deve essere assicurata.
@@ -448,15 +448,21 @@ Addirittura, i server sia TLD che autoritativi vengono replicati, usando configu
 Ogni ISP fornisce solitamente un server DNS proprio, detto anche \textit{Default Name Server}.
 Anche i DNS locali sono solitamente configurati con name server \textit{primario/secondario} da contattare nel caso l'uno o l'altro fallisca. 
 
-Quando un host fa una richiesta DNS ad un server DNS locale, questo controlla la sua cache, comportandosi quindi da proxy, e inoltrando la richiesta al DNS Root solamente se non è capace di soddisfare la richiesta da solo.
+Quando un host fa una richiesta DNS ad un server DNS locale, questo controlla la sua cache, comportandosi quindi da proxy, e inoltrando la richiesta al DNS Root (o molto più tipicamente a un servizio di risoluzione DNS, sopratutto nel caso di router che per motivi economici non implementano l'intero protocollo DNS) solamente se non è capace di soddisfare la richiesta da solo.
 
-Il meccanismo di caching è supportato dalla struttura gerarchica dei nomi di dominio DNS: ad esempio se il DNS locale conosce \lstinline|dns.nyu.edu|, potrebbe rispondere alle richieste di risoluzione di \lstinline|engineering.nyu.edu| inviando richieste direttamente al server TLD \lstinline|.edu|, che ha già contattato.
+Il meccanismo di caching è supportato dalla struttura gerarchica dei nomi di dominio DNS: ad esempio se il DNS locale conosce \lstinline|dns.nyu.edu|, potrebbe rispondere alle richieste di risoluzione di \lstinline|engineering.nyu.edu| inviando richieste direttamente al server autoritativo \lstinline|nyu.edu|, che ha già contattato.
+
+Abbiamo quindi che un host connesso ad un ISP (come un comune router) si rivolge solitamente al servizio DNS fornito da tale ISP per le sue richieste DNS.
+Questo quindi usa un servizio di risoluzione pubblico come 1.1.1.1 (Cloudflare) o 8.8.8.8 (Google) per risolvere il DNS (si dice che si comporta da \textit{forwarder} DNS), o in alcuni casi si comporta esso stesso come risolutore DNS contattando direttamente il server Root.
+
+Nessuno ci nega (e a volte avviene) che l'host eviti il DNS locale rivolgendosi direttamente a un servizio di risoluzione.
 
 \subsubsection{Risoluzione iterativa/ricorsiva}
-La risoluzione dei nomi di domnio DNS da parte di un server DNS locale (come da parte di un risolutore pubblico come quello fornito da Cloudflare) può accadere in due modi principali: \textbf{iterativo} e \textbf{ricorsivo}:
+La risoluzione dei nomi di domnio DNS da parte di un server DNS locale che si comporta come risolutore DNS (come da parte di un risolutore pubblico come quelli nominati sopra) può accadere in due modi principali: \textbf{iterativo} e \textbf{ricorsivo}:
 \begin{itemize}
-	\item \textbf{Iterativo}: # finisci
-	\item \textbf{Ricorsivo}:
+	\item \textbf{Iterativo}: in questo caso il server DNS si rivolge ad altri server DNS accettando sia traduzioni complete che riferimenti ad altri server DNS: nel caso il server contattato non possa tradurre potrà almeno reindirizzarci verso un server che può farlo;
+	\item \textbf{Ricorsivo}: in questo caso il server DNS accetta solo traduzioni complete, o al limite messaggi che segnalano il fallimento della richiesta.
+		Questa è la modalità in cui vengono interrogati la maggior parte dei servizi di risoluzione pubblici.
 \end{itemize}
 
 \end{document}
