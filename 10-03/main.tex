@@ -1,0 +1,446 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 03-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{E-mail}
+L'\textbf{e-mail} è un'altra delle applicazioni di largo uso sviluppate su Internet. Come ogni altra applicazione, è supportata da diversi \textit{protocolli}, fra cui \textbf{SMTP} (\textit{Simple Mail Transfer Protocol}), \textbf{IMAP} (\textit{Internet Message Access Protocol}), \textbf{POP} (\textit{Post Office Protocol}).
+
+Nel sistema della posta elettronica ci sono 3 componenti principali:
+\begin{itemize}
+	\item Gli \textbf{user agent}, cioè i client di posta elettronica usati dagli utenti per scrivere e ricevere messaggi di posta elettronica;
+	\item I \textbf{server} di posta elettronica;
+	\item Un \textbf{protocollo} di posta elettronica, prendiamo SMTP. 
+\end{itemize}
+
+I mail server supportano:
+\begin{itemize}
+	\item Una \textbf{mailbox} che contiene i messaggi in arrivo per ogni utente;
+	\item Una \textbf{coda} di messaggi in uscita: questi vengono poi smistati nelle mailbox dei vari utenti;
+	\item Il \textbf{protocollo} SMTP per scambiare messaggi con i client.
+\end{itemize}
+
+Come sempre, notiamo che con \textit{mail server} si intende nello specifico il processo che gestisce le richieste degli utenti (e per estensione tutta la macchina (o macchine) che lo eseguono).
+
+Il protocollo SMTP è un protocollo client-server: nonstante ciò, il mail server può comunicare con altri server, e in tal caso si comporta sia come client che come server.
+\begin{itemize}
+	\item Si comporta come \textit{client} quando deve inviare posta;
+	\item Si comporta come \textit{server} quando deve ricevere posta.
+\end{itemize}
+
+Questo è chiaro in quanto è il server che \textit{invia} la posta a dover iniziare la comunicazione, mentre il server che \textit{riceve} deve essere solo pronto, appunto, a ricevere.
+
+\subsubsection{Protocollo SMTP}
+Nello specifico, il protocollo SMTP è basato su TCP aperto alla porta 25.
+Il trasferimento è diretto, e come abbiamo già detto il server che invia si comporta come client per il server che riceve.
+
+Ci sono 3 fasi di trasferimento:
+\begin{itemize}
+	\item Handshake fra i due server;
+	\item Trasferimento di messaggi;
+	\item Chiusura della comunicazione.
+\end{itemize}
+
+L'interazione è richiesta/risposta come in HTTP (anche se le richieste vengono dette \textit{comandi}), con messaggi codificati in ASCII a 7 bit.
+
+I comandi contengono testo ASCII, mentre le risposte contengono un codice di stato e testo.
+
+\par\smallskip
+
+Facciamo un'esempio pratico per capire meglio il funzionamento. Poniamo che Alice voglia inviare un messaggio a Biagio:
+\begin{enumerate}
+	\item Alice usa l'user agent per comporre un messaggio e-mail al destinatario \lstinline|biagio@unipi.it|;
+	\item L'user agent di alice invia il messaggio al mail server di \lstinline|unipi|, che lo mettte nella coda dei messaggi;
+	\item Il mail server di \lstinline|unipi| apre una connessione TCP, comportandosi come client, con il mail server di Biagio;
+	\item Il messaggio di Alice viene trasferito verso tale mail server sulla rete TCP;
+	\item Il mail server di Biagio mette il messaggio nella mailbox di Biagio;
+	\item In un secondo momento, l'user agent di Biagio richiede la mailbox al suo mail server, che quindi gli invia il messaggio di Alice. 
+\end{enumerate}
+
+Abbiamo quindi, per riassumere un ultima volta, che i mail server si comportano come \textit{client} quando devono \textit{inviare} messaggi ad altri mail server, e come \textit{server} quando devono \textit{ricevere} messaggi da altri mail server.
+Verso gli user agent, invece, sono sempre server: si richiede al server di \textit{inviare} una mail, e si richiede al server di \textit{scaricare la mailbo} corrente (il server non ci contatterà come client per inviarci la posta come farebbe con un altro mail server, ma siamo noi a doverlo invocare). 
+
+\subsubsection{Parole chiave SMTP}
+Vediamo l'esempio di una connessione SMTP:
+\begin{lstlisting}[language=html, style=codestyle]	
+S: 220 hamburger.edu
+C: HELO crepes.fr
+S: 250 Hello crepes.fr, pleased to meet you
+C: MAIL FROM: <alice@crepes.fr>
+S: 250 alice@crepes.fr... Sender ok
+C: RCPT TO: <bob@hamburger.edu>
+S: 250 bob@hamburger.edu ... Recipient ok
+C: DATA
+S: 354 Enter mail, end with "." on a line by itself
+C: Do you like ketchup?
+C: How about pickles?
+C: .
+S: 250 Message accepted for delivery
+C: QUIT
+S: 221 hamburger.edu closing connection
+\end{lstlisting}
+
+Iniziamo con l'handshake: il server invia 220 (tutto ok) e il client si introduce con \lstinline|HELO| e il suo indirizzo: a questo punto il server risponde con \lstinline|250| (acknowledge dell'\lstinline|HELO|).
+
+Da qui in poi il client può comunicare la posta che vuole inviare.
+Con \lstinline|MAIL FROM| si indica l'indirizzo di posta elettronica dell'utente che sta inviando posta, a cui segue una risposta 250 dal server che segnala se quell'utente è riconosciuto. 
+Con \lstinline|RCPT TO| si indica poi l'indirizzo di posta elettronica dell'utente destinatario, a cui segue un'altra risposta 250 dal server che segnala se quell'utente è presente sul mail server. 
+
+Segue poi la sezione \lstinline|DATA|, a cui il server risponde con 354, e quindi la mail vera e propria.
+Alla fine del messaggio (chiuso con un . su una nuova linea) il server risponde con un'altro 250, e il client chiude la connessione con 250. L'ultimo acknowledge è del server con 221 (chiudo connessione).
+
+\subsubsection{Confronto fra SMTP e HTTP}
+Si può dire che HTTP è un protocollo di tipo \textbf{pull}, mentre SMTP è un protocollo di tipo \textbf{push}: in HTTP lato client si richiedono risorse, in SMTP si inviano.
+Inoltre, in SMTP si usano connessioni \textit{persistenti}.
+
+Abbiamo poi che in HTTP ogni oggetto è incapsulato in una risposta, mentre in SMTP si possono inviare messaggi \textit{multipart}, e che in SMTP si usa ASCII su 7 bit.
+
+\subsubsection{Protocolli di accesso}
+Il protocollo SMTP è effettivamente usato per la comunicazione fra mail server e per inviare messaggi a mail server: per richiedere la posta dal server si usano altri protocolli come \textbf{IMAP} (\textit{Internet Messagge Access Protocol}) e \textbf{POP} (\textit{Post Office Protocol}).
+In questo IMAP fornisce richieste di messaggi, eliminazione, accesso a directory di messaggi presenti sul server.
+
+Inoltre, servizi come GMail e Hotmail forniscono interfacce Web (sul protocollo HTTP) costruite su STMP (per inviare messaggi) e IMAP (o POP, in particolare POP3) per richiedere messaggi. 
+
+La differenza principale fra IMAP e POP è che \textit{POP} era pensato per singoli dispositivi: la posta veniva scaricata su locale e rimossa dal server, per cui non vi si poteva accedere da altri dispositivi.
+\textit{IMAP} risolve questo problema mantenendo i messaggi sul server e concedendone l'accesso da parte di più dispositivi.
+
+Da quello che abbiamo appreso in 4.2.1, possiamo dire che POP è \textit{stateless}, mentre IMAP è \textit{stateful}. 
+
+\subsection{Il DNS}
+\textbf{DNS} (\textit{Domain Name System}) è il sistema che usiamo per tradurre indirizzi DNS, semplici da ricordare per gli umani, in indirizzi IP.
+
+Di base, un'indirizzo IPv4 (IP versione 4) è rappresentato da un numero a 32 bit, diviso in 4 numeri da 8 bit rappresentati come unsigned e separati da punti: 8.8.8.8 sarebbe \lstinline|00001000_00001000_00001000_00001000|.
+Un certo numero di bit dal più significativo vengono detti \textbf{maschera} di rete, ed identificano la parte dell'IP che identifica la rete locale: i bit successivi identificano host.
+
+Il problema è che gli indirizzi IP sono difficili da ricordare: gli umani preferiscono indirizzi leggibili come \lstinline|tizio.caio.com|, cioè i cosiddetti \textbf{nomi di dominio}.
+
+Per tradurre da indirizzi leggibili a indirizzi IP (necessari per aprire connessioni TCP o UDP e quindi comunicare effettivamente col server) si usa il DNS.
+
+I problemi sono quindi:
+\begin{enumerate}
+	\item Mantenere l'\textbf{univocità} dei nomi di dominio verso gli indirizzi IP;
+	\item Permettere di risalire da un nome DNS all'indirizzo IP corrispondente.
+\end{enumerate}
+
+La soluzione che è stata data è di creare un \textit{database distribuito} implementato con una gerarchia di tanti \textit{name server} che contengono \textbf{registri} di nomi di dominio. Protocolli a livello application permettono quindi agli host (e a loro volta i name server) di \textbf{risolvere} nomi di domini DNS in indirizzi.
+Questo rappresenta una funzione base di Internet, implementata al livello application, e che distribuisce la maggior parte della complessità all'\textit{"edge"} di internet.
+
+Per assicurare l'univocità si sono formate \textit{autorità} come \textbf{ICANN} (\textit{Internet Corporation for Assigned Numbers and Names}), e la sussidiaria \textbf{IANA} (\textit{Internet Assigned Numbers Authority}) che definisce quali domini possono essere usati.
+Queste autorità top-level delegano quindi ad altre autorità il compito di assegnare nomi a determinate regioni geografiche (\lstinline|.uk|, \lstinline|.io|, ecc...), e la cosa può chiaramente ripetersi ricorsivamente.
+In particolare l'autorità di registrazione italiana (\lstinline|.it|) risiede a Pisa all'interno del CNR. 
+
+Come sappiamo, esistono anche domini top-level associati non ad entità geografiche ma generici, come \lstinline|.com|, \lstinline|.org|, ecc...
+Questi sono amministrati direttamente dall'ICANN, mentre i registri sono detenuti da compagnie private.
+
+La risoluzione dei nomi di dominio viene fatta in maniera simile a quella degli indirizzi IP, partendo da destra verso sinistra per risalire al name server che contiene l'IP cercato.
+Ad esempio, nel DNS \lstinline|www.google.com|, prima si controlla il \lstinline|com| per capire il primo name server da contattare. Questo a sua volta prendera il \lstinline|google| per contattare il prossimo name server, e così via.
+Il \lstinline|www| è arcaico e viene mantenuto principalmente per ragioni storiche.
+
+Abbiamo quindi che i problemi prima nominati vengono risolti rispettivamente nei seguenti modi:
+\begin{enumerate}
+	\item L'\textit{univocità} dei nomi di dominio è assicurata da \textbf{autorità} nazionali ed internazionali (ICANN, IANA, ecc...);
+	\item La risoluzione da un nome di dominio DNS all'indirizzo IP corrispondente è assicurata da \textbf{name server} che contengono \textbf{registri} di nomi di dominio.
+\end{enumerate}
+
+Non è detto che le autorità che gestiscono un \textbf{TLD} (\textit{Top Level Domain}) gestiscono anche il registro corrispondente (abbiamo detto che questo non è il caso per i TLD generali come \lstinline|.com|).
+
+\subsubsection{Risoluzione DNS}
+Vediamo i dettagli tecnici.
+Un server DNS comunica con un attraverso protocollo coi client, fornendo i servizi:
+\begin{itemize}
+	\item \textbf{Risoluzione} da dominio a indirizzo IP;
+	\item \textbf{Aliasing} degli \textbf{host}: più nomi possono puntare allo stesso IP;
+	\item \textbf{Aliasing} dei server di \textbf{posta};
+	\item \textbf{Distribuzione} del \textbf{carico}: più server (con i loro IP) possono rispondere allo stesso nome di dominio per dividersi le richieste.
+\end{itemize}
+
+Abbiamo detto che il DNS è un database \textbf{distribuito}, quindi sviluppato gerarchicamente su più \textbf{name server}.
+Questa soluzione è stata scelta, al contrario di un database \textbf{centralizzato}, per una serie di motivi:
+\begin{itemize}
+	\item Evita un singolo punto di fallimento;
+	\item Riduce il volume di traffico su ogni name sarver;
+	\item Il database centrale potrebbe essere distante;
+	\item La manutenzione è più semplice (si fa su unità più piccole).
+\end{itemize}
+
+\subsubsection{Database DNS}
+La struttura gerarchica del DNS è modellizzabile come segue:
+\begin{center}
+	\begin{forest}
+		[DNS Root, rectstyle
+		[DNS .com
+			[DNS yahoo.com]
+			[DNS google.com]
+		]
+		[DNS .org
+			[DNS pbs.org]
+		]
+		[DNS .edu
+			[DNS nyu.edu]
+			[DNS umass.edu]
+		]
+		]	
+	\end{forest}
+\end{center}
+
+I server ad ogni livello sono raggruppati in diverse categorie:
+\begin{enumerate}
+	\item \textbf{Root}, il registro base che punta agli altri registri;
+	\item \textbf{TLD} (\textit{Top Level Domain}), che contiene i domini top-level nazionali (\lstinline|.jp|, \lstinline|.it|, ecc...) o generici (\lstinline|.org|, \lstinline|.edu|, ecc...);
+	\item \textbf{Autoritativi}, i server DNS che si raggiungono dai TLD e che hanno effettivamente il compito di terminare la risoluzione restituendo un IP.
+\end{enumerate}
+
+Quando un client vuole risolvere un DNS, ad esempio per \lstinline|www.google.com|, compie i seguenti passi:
+\begin{enumerate}
+	\item Si rivolge al root server per trovare il server DNS \lstinline|.com|;
+	\item Si rivolge al server DNS \lstinline|.com| per trovare il server DNS \lstinline|google.com|;
+	\item Si rivolge al server DNS \lstinline|google.com| per ottenere l'IP di \lstinline|www.google.com|
+\end{enumerate}
+
+In verità, la situazione è più complicata: i server Root sono più di uno (13), e sono largamente replicati (più di 200 solo negli Stati Uniti). Questo è fondamentale in quanto la sicurezza del servizio DNS deve essere assicurata.
+
+Addirittura, i server sia TLD che autoritativi vengono replicati, usando configurazioni \textit{primario/secondario} o meccanismi come \textit{anycast} per assicurare la ridondanza del servizio.
+
+\subsubsecton{Server DNS locali}
+Ogni ISP fornisce solitamente un server DNS proprio, detto anche \textit{Default Name Server}.
+Anche i DNS locali sono solitamente configurati con name server \textit{primario/secondario} da contattare nel caso l'uno o l'altro fallisca. 
+
+Quando un host fa una richiesta DNS ad un server DNS locale, questo controlla la sua cache, comportandosi quindi da proxy, e inoltrando la richiesta al DNS Root solamente se non è capace di soddisfare la richiesta da solo.
+
+Il meccanismo di caching è supportato dalla struttura gerarchica dei nomi di dominio DNS: ad esempio se il DNS locale conosce \lstinline|dns.nyu.edu|, potrebbe rispondere alle richieste di risoluzione di \lstinline|engineering.nyu.edu| inviando richieste direttamente al server TLD \lstinline|.edu|, che ha già contattato.
+
+\subsubsection{Risoluzione iterativa/ricorsiva}
+La risoluzione dei nomi di domnio DNS da parte di un server DNS locale (come da parte di un risolutore pubblico come quello fornito da Cloudflare) può accadere in due modi principali: \textbf{iterativo} e \textbf{ricorsivo}:
+\begin{itemize}
+	\item \textbf{Iterativo}: # finisci
+	\item \textbf{Ricorsivo}:
+\end{itemize}
+
+\end{document}
