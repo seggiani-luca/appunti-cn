@@ -1,0 +1,368 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 06-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% test
+Continuiamo la discussione del DNS.
+
+\subsubsection{Caching DNS}
+Vediamo che anche nel DNS il caching può dare dei vantaggi in prestazioni non indifferentiVediamo che anche nel DNS il caching può dare dei vantaggi in prestazioni non indifferenti.
+
+Quando un qualsiasi server DNS trova una data traduzioni fra dominio DNS e indirizzo IP, la memorizza (per ridurre il traffico DNS) con un certo \textbf{timeout}, sostanzialmente una data di scadenza della traduzione (solitamente impostata a 2 giorni).
+Molto spesso i server TLD (che raramente cambiano) sono memorizzati per primi, in questo modo i server Root vengono visitati di rado.
+
+Infine, possiamo assumere che sia il S/O usato dall'utente che utilizza il DNS, che l'applicazione (metti il \textit{browser}) che usa per collegarsi in rete, mantengono una loro cache di traduzioni. 
+Questo significa che l'applicazione, per risolvere un DNS, effettuerà i passaggi:
+\begin{itemize}
+	\item Consulterà la sua cache interna;
+	\item Se non trovato, consulterà la cache del S/O;
+	\item Se non trovato, effettuerà un richiesta al server DNS locale;
+	\item Questo cercherà nella sua cache e se non trovato continuerà con i passaggi visti da 6.2.5 a 6.2.7.
+\end{itemize}
+
+\subsubsection{Record DNS}
+Vediamo la struttura dei \textit{Resource Record} (\textbf{RR}) memorizzati dai server DNS.
+
+Questi hanno struttura generale:
+\begin{lstlisting}[style=shellstyle]
+(name, value, type, ttl)
+\end{lstlisting}
+e diversi tipi, fra cui:
+\begin{itemize}
+	\item \lstinline|type=A| (\textit{Address}): \lstinline|name| è il nome dell'host, e \lstinline|value| l'indirizzo IP;
+	\item \lstinline|type=CNAME| (\textit{Canonical NAME}): \lstinline|name| è l'\textit{alias} per qualche nome \textit{"canonico"}, e \lstinline|value| il nome canonico;
+	\item \lstinline|type=NS| (\textit{Name Server}): \lstinline|name| è il dominio e \lstinline|value| è il nome di dominio del server autoritativo per questo dominio;
+	\item \lstinline|MX| (\textit{Mail eXchange}): \lstinline|value| è il nome del mail server associato a \lstinline|name|. 
+\end{itemize}
+
+\subsubsection{Protocollo DNS}
+Vediamo alcune specifiche del protocollo DNS usato per inviare richieste (\textit{query}) e risposte (\textit{reply}).
+Anticipiamo subito che il protocollo DNS si basa su UDP e non TCP.
+
+Abbiamo quindi che la struttura delle richieste e delle risposte è la stessa:
+\begin{lstlisting}[style=codestyle]	
+2 byte									2 byte
+<id>										<flags>
+# domande	(query)				# risposte RR (reply)
+# autorita' RR (reply)	# RR aggiuntivi (reply)
+...
+\end{lstlisting}
+
+L'identificatore (\lstinline|<id>|) è su 16 bit e viene usato per riconoscere i destinatari delle risposte.
+I flag (\lstinline|<flags>|) sono vari e specificano:
+\begin{itemize}
+	\item Se è un messaggio \textit{query} o \textit{reply};
+	\item Se si richiede ricorsione (per messaggi query);
+	\item Se la ricorsione è disponibile (per messaggi reply);
+	\item Se la risposta è authoritative, cioè viene da un server DNS authoritative.
+\end{itemize}
+
+\subsubsection{Inserire record in DNS}
+Vediamo quindi il processo usato per registrare nomi di dominio nel DNS.
+Mettiamo che la startup \textit{"Alpha S.r.l."} voglia registrare un dominio per il suo sito:
+\begin{itemize}
+	\item Dovrà registrare il nome rivolgendosi ad un'azienda specializzata, e fornendo il nome di dominio (che non deve essere già stato registrato), l'indirizzo IP del server authoritative primario e secondario;
+
+	\item L'azienda specializzata inserirà record di tipo NS e A in un server TLD (mettiamo \lstinline|.com|):
+\begin{lstlisting}[style=codestyle]	
+(alpha.com, dns1.alpha.com, NS) # RR NS dal nome di dominio al DNS autoritativo
+(dns1.alpha.com, 212.212.212.1, A) # RR A dal nome del DNS autoritativo al suo indirizzo
+\end{lstlisting}
+
+	\item A questo punto Alpha S.r.l. dovrà configurare i suoi server DNS authoritative inserendo record di tipo A e volendo MX (per la posta elettronica):
+\begin{lstlisting}[ style=codestyle]	
+(www.alpha.com, 212.212.212.2, A) # RR A dalla pagina web all'IP del server che la fornisce
+(alpha.com, mail.alpha.com, MX) # RR MX al nome del mail server
+(mail.alpha.com, 212.212.212.3, A) # RR A dal nome all'IP del mail server 
+\end{lstlisting}
+\end{itemize}
+
+\subsection{Applicazioni P2P}
+Abbiamo visto una certa gamma di applicazioni in rete che adottano il paradigma client-server: ad esempio il Web, l'e-mail, e proprio adesso il DNS.
+
+Vediamo adesso l'altro grande paradigma, quello del \textbf{Peer-to-Peer}.
+Ricordiamo che la caratteristica delle applicazioni P2P è che non c'è un server centrale sempre attivo, ma sistemi host finali comunicano fra di loro in maniera arbtiraria: i \textit{peer} richiedono servizi ad altri peer, fornendo in cambio altri servizi.
+
+Questa architetturà è \textit{auto-scalabile} (più peer, più grande la rete), complesso da gestire e sostanzialmente decentralizzato.
+
+Ci sono diverse applicazioni realizzabili come P2P.
+Possiamo classificarle largamente:
+\begin{itemize}
+	\item \textbf{Condivisione contenuti}: i peer rendono disponibili contenuti multimediali o in generale file ad altri peer, in maniera decentralizzata. Dal punto di vista legale questo fornisce una piattaforma abbastanza sicura per lo scambio di contenuti illegali (film e musica pirata, ecc...). Celebre è l'esempio di \textit{Napster};
+	\item \textbf{Messaggistica istantanea}: gli \textit{username} degli utenti devono essere mappati a certi indirizzi IP. Quando un utente va online un \textit{indice} è notificato col suo indirizzo IP: a questo punto altri utenti possono contattarlo in P2P a tale indirizzo.
+\end{itemize}
+
+\subsubsection{Indici P2P}
+Vediamo che in entrambi casi presentati nella scorsa sezione (nel primo non si è detto ma è chiaro riflettendo sulle soluzioni tecniche) abbiamo bisogno di \textbf{indici}: per stabilire quali peer contattare per ottenere una data risorsa, bisogna avere un modo di effettuare ricerche sui loro indirizzi IP.
+
+Un indice P2P è organizzato come un database di coppie chiave-valore, ad esempio:
+\begin{lstlisting}[style=shellstyle]
+Led Zeppelin IV, 203.17.123.38
+\end{lstlisting}
+
+I peer effettuano \textit{query} a questo database per trovare i peer che possiedono date risorse; i peer possono anche \textit{inserire} nuove coppie chiave-valore (ad esempio per segnalare che possiedono una nuova risorsa).
+
+Il database può essere realizzato in più modi:
+\begin{enumerate}
+	\item Si può dislocare un singolo \textbf{indice centralizzato} per tutti i peer. I problemi di questo sistema sono ovvi: che può essere facilmente usato per risalire ai peer (dubbia sicurezza) o sovraccaricato per rendere l'intero sistema P2P inutilizzabile.
+
+		Diciamo infatti che applicazioni P2P con indici centralizzati sono P2P \textit{"ibridi"}, con funzionalità client-server per l'ottenimento degli IP dei peer.
+
+		Un sistema di questo tipo veniva usato da \textit{Napster}, con celebri risultati (il server centrale viene chiuso e l'intera applicazione cade);
+
+	\item Si può sfruttare il \textbf{query flooding} per realizzare un indice \textit{decentralizzato}: secondo questo paradigma ogni peer forma una parte dell'indice.
+	
+		In questo caso la fase di distribuzione di contenuti è banale: non bisogna collegarsi ad un indice centralizzato, ma ogni peer diventa parte dell'indice nel momento stesso in cui inizia a condividere un contenuto.
+
+		Il problema giunge in fase di ricerca di contenuti: abbiamo che il client che deve ricevere contenuti deve limitarsi a \textit{chiedere} agli altri peer "vicini" se hanno il contenuto desiderato. Definiamo i peer come vicini se hanno fra di loro una connessione TCP attiva. 
+		La richiesta può chiaramente diffondersi di vicino in vicino visitando l'intera rete o un suo sottoinsieme, e in questo modo si implementa effettivamente, se non per "forza bruta", un indice decentalizzato.
+
+	Per ridurre il traffico sulla rete P2P (sistemi di questo tipo tendono a emanare molto traffico) si può usare il \textit{Limited-Scope} query flooding, cioè inviare richieste non a tutti gli amici, ma a un sottoinsieme, o impostando un time-to-live per le richieste.
+
+	Un'altro problema è chiaramente il \textit{bootstrapping}: come trovare il primo set di vicini? In questo caso si possono usare scansioni, cache temporanee di peer, peer preimpostati (che hanno però il problema della centralizzazione) o l'intervento manuale dell'utente.
+
+		Questa era la soluzione usata da servizi come \textit{LimeWire}.
+
+	\item Un'approccio che combina il meglio dei due scorsi è un'approccio \textbf{gerarchico}.
+		In questo caso prevediamo una rete simile a quella usata nel query flooding, ma che prevede dei \textit{Super Nodi} (\textbf{SN}) (o \textit{Super Peer}, \textbf{SP}), cioè peer con alta bandwidth e disponibilità alle connessioni.
+		Ogni SN gestisce una rete locale, con un suo indice locale, e i peer di quella rete lo interrogano come avrebbero interrogato il server centrale del primo caso.
+		A questo punto la trasmissione avviene normalmente fra peer, ammesso che i peer siano all'interno della stessa rete locale gestita dal SN.
+		Non si esclude la possibilità che un SN non trovi il contenuto richiesto nel suo indice locale: in questo caso è libero di collegarsi ad altri adottanto sostanzialmente il query flooding, che però sarà più efficiente per diverse ragioni (meno supernodi formano una rete più compatta, i supernodi hanno specifiche migliori di trasmissione, i supernodi sono pensati appositamente per questa operazione (a differenza dei peer normali che vogliono perlopiù scaricare e non dare), ecc...).
+
+		Chiaramente il problema sarà di non \textit{"centralizzare"} troppo i SN, cosa che li renderebbe obiettivi di attacchi o cause legali.
+
+		Questa soluzione veniva usata da servizi successivi a \textit{LimeWire}, come ad esempio \textit{FastTrack}.
+
+	\item Un approccio interessante è quello dato dalle \textbf{DHT} (\textit{Distributed Hash Table}).
+		
+		Questo è l'approccio usato da \textit{BitTorrent} e \textit{eMule}.
+\end{enumerate}
+
+\end{document}

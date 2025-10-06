@@ -430,7 +430,7 @@ I registri ad ogni livello sono raggruppati in diverse categorie:
 \begin{enumerate}
 	\item \textbf{Root}, il registro base che punta agli altri registri;
 	\item \textbf{TLD} (\textit{Top Level Domain}), che contiene i domini top-level nazionali (\lstinline|.jp|, \lstinline|.it|, ecc...) o generici (\lstinline|.org|, \lstinline|.edu|, ecc...);
-	\item \textbf{Autoritativi}, i server DNS che si raggiungono dai TLD e che hanno effettivamente il compito di terminare la risoluzione restituendo un IP.
+	\item \textbf{Autoritativi}, i server DNS che si raggiungono dai TLD (o da server DNS ad altri \textit{sottodomini}) e che hanno effettivamente il compito di terminare la risoluzione per quel dominio restituendo un IP.
 \end{enumerate}
 
 Quando un client vuole risolvere un DNS, ad esempio per \lstinline|www.google.com|, compie i seguenti passi:
@@ -463,6 +463,8 @@ La risoluzione dei nomi di domnio DNS da parte di un server DNS locale che si co
 	\item \textbf{Iterativo}: in questo caso il server DNS si rivolge ad altri server DNS accettando sia traduzioni complete che riferimenti ad altri server DNS: nel caso il server contattato non possa tradurre potrà almeno reindirizzarci verso un server che può farlo;
 	\item \textbf{Ricorsivo}: in questo caso il server DNS accetta solo traduzioni complete, o al limite messaggi che segnalano il fallimento della richiesta.
 		Questa è la modalità in cui vengono interrogati la maggior parte dei servizi di risoluzione pubblici.
+
+		Dal punto di vista interno la soluzione che si ha è che ogni DNS server contattato si prende la briga di contattare il successivo con una nuova richiesta DNS, e non di restituire solamente l'IP del prossimo elemento della catena, effettivamente sollevando il carico dal server DNS locale.
 \end{itemize}
 
 \end{document}
