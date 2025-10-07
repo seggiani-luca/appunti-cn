@@ -310,10 +310,9 @@ Abbiamo visto una certa gamma di applicazioni in rete che adottano il paradigma 
 Vediamo adesso l'altro grande paradigma, quello del \textbf{Peer-to-Peer}.
 Ricordiamo che la caratteristica delle applicazioni P2P è che non c'è un server centrale sempre attivo, ma sistemi host finali comunicano fra di loro in maniera arbtiraria: i \textit{peer} richiedono servizi ad altri peer, fornendo in cambio altri servizi.
 
-Questa architetturà è \textit{auto-scalabile} (più peer, più grande la rete), complesso da gestire e sostanzialmente decentralizzato.
+Questa architetturà è \textit{auto-scalabile} (più peer, più grande la rete), complessa da gestire e (vogliamo) il più possibile decentralizzata.
 
-Ci sono diverse applicazioni realizzabili come P2P.
-Possiamo classificarle largamente:
+Ci sono diverse applicazioni realizzabili come P2P; possiamo classificarne alcune:
 \begin{itemize}
 	\item \textbf{Condivisione contenuti}: i peer rendono disponibili contenuti multimediali o in generale file ad altri peer, in maniera decentralizzata. Dal punto di vista legale questo fornisce una piattaforma abbastanza sicura per lo scambio di contenuti illegali (film e musica pirata, ecc...). Celebre è l'esempio di \textit{Napster};
 	\item \textbf{Messaggistica istantanea}: gli \textit{username} degli utenti devono essere mappati a certi indirizzi IP. Quando un utente va online un \textit{indice} è notificato col suo indirizzo IP: a questo punto altri utenti possono contattarlo in P2P a tale indirizzo.
@@ -331,7 +330,7 @@ I peer effettuano \textit{query} a questo database per trovare i peer che possie
 
 Il database può essere realizzato in più modi:
 \begin{enumerate}
-	\item Si può dislocare un singolo \textbf{indice centralizzato} per tutti i peer. I problemi di questo sistema sono ovvi: che può essere facilmente usato per risalire ai peer (dubbia sicurezza) o sovraccaricato per rendere l'intero sistema P2P inutilizzabile.
+	\item Si può dislocare un singolo \textbf{indice centralizzato} per tutti i peer. I problemi di questo sistema sono ovvi: questo può essere facilmente individuato e messo fuori uso (cause legali, guasti, ecc...) o sovraccaricato per rendere l'intero sistema P2P inutilizzabile.
 
 		Diciamo infatti che applicazioni P2P con indici centralizzati sono P2P \textit{"ibridi"}, con funzionalità client-server per l'ottenimento degli IP dei peer.
 
@@ -341,14 +340,16 @@ Il database può essere realizzato in più modi:
 	
 		In questo caso la fase di distribuzione di contenuti è banale: non bisogna collegarsi ad un indice centralizzato, ma ogni peer diventa parte dell'indice nel momento stesso in cui inizia a condividere un contenuto.
 
-		Il problema giunge in fase di ricerca di contenuti: abbiamo che il client che deve ricevere contenuti deve limitarsi a \textit{chiedere} agli altri peer "vicini" se hanno il contenuto desiderato. Definiamo i peer come vicini se hanno fra di loro una connessione TCP attiva. 
-		La richiesta può chiaramente diffondersi di vicino in vicino visitando l'intera rete o un suo sottoinsieme, e in questo modo si implementa effettivamente, se non per "forza bruta", un indice decentalizzato.
+		Il problema giunge in fase di ricerca di contenuti: abbiamo che il client che deve ricevere contenuti deve limitarsi a \textit{chiedere} agli altri peer \textit{"vicini"} se hanno il contenuto desiderato. Definiamo i peer come \textit{vicini} se hanno fra di loro una connessione TCP attiva. 
+		La richiesta può chiaramente diffondersi di vicino in vicino visitando l'intera rete o un suo sottoinsieme, e in questo modo si implementa effettivamente, se non per "forza bruta", un indice decentralizzato.
 
-	Per ridurre il traffico sulla rete P2P (sistemi di questo tipo tendono a emanare molto traffico) si può usare il \textit{Limited-Scope} query flooding, cioè inviare richieste non a tutti gli amici, ma a un sottoinsieme, o impostando un time-to-live per le richieste.
+		La rete che si viene a formare fra tutti i peer vicini in un sistema P2P di questo tipo viene detta \textbf{rete overlay}.
+
+		Per ridurre il traffico sulla rete P2P (sistemi di questo tipo tendono a emanare molto traffico) si può usare il \textbf{limited-Scope} query flooding, cioè inviare richieste non a tutti gli amici, ma a un sottoinsieme, magari impostando un time-to-live per le richieste oltre il quale i vicini al prossimo \textit{"hop"} non necessitano più inoltrare la richiesta oltre.
 
 	Un'altro problema è chiaramente il \textit{bootstrapping}: come trovare il primo set di vicini? In questo caso si possono usare scansioni, cache temporanee di peer, peer preimpostati (che hanno però il problema della centralizzazione) o l'intervento manuale dell'utente.
 
-		Questa era la soluzione usata da servizi come \textit{LimeWire}.
+		Questa era la soluzione usata da servizi come \textit{LimeWire};
 
 	\item Un'approccio che combina il meglio dei due scorsi è un'approccio \textbf{gerarchico}.
 		In questo caso prevediamo una rete simile a quella usata nel query flooding, ma che prevede dei \textit{Super Nodi} (\textbf{SN}) (o \textit{Super Peer}, \textbf{SP}), cioè peer con alta bandwidth e disponibilità alle connessioni.
@@ -356,12 +357,19 @@ Il database può essere realizzato in più modi:
 		A questo punto la trasmissione avviene normalmente fra peer, ammesso che i peer siano all'interno della stessa rete locale gestita dal SN.
 		Non si esclude la possibilità che un SN non trovi il contenuto richiesto nel suo indice locale: in questo caso è libero di collegarsi ad altri adottanto sostanzialmente il query flooding, che però sarà più efficiente per diverse ragioni (meno supernodi formano una rete più compatta, i supernodi hanno specifiche migliori di trasmissione, i supernodi sono pensati appositamente per questa operazione (a differenza dei peer normali che vogliono perlopiù scaricare e non dare), ecc...).
 
-		Chiaramente il problema sarà di non \textit{"centralizzare"} troppo i SN, cosa che li renderebbe obiettivi di attacchi o cause legali.
+		Chiaramente il problema sarà di non \textit{"centralizzare"} troppo i SN, cosa che li renderebbe obiettivi di attacchi, cause legali, o comunque renderebbe più fragile l'intero sistema.
 
-		Questa soluzione veniva usata da servizi successivi a \textit{LimeWire}, come ad esempio \textit{FastTrack}.
+		Questa soluzione veniva usata da servizi successivi a \textit{LimeWire}, come ad esempio \textit{FastTrack};
 
 	\item Un approccio interessante è quello dato dalle \textbf{DHT} (\textit{Distributed Hash Table}).
-		
+	In questo caso si mira a realizzare l'associazione chiave-valore attraverso un'\textbf{hash table distribuita} fra i nodi di un \textit{overlay network}.
+	
+	Ci dotiamo di una funzione di hashing \textit{consistente}, cioè dove la rimozione di un bucket (di un bersaglio per la funzione) richiede lo spostamento delle sole chiavi che arrivavano a quel bucket.
+	Usiamo quindi questi bucket per partizionare i peer: a certe chiavi corrisponderanno certi peer che conterrano i dati associati alle chiavi.
+
+	A questo punto la ricerca di contenuti si può fare come per il query flooding, cioè inviando richieste ai vicini finché non si trova un degli host che corrisponde alla chiave cercata (e quindi i contenuti desiderati).
+	Una soluzione più intelligente è però strutturare la \textit{topologia} dell'overlay network in modo che i salti possano essere informati: questo è fattibile quando si usa un apposito algoritmo di hashing, dove ogni nodo ha una qualche informazione su quali dei suoi nodi vicini sono più o meno \textit{"vicini"} alla chiave cercata. 
+
 		Questo è l'approccio usato da \textit{BitTorrent} e \textit{eMule}.
 \end{enumerate}
 
