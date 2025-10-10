@@ -261,11 +261,13 @@ Esistono due approcci per la dislocazione di tali server:
 \end{itemize}
 
 Facciamo un'esempio pratico, guardando al processo che un servizio di distribuzione segue per fornire un contenuto a un utente.
+Abbiamo che il meccanismo principale di redirezione è realizzato sfruttando il DNS:
 \begin{itemize}
 	\item Il CDN (diciamo \lstinline|kingcdn.com|) mantiene più copie del contenuto su diversi \textit{nodi} CDN (magari \lstinline|kingcdn.com/<slug-contenuto-1>|, \lstinline|kingcdn.com/<slug-contenuto-2>|, ecc...). 
-	\item Il servizio di distribuzione rende disponibile il contenuto a \lstinline|netcinema.com/<slug-contenuto>|;
-	\item L'utente richiede un contenuto dal CDN, collegandosi a \lstinline|netcinema.com| e navigando fino al contenuto richiesto;
-	\item Quando l'utente vuole effettivamente guardare il contenuto, il suo DNS locale chiede l'IP del nome di dominio al server autoritativi di \lstinline|netcinema.com|, che risponde con un record CNAME corrispondente all'IP del server autoritativo di \lstinline|kingcdn.com|. L'utente viene quindi rediretto verso il nodo più vicino (potrebbe anche scegliere un'altro percorso se si verificassero variazioni (in peggio) del servizio). Da qui in poi il video è trasmesso dal nodo del CDN su HTTP. # non chiaro
+	\item Il servizio di distribuzione rende disponibile il contenuto a \lstinline|video.netcinema.com/<slug-contenuto>|;
+	\item L'utente richiede un contenuto dal CDN, collegandosi a \lstinline|netcinema.com| e navigando fino al contenuto richiesto a \lstinline|video.netcinema.com/<slug-contenuto>| (l'opzione più probabile è che questo contenuto si trovi in un blocco HTML di tipo \lstinline|<video>|);
+	\item A questo punto, il DNS locale dell'utente chiede l'IP di \lstinline|video.netcinema.com| ai server autoritativi di \lstinline|netcinema.com|, che risponde con un record CNAME corrispondente all'IP del server autoritativo di \lstinline|kingcdn.com|;
+		\item L'utente viene quindi rediretto verso il nodo più vicino (potrebbe anche scegliere un'altro percorso se si verificassero variazioni (in peggio) del servizio). Da qui in poi il video è trasmesso dal nodo del CDN su HTTP.
 \end{itemize}
 
 \subsection{Programmazione socket}
