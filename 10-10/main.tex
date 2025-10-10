@@ -1,0 +1,334 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 10-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Torniamo sull'argomento dello streaming video.
+
+\subsection{Tecniche avanzate per lo streaming}
+Avevamo introdotto l'idea del \textbf{playout delay}, dove bufferizzaviamo i dati video in ingresso per "spostare in avanti" in qualche modo la zona di dati compromessa dal \textit{jitter} (irregolarità) della rete.
+
+Visto che il jitter può essere massiccio, e la quantità di dati da inviare non indifferente, esistono alcune strategie più effiaci come ad esempio \textbf{DASH}.
+
+\subsubsection{DASH}
+\textbf{DASH} (\textit{Dynamic, Adaptive Streaming over HTTP}) è una tecnologia che prevede di memorizzare i file video in più chunk, ogninuo memorizzato con ridondaza a diversi bitrate. Un \textit{manifest file} fornirà gli URL di tutti i chunk, individuati quindi da indice nel video e livello di compressione.
+
+Il \textit{client} dovrà a questo punto misurare la velocità di trasmissione del server, e quindi consultare il manifest file: sulla base delle misurazioni fatte richiede il chunk di qualità massima sostenibile alla largezza di banda corrente. In questo modo può variare la qualità del video nel tempo, in modo da rispondere in maniera abbastanza elastica alle irregolarità della rete.
+
+Questo richiede \textit{"intelligenza"} dal client: questo deve sapere:
+\begin{itemize}
+	\item \textit{Quando} richiedere i chunk in modo da non incorrere né in starvation (restare senza chunk) né in overflow (non avere più spazio per i chunk);
+	\item \textit{A che bitrate} richiedere i chunk sulla base della banda disponibile;
+	\item \textit{Dove} richiedere i chunk: se i server sono duplicati dovrà scegliere il più efficiente.
+\end{itemize}
+
+\subsection{CDN}
+Vediamo un'altra tecnologia, questa volta riguardante la \textit{scalabilità} dei server che forniscono gigantesche quantità di contenuti video a numeri altrettanto grandi di utenti, simultaneamente, in tutto il mondo.
+Questo è il problema che viene affrontato dai \textbf{CDN} (\textit{Content Distribution Network}).
+
+L'idea è di copiare e servire diverse copie dei video su diversi server in siti geograficamente distribuiti.
+Esistono due approcci per la dislocazione di tali server:
+\begin{itemize}
+	\item \textbf{Enter deep}: usare server CDN vicini agli access network: l'idea è di spostarsi il più vicino possibile agli utenti;
+	\item \textbf{Bring home}: meno cluster, più grandi, distribuiti in \textbf{POP} (\textit{Points Of Presence}) \textit{vicini} ma non \textit{sulla} rete di accesso degli utenti. 
+\end{itemize}
+
+Facciamo un'esempio pratico, guardando al processo che un servizio di distribuzione segue per fornire un contenuto a un utente.
+\begin{itemize}
+	\item Il CDN (diciamo \lstinline|kingcdn.com|) mantiene più copie del contenuto su diversi \textit{nodi} CDN (magari \lstinline|kingcdn.com/<slug-contenuto-1>|, \lstinline|kingcdn.com/<slug-contenuto-2>|, ecc...). 
+	\item Il servizio di distribuzione rende disponibile il contenuto a \lstinline|netcinema.com/<slug-contenuto>|;
+	\item L'utente richiede un contenuto dal CDN, collegandosi a \lstinline|netcinema.com| e navigando fino al contenuto richiesto;
+	\item Quando l'utente vuole effettivamente guardare il contenuto, il suo DNS locale chiede l'IP del nome di dominio al server autoritativi di \lstinline|netcinema.com|, che risponde con un record CNAME corrispondente all'IP del server autoritativo di \lstinline|kingcdn.com|. L'utente viene quindi rediretto verso il nodo più vicino (potrebbe anche scegliere un'altro percorso se si verificassero variazioni (in peggio) del servizio). Da qui in poi il video è trasmesso dal nodo del CDN su HTTP. # non chiaro
+\end{itemize}
+
+\subsection{Programmazione socket}
+Abbiamo introdotto il concetto di \textbf{socket} (dall'inglese per \textit{presa}) come astrazione della comunicazione in rete per i processi in esecuzione su un S/O.
+
+Lato pratico, il S/O renderà disponibili chiamate a sistema per effettuare almeno alcune operazioni base:
+\begin{itemize}
+	\item Apertura di un socket: questo potrà essere \textbf{TCP} o \textbf{UDP};
+	\item Invio di dati al socket (o scrittura sul socket);
+	\item Ricezione di dati al socket (o lettura dal socket).
+\end{itemize}
+
+Ricordiamo che il TCP è un protocollo orientato alla connessione, sicuro e affidabile, mentre UDP è un protocollo semplice per il trasferimento diretto ma non affidabile di dati.
+
+\subsection{Reti in connessione diretta}
+Finite le applicazioni, riprendiamo il discorso dal \textit{basso}. Se avevamo discusso come creare applicazioni che sfruttassero la rete, adesso vogliamo discutere come la rete riesce in primo luogo a trasmettere bit fra più processi, o anche solo fra più calcolatori.
+
+Iniziamo col considerare come nodi \textbf{adiacenti} nella rete comunicano fra di loro, cioè come 2 host con apposite interfacce di rete comunicano attraverso una connessione diretta: il caso più semplice è quello di un link punto-punto fisico.
+
+Ci sono già diversi problemi da analizzare: come rendere la comunicazione \textbf{affidabile} (\textit{framing}, \textit{rilevamento errori} e \textit{correzione}, ecc...).
+Introdurremo quindi il protocollo \textbf{PPP} (\textit{Point to Point Protocol}), i protcolli ad \textbf{accesso multiplo}, e le \textbf{LAN} (\textit{Local Area Network}).
+
+\subsection{Link punto-punto fisici}
+Supponiamo di avere 2 host (2 macchine) che vogliono comunicare fra di loro. Questi saranno provvisti ciascuno di un interfaccia per una porta seriale che potranno comandare (alto o basso), e le loro porte seriali saranno collegate da un link di qualche tipo (rame, fibra ottica, ecc...).
+
+Le porte seriali permettono la \textbf{codifica} di bit attraverso variazioni di stato del mezzo fisico del link.
+
+L'interfaccia della macchina mittente è detta \textbf{trasmettitore}, mentre l'interfaccia della macchina destinatario è detta \textbf{ricevitore}: bisognerà stabilire un protocollo per la comunicazione fra questi.
+
+In questo caso il protocollo è semplice il \textit{trasmettitore} dovrà occuparsi di \textbf{codificare} sequenze di bit in variazioni di stato sul mezzo di link, mentre il \textit{ricevitore} dovrà occuparsi di \textbf{decodificare} tali variazioni di stato riportandole in bit sulla macchina destinatario.
+
+\subsubsection{Data link}
+Una caratteristica fondamentale dei link è che sono \textit{inaffidabili}: il canale di trasmissione non è mai ideale (degradazione del segnale, rumore, interferenze, ecc....) e quindi la sequenza codificata potrebbe arrivare al ricevitore radicalmente cambiata rispetto a quella iniziale.
+
+Chiameremo \textit{bit error rate} la frequenza di bit persi sul mezzo di comunicazione. 
+
+Per gestire l'inaffidabilità introdurremo un livello superiore a quello di \textbf{link fisico}, detto di \textbf{link dati} (\textit{data link} o anche \textit{livello logico}).
+\begin{itemize}
+	\item La prima cosa che prevede il data link è il \textbf{framing}: si divide la comunicazione in \textit{datagrammi} (insiemi di bit), e si incapsulano i datagrammi fra \textit{header} e \textit{trailer} (sostanzialmente intestazioni e terminazioni del datagramma).
+		Nell'\textbf{header} potremmo inserire diverse informazioni: prima fra tutte l'indice del datagramma nell'intero blocco di dati da trasferire.
+		
+		Se la frequenza di errore è comparabile con la lunghezza dei datagrammi, avremo sicuramente perdite di dati: riducendo la lunghezza dei datagrammi potremmo avere più fortuna.
+
+		Questa tecnica introduce chiaramente un certo \textit{overhead} di trasmissione, dato dal dover introdurre header e trailer. Ci permette però di dividere la trasmissione in unità contenute, su cui è più semplice fare controllo degli errori;
+	\item Altri servizi sono forniti per il controllo degli errori di trasmissione: l'\textbf{error detection} mira a rilevare gli errori, mentre l'\textbf{error correction} mira a rilevarli e correggerli. Questo è piuttosto semplice nel caso di trasmissioni binarie: assunto di avere un rilevamento dell'errore granulare al bit, correggerlo significherà semplicemente invertirlo.
+		
+		Una soluzione alternativa è comunque quella della \textbf{ritrasmissione} dei dati in errore, che implica però una comunicazione all'\textit{indietro}, dal ricevitore al trasmettitore per la segnalazione dei frame corrotti.
+
+	\item Ci sono poi altri servizi che potremmo voler fornire: ad esempio il \textbf{controllo di flusso} che permetta di moderare in qualche modo la frequenza di trasmissione. Ad esempio il ricevitore potrebbe voler segnalare al trasmettitore di dover ridurre il bitrate, magari per problemi di overflow.
+
+	\item Infine, vogliamo distinguere se offriamo servizi \textbf{half-duplex} o \textbf{full-duplex}:
+		\begin{itemize}
+			\item \textbf{Half-duplex}: entrambi i nodi possono trasmettere, ma solo uno per volta;
+			\item \textbf{Full-duplex}: entrambi i nodi possono trasmettere, in \textit{parallelo} (quindi contemporaneamente).
+		\end{itemize}
+
+		Configurazioni dove solo un nodo può trasmettere sono dette \textbf{simplex}.
+\end{itemize}
+
+\subsubsection{NIC}
+Il livello \textit{data link} è implementato nella cosiddetta \textbf{NIC} (\textit{Network Interface Card}) all'interno di ogni host sulla rete. Questa implementa il livello data link e di conseguenza il livello fisico. Può essere Ethernet, WiFi, ecc...
+
+La NIC è collegata al bus periferiche di un calcolatore (ad esempio bus PCI) e implementa una o più delle funzionalità offerte dal livello data link.
+Fa questo combinando \textit{hardware}, \textit{software} e \textit{firmware}: l'importante è che sia capace di offrire al calcolatore i datagrammi inviati al livello data link (in questo sia il NIC che il calcolatore vedono il livello data link).
+
+\end{document}
