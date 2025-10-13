@@ -234,7 +234,7 @@
 Il \textit{rilevamento degli errori} (\textbf{error detection}) è il meccanismo attraverso il cui verifichiamo se i dati arrivati attraverso il link fisico sono corretti.
 
 Dobbiamo innanzitutto stabilire un codice di \textbf{rilevamento} degli errori.
-Per ogni datagramma trasmettiamo $d$ bit di dati (i bit $D$) e $r$ bit di \textit{rilevamento errore}, o di \textbf{ridondanza} (i bit $R$). Minuscolo è il numero di bit, maiuscolo è il campo di bit vero e proprio.
+Per ogni frame di livello Datalink trasmettiamo $d$ bit di dati (i bit $D$) e $r$ bit di \textit{rilevamento errore}, o di \textbf{ridondanza} (i bit $R$). Minuscolo è il numero di bit, maiuscolo è il campo di bit vero e proprio.
 Sia i bit $D$ che i bit $R$ vengono trasmessi attraverso il link, che ricordiamo è \textit{suscettibile ad errori}.
 
 Per ricavare i bit $R$ si applica una certa funzione $H()$ (sostanzialmente di \textit{hashing}) sui bit $D$. Assunto che mittente e destinatario usino la stessa funzione $H()$, una volta ricevuti i dati il destinatario potrà applicare $H()$ sui bit $D$ ricevuti e ottenere la sua copia dei bit $R$ da confrontare con quelli ricevuti.
@@ -256,30 +256,32 @@ Vediamo alcune possibili funzioni $H()$ usate per fare rilevamento errori.
 
 		Questo algoritmo funziona bene solo nella circostanza in cui il numero di errori sui bit $d$ è dispari (per quanto ci riguarda, 1). Quando si trasferiscono quantità relativamente basse di bit per parola su canali abbastanza affidabili (8, 16, 24 bit su rame o simili) abbiamo che è abbastanza sicuro. Con parole più grandi chiaramente può essere molto più soggetto ad errori.
 
-	\item \textbf{Checksum}: questo sistema, detto della \textit{"somma di controllo"} viene usato in UDP e TCP. 
+	\item \textbf{Checksum}: questo sistema, detto della \textit{"somma di controllo"} viene usato in UDP e TCP. Non si riferisce principalmente a frame, quindi parleremo di blocchi di dati generici.
 
-		In questo caso si prende ogni pacchetto e si divide in blocchi da 16 bit. Sommando questi blocchi bit-a-bit in \textit{complemento a uno} si ottiene un campo $R$ su $r=16$ bit detto \textit{checksum}, che può essere ricalcolato lato destinatario per fare rilevamento degli errori.
+		In questo caso si prende ogni blocco di dati e si divide in frammenti da $n$ bit. Sommando questi frammenti si ottiene un campo $R$ su $r= n$ bit (quindi modulo $2^n$) detto \textit{checksum}, che può essere ricalcolato lato destinatario per fare rilevamento degli errori.
 
-		Questo metodo è più sensibile rispetto al bit di parità, e viene usato perlopiù a livello di \textit{trasporto} UDP o TCP (più che a livello \textit{datalink}, dove si fanno altri tipi di controlli meno sensibili).
+		Questo metodo è più sensibile rispetto al bit di parità, e viene usato perlopiù a livello di \textit{trasporto} UDP o TCP (più che a livello \textit{data link}, dove si fanno altri tipi di controlli meno sensibili).
 
 	\item \textbf{CRC} (\textit{Cyclic Redundancy Check}): questo è il metodo usato più spesso in ambito di \textit{Datalink}.
 
 		Supponiamo di avere $R$ bit dati, e un \textit{pattern} detto \textbf{generatore} $G$ di $r + 1$ bit (dove ricordiamo che $R$ sono i bit di ridondanza e $r$ il loro numero). Mittente e destinatario dovranno entrambi conoscere il generatore.
 
-		Si calcolano quindi il valore dell'operazione $<D, R>$ come:
+		L'idea è quindi che in fase di trasmissione si prende un numero $R$ di $r$ bit tale che la concatenazione $D|R$ dei bit $D$ ed $R$ sia divisibile per $G$.
+		Notiamo che le somme in CRC si fanno \textit{modulo 2}, quindi senza riporti.
+		In questo caso la relazione appena descritta sarà:
 		$$
-		<D, R> = D \times 2^r \  \mathsf{XOR} \  R
+		D \cdot 2^r \oplus R = nG
 		$$
-		senza ancora sapere quanto vale $R$. # poco chiaro
+		dove $D \cdot 2^r$ è semplicemente lo shift a sinistra di $r$ bit di $D$, $\oplus$ lo XOR (che implementa la somma modulo 2), e $n$ una costante moltiplicativa naturale qualsiasi, che assicura che il lasto sinistro è divisibile per $G$.
 
-		A questo punto il mittente dovrà scegliere i bit $R$ in modo che $<D, R>$ diviso $G$ abbia resto zero: il destinatario potrà quindi calcolarsi $<D, R>$ dai $D$ ed $R$ ottenuti sul link fisico, e noto $G$ effettuare la divisione. Se il resto è diverso da 0, allora si rileva un errore di trasmissione.
+		Quando il destinatarrio riceve il frame la verifica è molto semplice: ha $D$ ed $R$ ottenuti sul link fisico, e noto $G$ può effettuare la divisione. Se il resto è diverso da 0, allora si rileva un errore di trasmissione.
 
-		Vediamo come $R$ viene calcolato nella pratica.
+		Resta quindi da vedere come $R$ viene calcolato nella pratica.
 		Vogliamo:
 		$$
-		D \times 2^r \ \mathsf{XOR} \ R = n G \implies D \times 2^r \ \textsf{XOR} \ R
+		D \times 2^r \oplus R = n G \implies D \times 2^r = n G \oplus R
 		$$
-		per cui $R$ dovrà soddisfare:
+		come ci è concesso dalle proprietà dello XOR, per cui $R$ dovrà soddisfare:
 		$$
 		R = \text{mod}\left( D \times 2^r, G \right)
 		$$
@@ -289,11 +291,11 @@ Vediamo alcune possibili funzioni $H()$ usate per fare rilevamento errori.
 \subsection{Correzione errori}
 Dopo aver discusso il \textit{rilevamento degli errori}, vediamo come procedere nella \textbf{correzione degli errori} in caso se ne rilevino.
 
-La soluzione più semplice sarebbe quella di ritrasmettere i datagrammi sbagliati.
+La soluzione più semplice sarebbe quella di ritrasmettere i frame sbagliati.
 Se poi si avesse un algoritmo di rilevamento errori che restituisse esattamente \textit{quali} bit sono errati, basterebbe commutarli per risolvere gli errori.
 
 In questo caso non serve più un codice a \textit{rilevamento} degli errori, ma un codice a \textbf{correzione} degli errori.
-Per ogni datagramma trasmettiamo $d$ bit di dati (i bit $D$) e $r$ bit di \textit{correzione errore}, o ancora di \textbf{ridondanza} (i bit $EDC$, da \textit{Error Detection Code}).
+Per ogni frame  trasmettiamo $d$ bit di dati (i bit $D$) e $r$ bit di \textit{correzione errore}, o ancora di \textbf{ridondanza} (i bit $EDC$, da \textit{Error Detection Code}).
 
 Questi sono simmetrici al codice definito per il rilevamento errori: la differenza è che dati $D$ ed $EDC$, lato destinatario possiamo rilevare esattamente l'errore di trasmissione (se c'è stato).
 
@@ -349,12 +351,13 @@ Chiaramente i bit $EDC$ nel trailer saranno molti di più: per la precisione $i 
 \subsection{Trasferimento dati}
 Abbiamo visto alcuni algoritmi di \textit{rilevamento errori}, introdotto l'ipotesi di effettuare un \textit{reinvio} dei dati corrotti nel caso di errori, e visto anche un algoritmo di \textit{rilevamento e correzione errori}.
 
-Vediamo adesso come realizzare un livello superiore a quello \textit{datalink}, riportando indietro l'ipotesi del reinvio dati, cioè il cosiddetto livello \textit{transfer} o \textbf{trasferimento}, che considereremo un livello \textit{affidabile}.
+Vediamo adesso come realizzare un livello superiore a quello data link, riportando indietro l'ipotesi del reinvio dati, cioè il cosiddetto livello \textit{transfer} o \textbf{trasferimento}, che considereremo un livello \textit{affidabile}.
 
 Le considerazioni che facciamo adesso saranno quelle che nel modello OSI vengono implementate nel cosiddetto livello \textbf{transport}.
 
-L'idea è quella di usare i servizi offerti dal livello datalink per realizzare un'ulteriore astrazione, quella appunto di \textit{trasferimento affidabile}.
-\textit{"Confezioneremo"} quindi i pacchetti che vogliamo spedire in datagrammi livello datalink provvisti di un opportuno \textit{header}.
+L'idea è quella di usare i servizi offerti dal livello data link per realizzare un'ulteriore astrazione, quella appunto di \textit{trasferimento affidabile}.
+
+Quello che farà la componentistica di livello transport sarà interagire con un \textit{livello superiore} che fornirà \textit{dati}: questi verranno incapsulati in un \textbf{pacchetto}, a sua volta incluso come \textit{payload} di un frame di livello Datalink, e quindi spedito sulla lniea inaffidabile vista finora.
 
 \subsubsection{Primitive di trasferimento}
 Per implementare questo tipo di livello \textit{transfer} ci doteremo quindi di alcune primitive a servizio di un'altro \textit{livello superiore}:
@@ -381,7 +384,7 @@ Iniziamo ad iterare sul nostro protocollo \textit{RDT}.
 Assumiamo come prime ipotesi, largamente semplificate:
 \begin{itemize}
 	\item Non ci sono errori di bit;
-	\item Non ci sono perdite di pacchetti. # chiarisci chi è frame, chi è datagramma e chi è pacchetto
+	\item Non ci sono perdite di frame.
 \end{itemize}
 
 Prevederemo quindi FSM diverse per \textit{trasmettitore} e \textit{ricevitore}:
@@ -395,12 +398,12 @@ L'FSM in questo caso sarà semplice:
 	\includegraphics[scale=0.16]{../figures/rdt1fsm.png}
 \end{center}
 \begin{itemize}
-	\item Il trasmettitore avrà il compito di aspettare la chiamata dall'alto, e una volta arrivata di creare un pacchetto da spedire sulla linea inaffidabile;
+	\item Il trasmettitore avrà il compito di aspettare la chiamata dall'alto, e una volta arrivata di creare un \textit{pacchetto} da spedire sulla linea inaffidabile (incapsulandolo in un opportuno frame);
 	\item Il ricevitore avrà il compito di aspettare anch'esso la chiamata dall'alto, e una volta ricevuta mettersi in ascolto per il pacchetto spedito dal trasmettitore. Una volta arrivato, dovrà estrarre i dati dal pacchetto e consegnarli al livello superiore.
 \end{itemize}
 
 \subsubsection{RDT 2.0}
-Introduciamo un mezzo di trasmissione inaffidabile che potrebbe avere errori di bit, e presumiamo che tale mezzo implementi un qualche livello sottostante (di tipo datalink # datalink maiusc o minusc) che implementa correzione degli errori attraverso CRC o checksum (come visto in 10.1 e 10.2).
+Introduciamo un mezzo di trasmissione inaffidabile che potrebbe avere errori di bit, e presumiamo che tale mezzo implementi un qualche livello sottostante (di tipo data link) che implementa correzione degli errori attraverso CRC o checksum (come visto in 10.1 e 10.2).
 
 Il problema sarà: come riprendersi dagli errori? Abbiamo due modi principali:
 \begin{itemize}

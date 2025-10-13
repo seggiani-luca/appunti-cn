@@ -306,10 +306,11 @@ Chiameremo \textit{bit error rate} la frequenza di bit persi sul mezzo di comuni
 
 Per gestire l'inaffidabilità introdurremo un livello superiore a quello di \textbf{link fisico}, detto di \textbf{link dati} (\textit{data link} o anche \textit{livello logico}).
 \begin{itemize}
-	\item La prima cosa che prevede il data link è il \textbf{framing}: si divide la comunicazione in \textit{datagrammi} (insiemi di bit), e si incapsulano i datagrammi fra \textit{header} e \textit{trailer} (sostanzialmente intestazioni e terminazioni del datagramma).
-		Nell'\textbf{header} potremmo inserire diverse informazioni: prima fra tutte l'indice del datagramma nell'intero blocco di dati da trasferire.
+	\item La prima cosa che prevede il data link è il \textbf{framing}: si divide la comunicazione in \textit{payaload} (insiemi di bit), e si incapsulano i tali payload fra \textit{header} e \textit{trailer} (sostanzialmente intestazioni e terminazioni), andando a formare il cosiddetto \textbf{frame}. Da qui in poi, con frame intenderemo sia l'intero frame che il suo payload a seconda del contesto. 
 		
-		Se la frequenza di errore è comparabile con la lunghezza dei datagrammi, avremo sicuramente perdite di dati: riducendo la lunghezza dei datagrammi potremmo avere più fortuna.
+		Nell'\textbf{header} potremmo inserire diverse informazioni: prima fra tutte l'indice del frame nell'intero blocco di dati da trasferire.
+		
+		Se la frequenza di errore è comparabile con la lunghezza dei frame, avremo sicuramente perdite di dati: riducendo la lunghezza dei frame potremmo avere più fortuna.
 
 		Questa tecnica introduce chiaramente un certo \textit{overhead} di trasmissione, dato dal dover introdurre header e trailer. Ci permette però di dividere la trasmissione in unità contenute, su cui è più semplice fare controllo degli errori;
 	\item Altri servizi sono forniti per il controllo degli errori di trasmissione: l'\textbf{error detection} mira a rilevare gli errori, mentre l'\textbf{error correction} mira a rilevarli e correggerli. Questo è piuttosto semplice nel caso di trasmissioni binarie: assunto di avere un rilevamento dell'errore granulare al bit, correggerlo significherà semplicemente invertirlo.
@@ -328,7 +329,7 @@ Per gestire l'inaffidabilità introdurremo un livello superiore a quello di \tex
 \end{itemize}
 
 \subsubsection{NIC}
-Il livello \textit{data link} è implementato nella cosiddetta \textbf{NIC} (\textit{Network Interface Card}) all'interno di ogni host sulla rete. Questa implementa il livello data link e di conseguenza il livello fisico. Può essere Ethernet, WiFi, ecc...
+Il livello data link è implementato nella cosiddetta \textbf{NIC} (\textit{Network Interface Card}) all'interno di ogni host sulla rete. Questa implementa il livello data link e di conseguenza il livello fisico. Può essere Ethernet, WiFi, ecc...
 
 La NIC è collegata al bus periferiche di un calcolatore (ad esempio bus PCI) e implementa una o più delle funzionalità offerte dal livello data link.
 Fa questo combinando \textit{hardware}, \textit{software} e \textit{firmware}: l'importante è che sia capace di offrire al calcolatore i datagrammi inviati al livello data link (in questo sia il NIC che il calcolatore vedono il livello data link).
