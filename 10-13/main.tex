@@ -379,7 +379,7 @@ Una macchina a stati finiti rappresenta un \textit{automa} dotato di \textbf{sta
 
 Nelle prossime sezioni definiremo \textit{iterativamente} versioni sempre più accurate di RDT rispetto a un qualche protocollo reale.
 
-\subsubsection{RDT 1.0}
+\subsection{RDT 1.0}
 Iniziamo ad iterare sul nostro protocollo \textit{RDT}.
 Assumiamo come prime ipotesi, largamente semplificate:
 \begin{itemize}
@@ -402,7 +402,7 @@ L'FSM in questo caso sarà semplice:
 	\item Il ricevitore avrà il compito di aspettare anch'esso la chiamata dall'alto, e una volta ricevuta mettersi in ascolto per il pacchetto spedito dal trasmettitore. Una volta arrivato, dovrà estrarre i dati dal pacchetto e consegnarli al livello superiore.
 \end{itemize}
 
-\subsubsection{RDT 2.0}
+\subsection{RDT 2.0}
 Introduciamo un mezzo di trasmissione inaffidabile che potrebbe avere errori di bit, e presumiamo che tale mezzo implementi un qualche livello sottostante (di tipo data link) che implementa correzione degli errori attraverso CRC o checksum (come visto in 10.1 e 10.2).
 
 Il problema sarà: come riprendersi dagli errori? Abbiamo due modi principali:
