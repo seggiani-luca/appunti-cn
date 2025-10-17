@@ -1,0 +1,379 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 17-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+
+\subsubsection{Pseudocodice del selective repeat}
+Continuiamo la discussione del selective repeat.
+Per farlo, non usiamo più un approccio FSM, ma descriviamolo in \textit{pseudocodice}.
+
+Vediamo allora il trasmettitore:
+\begin{center}
+\begin{algorithm}
+	\caption{Trasmettitore \textit{selective repeat}}
+\begin{algorithmic}
+	\IF{ci sono dati dall'alto}
+		\STATE Se il prossimo numero di sequenza è nella finestra, invia il pacchetto
+	\ENDIF
+	\IF{timeout$(n)$}
+		\STATE Reinvia il pacchetto $n$ e riavvia il timer
+	\ENDIF
+	\IF{ACK$(n)$ nella finestra}
+		\STATE Marchia il pacchetto $n$ come \textit{ricevuto}
+		\STATE Se era il pacchetto non ricevuto con numero di sequenza minore, avanza la finestra fino al prossimo pacchetto non ricevuto
+	\ENDIF
+\end{algorithmic}
+\end{algorithm}
+\end{center}
+
+\newpage
+
+e quindi il ricevitore:
+\begin{center}
+\begin{algorithm}
+	\caption{Ricevitore \textit{selective repeat}}
+\begin{algorithmic}
+	\IF{ricevuto pacchetto $n$ in finestra}
+		\STATE invia ACK$(n)$
+		\STATE se è fuori ordine, bufferizzalo
+		\STATE se è in ordine, consegna il pacchetto (e quindi i successivi bufferizzati), e avanza la finestra al prossimo pacchetto non ancora ricevuto
+	\ENDIF
+	\IF{ricevuto pacchetto $n$ prima della finestra}
+		\STATE invia ACK$(n)$
+	\ENDIF
+	\IF{ricevuto pacchetto $n$ dopo la finestra}
+		\STATE ignoralo
+	\ENDIF
+\end{algorithmic}
+\end{algorithm}
+\end{center}
+
+Notiamo quindi che sia il trasmettitore che il ricevitore mantengono le loro finestre, il primo per i pacchetti marchiati come da inviare, il secondo per i pacchetti che può bufferizzare.
+
+\subsection{Protocollo PPP}
+Vediamo quindi un protocollo reale di livello \textit{datalink} che implementa le funzionalità che abbiamo descritto finora.
+Questo è il protocollo \textbf{PPP} (\textit{Point-to-Point Protocol}), e viene oggi usato dai router per parlare direttamente l'uno con l'altro.
+
+Le funzionalità del PPP sono:
+\begin{itemize}
+	\item \textbf{Framing} pacchetti: provvede all'incapsulamento dei datagrammi livello network in frame livello datalink. Può portare dati livello network di qualsiasi protocollo di rete (non solo IP);
+	\item \textbf{Trasparenza bit}: è capace di portare qualsiasi pattern di bit nel campo dati;
+	\item \textbf{Rilevamento errori}: c'è ma non c'è correzione;
+	\item \textbf{Verifica connessione}: permette di verificare e segnalare il fallimento del link al livello network;
+	\item \textbf{Negoziamento indirizzi} al livello network: gli host possono imparare e configurare gli indirizzi di rete altrui.
+\end{itemize}
+
+Vediamo che non è presente quanto abbiamo detto sul \textit{trasferimento affidabile} di dati: questo lo rende effettivamente un link \textbf{inaffidabile} (abbiamo visto che questa funzionalità viene reintrodotta a livello \textit{transport}).
+
+In particolare, PPP non è provvisto di:
+\begin{itemize}
+	\item Correzione errori;
+	\item Recupero da errori;
+	\item Controllo di flusso;
+	\item Consegna fuori ordine;
+	\item Comunicazioni \textit{point-multipoint}. 
+\end{itemize}
+
+Ci si aspetta invece che queste funzionalità vengano delegate a protocolli di livello superiore come \textit{TCP}.
+
+\subsubsection{Pacchetto PPP}
+Iniziamo a vedere la struttura di un pacchetto PPP:
+\begin{lstlisting}[style=codestyle]	
+1 byte		1 byte		1 byte		1 byte		 variabile	2 o 4 byte	1 byte
+<flag>		<address>	<control>	<protocol> <info>			<check>			<flag>
+\end{lstlisting}
+
+\begin{itemize}
+	\item I campi \textbf{flag} fanno da delimitatori per il framing;
+	\item Il campo \textbf{address} è effettivamente inutile: il PPP non permette comunicazine \textit{point-multipoint} (più destinatari) e quindi è sempre impostato tutto a 1 (l'indirizzo di \textit{broadcast});
+	\item Il campo \textbf{control} è ugualmente inutile;
+	\item Il campo \textbf{protocol} stabilisce il protocollo di livello superiore da usare (ad esempio TCP);
+	\item Il campo \textbf{info} contiene i dati veri e propri, ed è a dimensione variabile da 0 a 1500 byte (la dimensione massima può essere negoziata);
+	\item Il campo \textbf{check} supporta il CRC per il rilevamento errori.
+\end{itemize}
+
+Notiamo che garantire la \textit{trasparenza bit} non è immediato: se si spedisse un campo info che contiene una copia esatta del marcatore di flag terminale che ci aspettiamo, come dovrebbe fare il ricevitore a capire che tale campo va spedito e non è effettivamente il terminatore?
+
+Risolviamo il problema sfruttando il \textbf{byte stuffing/unstuffing}, meccanismo per noi sostanzialmente analogo a quello delle \textit{sequenze di escape}.
+Si antepone quindi al byte problematico un'altro specifico byte, di escape, che il ricevitore potrà poi interpretare come segnalatore (di prendere \textit{"alla lettera"} il byte sucessivo), e quindi buttare via.
+
+\subsection{Link multipli}
+Veniamo ora a descrivere le reti formate da più \textbf{link di accesso}.
+La prima distinzione che dobbiamo fare è fra i due tipi di link che possiamo incontrare:
+\begin{itemize}
+	\item Link \textbf{punto-punto}: sono del tipo che abbiamo visto finora, e collegano solo due dispositivi fra di loro;
+	\item Link \textbf{broadcast} (detti anche a \textit{mezzo condiviso}): sono tipici di tecnologie come il \textit{vecchio Ethernet}, le reti mobili e reti wireless come 802.11 (\textit{WiFi}). In questo tipo di rete i dispositivi possono parlare con tutti gli altri dispositivi, contemporaneamente.  
+\end{itemize}
+
+Il problema delle reti broadcast è chiaramente l'\textbf{interferenza}: si possono verificare \textit{collisioni} se un nodo riceve 2 o più segnali contemporaneamente.
+
+\subsubsection{Protocolli MAC}
+Dobbiamo quindi definire un protocollo di accesso multiplo, cioè un \textbf{algoritmo distribuito} che determini come i nodi condividono il canale (decida quale nodo può trasettere).
+Il problema è che tale protocollo deve sfruttare comunicazione sul canale condiviso stesso, in quanto non abbiamo sempre a disposizione un altro canale \textit{fuori banda} da usare per la coordinazione delle comunicazioni. 
+
+Quello che desideriamo è, dato un canale ad accesso multiplo \textbf{MAC} (\textit{Multiple Access Channel}) con capacità di $R$ bit al secondo, che:
+\begin{enumerate}
+	\item Quando un nodo vuole trasmettere, può farlo a capacità $R$;
+	\item Quando $M$ nodi vogliono trasmettere, questi possono farlo a capacità $R/M$;
+	\item Il sistema sia completamente decentralizzato: non ci siano nodi speciali che coordinano le comunicazioni, né clock di sincronizzazione;
+	\item Il sistema sia \textit{semplice}.
+\end{enumerate}
+
+Chiameremo i protocolli che ci permettono di fare ciò protocolli \textbf{MAC} (acronimo già visto).
+
+\subsubsection{Tassonomia dei MAC}
+Esistono tre classi principali di protocolli MAC:
+\begin{enumerate}
+	\item \textbf{Partizionamento canali}: si divide il canale in \textit{"pezzi"} (slot temporali, bande di frequenza), e si alloca ogni \textit{"pezzo"} all'uso esclusivo di un nodo.
+		Un idea interessante è quella della sovrapposizione di \textbf{codice}: in questo caso ogni nodo parla usando una codifica particolare, e si riesce a distinguere fra nodi rilevanto tali codifiche;
+	\item \textbf{Accesso casuale}: il canale non viene diviso e si permettono le collisioni. In questo caso chiaramente l'approccio alla trasmissione sarà di:
+		\begin{itemize}
+			\item Rilevare quando il canale è libero;
+			\item Aspettare un quanto temporale (sperabilmente piccolo e casuale, in modo da ridurre le collisioni);
+			\item Iniziare a trasmettere.
+		\end{itemize}
+
+		In questo caso chiaramente bisogna dotarsi di un sistema per \textit{recuperare} le collisioni, che inevitabilmente prima o poi accadranno;
+	\item \textbf{Turni}: i nodi si dividono a turni, ma i nodi con più dati da inviare possono prendere turni più lunghi.
+\end{enumerate}
+
+\subsubsection{Protocollo TDMA}
+Vediamo il primo protocollo MAC, il \textbf{TDMA} (\textit{Time Division Multiple Access}). Questo fa parte della categoria (1) dei protocolli MAC, e quindi è a \textit{partizionamento canali}. 
+
+Si fornisce l'accesso al canale di accesso in \textit{round}.
+Ogni stazione otiene uno slot di accesso a lunghezza fissa in ogni round.
+Gli slot non utilizzati tengono il canale a riposo.
+
+Con questo protocollo riusciamo a soddisfare i primi 2 requisiti che ci eravamo dati. La decentralizzazione (requisito 3) non è immediata, in quanto bisogna capire quando i round iniziano e l'ordine di comunicazione ad ogni round.
+Immaginiamo che i nodi riescano comunque a coordinarsi automaticamente.
+Sicuramente il protocollo è pero semplice (requisito 4).
+
+\end{document}
