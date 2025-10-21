@@ -1,0 +1,391 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 21-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Riprendiamo la discussione dei protocolli MAC.
+
+\subsubsection{Protocollo FDMA}
+Avevamo parlato del protocollo \textit{TDMA}. Adesso vediamone la versione in partizionamento di stretto: l'\textbf{FDMA} (\textit{Frequency Division Multiple Access}).
+# non l' ha fatto
+
+\subsection{MAC ad acesso casuale}
+Veniamo quindi a discutere i protocolli ad \textbf{accesso casuale}.
+In questo caso ipotizziamo che:
+\begin{itemize}
+	\item Quando un nodo ha un pacchetto, vuole trasmetterlo al bitrate massimo $R$;
+	\item Non c'è alcun tipo di coordinazione \textit{a priori} dei nodi.
+\end{itemize}
+
+In questo caso, chiaramente si incorre nel problema delle \textit{collisioni}.
+
+I protocolli \textbf{MAC random access} specificano come:
+\begin{itemize}
+	\item Rilevare collisioni;
+	\item Recuperare dalle collisioni (ad esempio ritrasmettendo con ritardi casuali).
+\end{itemize}
+
+Esempi di protcolli MAC random access sono \textbf{ALOHA} (originariamente acronimo \textit{Additive Links On-line Hawaii Area}) e \textbf{CSMA} (\textit{Carrier Sense Multiple Access}).
+
+\subsubsection{Protocollo ALOHA slotted}
+Il protocollo \textbf{ALOHA} (\textit{Additive Links On-Line Hawaii Area}) nasce da un progetto di Norman Abramson, per coordinare le comunicazioni fra le sedi dell'università delle Hawaii.
+
+Vediamo la versione di ALOHA detta \textbf{ALOHA slotted} (tempo diviso in \textit{slot}).
+Assumiamo che:
+\begin{itemize}
+	\item Tutti i frame hanno la solita dimensione prefissata;
+	\item Il tempo è diviso in slot di dimensioni uguali (corrispondenti al tempo necessario a trasmettere 1 frame);
+	\item I nodi iniziano a trasmettere solo all'inizio degli slot;
+	\item I nodi sono sincronizzati;
+	\item Se 2 o più nodi iniziano a trasmettere all'inizio di uno slot, tutti gli slot rilevano una collisione.
+\end{itemize}
+
+La modalità di operazione dei nodi in ALOHA è quindi la seguente:
+\begin{itemize}
+	\item Quando un nodo ottiene un frame da trasmettere, lo trasmette al prossimo slot;
+	\item Se non c'è collisione, la trasmissione va a buon fine e il frame viene trasmesso;
+	\item Se c'è collisione, il nodo ritrasmette il frame in ogni slot seguente con un certa probabilità $p$ finché la trasmissione non riesce.
+\end{itemize}
+
+Le collisioni vengono verificate controllando se si riceve un ACK al termine della trasmissione: notiamo che questo rende identici (dal punto di vista del trasmettitore) gli errori di trasmissione di ACK e le collisioni. I trasmettitori in ALOHA assumono che ci sia comunque bisogno di ritrasmettere.
+
+I pro dell'approccio sono che ogni nodo può trasmettere al bitrate $R$ completo (1), il sistema è altamente decentralizzato (3) (assunta sincronizzazione), ed è semplice (4).
+
+I contro sono che le collisioni riducono il bitrate effettivo, sprecando slot e quindi impedendo che $M$ nodi possano trasmettere a capacità $R/M$ (3). Inoltre, si possono verificare slot fermi. Infine, notiamo che abbiamo bisogno di sincronizzazione di clock o comunque una sincronia che permetta ai nodi di capire quando gli slot iniziano.
+
+\subsubsection{Efficienza di ALOHA slotted}
+Facciamo alcune considerazioni quantitative sull'efficienza del protocollo appena visto.
+Assumiamo che $N$ nodi vogliano trasmettere frame negli slot con probabilità $p$.
+
+La probabilità che ogni nodo trasmetta con successo in uno slot sarà:
+$$
+p_\text{nodo} = p(1 - p)^{N - 1}
+$$
+per cui la probabilità che un \textit{qualsiasi} nodo trasmetta con successo in uno slot sarà:
+$$
+p_{\text{nodi}} = N p(1 - p)^{N - 1}
+$$
+
+Vogliamo quindi trovare $p^*$ che massimizza $p_\text{nodi}$.
+Derivando $p_\text{nodi}$ su $p$ si ha:
+$$
+\frac{d}{dp} p_\text{nodi} = 
+$$
+che imponiamo uguale a zero: # finisci
+$$
+\frac{d}{dp} p_\text{nodi} = 0 \implies 
+$$
+
+\subsubsection{Protocollo ALOHA pure}
+Eliminiamo l'ipotesi della sincronizzazione dal protocollo ALOHA in versione slotted: in questo caso, appena arriva un frame, il nodo inizia subito a trasmettere.
+Chiamiamo questo protocollo \textbf{ALOHA pure}.
+
+La probabilità delle collisioni in questo caso incrementa: ogni frame inviato al tempo $t_0$ collide con i frame inviati fra $[t_0 - 1, t_0 + 1]$ (dove l'unita corrisponde allo slot temporale dedicato ad un frame).
+
+\subsubsection{Efficienza di ALOHA pure}
+# divertiti coi calcoli
+
+\par\medskip
+
+Abbiamo quindi trovato un protocollo che è molto più semplice e decentralizzato (non richiede sincronizzazione), ma ha un utilizzazione del canale di comuniazione che è di molto minore della versione slotted.
+
+\subsubsection{Protocollo CSMA}
+Il protocollo \textbf{CSMA} (\textit{Carrier Sense Multiple Access}) prevede di \textit{ascoltare} prima di trasmettere: in questo caso si può rilevare la condizione del canale condiviso prima di provare ad accedervi.
+In particolare, dopo aver ascoltato:
+\begin{itemize}
+	\item Se il canale è rilevato fermo, si trasmette l'intero frame;
+	\item Se il canae è rilevato attivo, si differisce la trasmissione ad un secondo momento.
+\end{itemize}
+
+Questo è in qualche modo analogo al modo in cui gli umani usano mezzi condivisi (ad esempio l'etere quando parlano a voce): prima si ascolta cosa dicono gli altri, e poi si parla. La regola fondamentale è \textit{"non interrompere gli altri!"}.
+
+CSMA ha una versione detta \textbf{CSMA/CD}, cioè \textit{CSMA with Collision Detection}.
+In questo caso le collisioni vengono rilevate entro qualche tempo limitato.
+Le trasmissioni in collisione vengono abortite, riducendo lo spreco del canale.
+Questo è piuttosto facile per i mezzi cablati, più difficile per i mezzi wireless. 
+
+Il CSMA/CD è necessario in quanto le collisioni possono comunque accadere dopo l'ascolto del canale (\textit{carrier sensing}): i tempi di propagazione significano infatti che due nodi potrebbero non sentire le trasmissioni appena iniziate l'uno dell'altro.
+
+\subsubsection{Rilevamento collisioni CSMA}
+Per rilevare le collisioni si potrebbe pensare di mettere a comparatore il segnale che il nodo sta trasmettendo e quello che sta ricevendo: se il delta è maggiore di qualche soglia, dev'essere che c'è un altra sorgente di segnale e quindi siamo in collisione.
+
+In verità l'approccio effettivamente usato è più semplice: invece di parlare di \textit{segnali}, si parla di \textit{potenze} rilevate sul mezzo di trasmissione. L'approccio è comunque funzionale: se il trasmettitore si aspetta di poter erogare una potenza $P$, rilevando potenze $P^* >> P$ sul mezzo potremo concludere con un certo grado di sicurezza di essere in collisione.
+
+\subsubsection{CSMA su Ethernet}
+Vediamo quindi l'implementazione di CSMA sul mezzo Ethernet.
+Vediamo cosa fa la \textbf{NIC} (\textit{Network Interface Card}) quando vuole trasmettere un frame.
+\begin{enumerate}
+	\item La NIC riceve il datagramma dal livello network, e ne crea un frame (siamo a livello datalink);
+	\item La NIC ascolta il mezzo (\textit{channel sensing}):
+		\begin{itemize}
+			\item Se il mezzo è rilevato fermo, inizia con la trasmissione del frame;
+			\item Se il mezzo è rilevato attivo, si aspetta finché non è fermo, e quindi si trasmette.
+		\end{itemize}
+	\item Se la NIC riesce a trasmettere l'intero frame senza collisioni, abbiamo finito;
+	\item Se si verificano altre trasmissioni mentre si trasmette, cioè una \textit{collisione} (vedi sezione sopra), si abortisce la trasmissione e invia il cosiddetto segnale di \textbf{jam}: questo è un segnale a potenza più alta della media che ha lo scopo di avvisare gli altri trasmettitori che una collisione si è verificata;
+	\item Dopo aver abortito, la NIC entra in un \textbf{backoff esponenziale}:
+		\begin{itemize}
+			\item Dopo la $m$-esima collisione, sceglie un $K$ casuale fra $\{ 0, 1, 2, ..., 2^m - 1 \}$ (binario). Quindi il NIC aspetta per $K \times 512$ tempi bit (per \textit{tempo bit} intendiamo il tempo necessario a trasmettere un bit con bitrate $R$ di mezzo), e quindi torna al passo (2);
+			\item Il risultato è che più collisioni si hanno, più lungo è in media l'intervallo di backoff (attesa). 
+		\end{itemize}
+	Chiaramente, per implementare tale politica dovremo dotarci di un contatore per le $m$ collisioni rilevate. Inoltre, sarà utile prevedere una dimensione massima per la finestra dove scegliere $K$, cioè un numero di collisioni oltre cui gli intervalli di backoff non continuano ad aumentare (in Ethernet questo numero è 10, per cui il tempo massimo è $2^10 -1 = 1023$ tempi bit).
+\end{enumerate}
+
+Vediamo cosa abbiamo ottenuto con CSMA su Ethernet: il requisito di completa decentralizzazione è soddisfatto (3), il sistema è effettivamente abbastanza semplice (4), e le frequenze di trasmissione sono perlopià soddisfatte, salvo collisioni da recuperare (requisiti (1) e (2)). Il problema rimasto è quello degli alti carichi: il backoff esponenziale implica che il sistema può rallentare fino a troughput nulli se si verificano collisioni particolarmente gravi (quindi inevitabilmente quando ci sono molti nodi). 
+
+\subsection{MAC a turni}
+Veniamo quindi ai protocolli MAC basati sui turni.
+
+\subsubsection{Polling}
+Come primo esempio vediamo il meccanismo del \textbf{polling}.
+Prevediamo un nodo, detto \textit{master}, che invita gli altri nodi (detti \textit{slave}) a trasmettere a turno.
+
+Questo approccio è usato spesso per dispositivi \textit{"stupidi"} (è usato ad esempio in Bluetooth).
+
+Per quando riguarda i nostri requisiti, non è assolutamente decentralizzato (3), è abbastanza efficiente (requisiti (1) e (2)) ed è sempre abbastanza semplice (4).
+
+Si comporta bene agli alti carichi (il nodo centralizzato governa gli altri assicurando throughput massimo) ma non ai bassi (si sprecano molti turni), proprio come TDMA (sezione 12.3.1).
+
+I problemi sono poi l'\textit{overhead} dato dal polling, la \textit{latenza} introdotta e il fatto che il master rappresenta un \textit{single point of failure}.
+Quest'ultimo problema potrebbe essere risolto prevedendo un algoritmo di \textit{rielezione} da mettere in esecuzione al momento della morte del master.
+Questo, però, va chiaramente in contro al requisito (4) (semplicità).
+
+\subsubsection{Passaggio di token}
+Un altro modo per implementare comunicazioni a turni è il \textbf{token passing}.
+Questo token (di controllo) rappresenta un qualche segnalatore che chi vuole trasmettere deve possedere per poterlo fare.
+Il token viene passato da un nodo all'altro, sequenzialmente, in modo che tutti i nodi possano parlare.
+
+I problemi principali saranno quindi la \textit{latenza}, la \textit{gestione} del token stesso, nonché il fatto che questo rappresenta nuovamente un \textit{single point of failure} per l'intero sistema (se il token va perso, chi può parlare?).
+
+La latenza si ha dal fatto che il token deve essere passato, e questo rappresenta un \textit{overhead} (il tempo passato a passarsi il token non è passato a trasmettere).
+
+
+
+\end{document}
