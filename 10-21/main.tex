@@ -237,7 +237,7 @@ Avevamo parlato del protocollo \textit{TDMA}. Adesso vediamone la versione in pa
 
 In questo caso si divide il canale in bande di frequenze. Le bande risultano così ugualmente distribuite fra tutti i nodi, e allo stesso modo il bitrate è diviso fra le bande.
 
-IN questo il FDMA ha gli stessi pro e contro del TDMA: i primi 2 requisiti sono soddisfatti direttamente. La centralizzazione (3) è sempre un problema in quanto qualcuno dovrà almeno definire quali sono le bande. Infine, il protocollo è nuovamente semplice (4) (ammesso che uno conosca la trasformata di Fourier discreta). 
+IN questo il FDMA ha gli stessi pro e contro del TDMA: il requisito (2) è soddisfatto direttamente. La centralizzazione (3) è sempre un problema in quanto qualcuno dovrà almeno definire quali sono le bande. Infine, il protocollo è nuovamente semplice (4) (ammesso che uno conosca la trasformata di Fourier discreta). 
 
 \subsection{MAC ad accesso casuale}
 Veniamo quindi a discutere i protocolli ad \textbf{accesso casuale}.
@@ -287,7 +287,7 @@ I contro sono che le collisioni riducono il bitrate effettivo, sprecando slot e 
 Facciamo alcune considerazioni quantitative sull'efficienza del protocollo appena visto.
 Assumiamo che $N$ nodi vogliano trasmettere frame negli slot con probabilità $p$.
 
-La probabilità che ogni nodo trasmetta con successo in uno slot sarà:
+La probabilità che un nodo trasmetta con successo in uno slot sarà:
 $$
 p_\text{nodo} = p(1 - p)^{N - 1}
 $$
@@ -306,27 +306,132 @@ che imponiamo uguale a zero:
 $$
 \frac{d}{dp} p_\text{nodi} = N (1 - p)^{N - 2} \left( (1 - p) - p(N - 1) \right) = 0
 $$
-Ora, $(1 - p)^{N - 2}$ è sempre diverso da 0, salvo il caso $p = 1$ (che però sarebbe troppo facile, significherebbe che tutti i nodi ritrasmettono sempre, e le collisioni sono quindi assicurate).
+Ora, $(1 - p)^{N - 2}$ è sempre diverso da 0, salvo il caso $p = 1$ (che però sarebbe troppo facile, significherebbe che tutti i nodi ritrasmettono sempre, e le collisioni sarebbero quindi assicurate).
 Inoltre, a meno che la nostra rete non sia banale, $N \neq 0$.
 Poniamo quindi $p \neq 1 \implies (1 - p)^{N - 2} \neq 0$, $N \neq 0$ e cancelliamo i rispettivi termini:
 $$
-N \left( (1 - p) - p(N - 1) \right) = 0 \implies
+(1 - p) - p(N - 1) = 1 - p - pN + p = 1 - pN = 0 \, \Rightarrow \, pN = 1 \, \Rightarrow \, p = \frac{1}{N} 
 $$
+Per cui $p^* = \frac{1}{N}$ è la probabilità ottima dati $N$ nodi.
 
-# finisci!!!
+Sostituiamo quindi $p^*$ ottima in $p_\text{nodi}$ per trovare la formula della probabilità ottima che non ci siano collisioni ad ogni turno:
+$$
+p_\text{nodi} = N \frac{1}{N} \left( 1 - \frac{1}{N} \right)^{N - 1} = \left( 1 - \frac{1}{N} \right)^{N - 1}
+$$
+Prendiamo quindi il limite per vedere qual'è l'efficienza ottima a $N \rightarrow +\infty$:
+$$
+\lim_{N \rightarrow + \infty} p_{\text{nodi}} = \lim_{N \rightarrow + \infty} \left( 1 - \frac{1}{N} \right)^{N - 1} = \frac{1}{e}
+$$
+L'occhio vispo del matematico si renderà subito conto che questo non è altro che la versione negativa del limite di Nepero (si rimanda ai testi di analisi per le dovute dimostrazioni), per cui l'utilizzazione complessiva nel limite di infiniti dispositivi (per quanto ci riguarda il caso peggiore) sarà $\frac{1}{e} \approx 37\%$, che è molto poco!
 
 \subsubsection{Protocollo ALOHA pure}
-Eliminiamo l'ipotesi della sincronizzazione dal protocollo ALOHA in versione slotted: in questo caso, appena arriva un frame, il nodo inizia subito a trasmettere.
+Eliminiamo l'ipotesi della sincronizzazione dal protocollo ALOHA in versione slotted: in questo caso, appena arriva un frame, il nodo inizia subito a trasmettere. Nel caso di collisioni, finisce la sua trasmissione (o aspetta il tempo frame) e ritrasmette con probabilità $p$. Essenzialmente, abbiamo il comportamento di ALOHA slotted ma con tempi di inizio casuali.
 Chiamiamo questo protocollo \textbf{ALOHA pure}.
 
-La probabilità delle collisioni in questo caso incrementa: ogni frame inviato al tempo $t_0$ collide con i frame inviati fra $[t_0 - 1, t_0 + 1]$ (dove l'unita corrisponde allo slot temporale dedicato ad un frame).
+Questa soluzione è più facilmente implementabile nella realta, in quanto è irrealistico pensare che più dispositivi (magari su reti \textit{wireless}) possano sincronizzarsi efficientemente e in maniera affidabile al tempo frame.
+
+La probabilità delle collisioni in questo caso incrementa: ogni frame inviato al tempo $t_0$ collide con i frame inviati fra $[t_0 - 1, t_0 + 1]$ (dove l'unità corrisponde allo slot temporale dedicato ad un frame, cioè lavoriamo sempre con periodo tempo di frame).
 
 \subsubsection{Efficienza di ALOHA pure}
-# divertiti coi calcoli
+Ripetiamo le considerazioni matematiche fatte in 13.1.2 su ALOHA slotted, stavolta riferendoci ad ALOHA pure.
+La differenza principale dal punto di vista matematico sarà che i frame possono iniziare a venire trasmessi in qualsiasi momenti, e non in \textit{round} temporali discreti.
+
+Abbiamo quindi accennato al fatto che ogni frame inviato al tempo $t_0$ collide con i frame inviati fra $[t_0 - 1, t_0 + 1]$, considerata come unità di tempo il tempo frame (i frame saranno comunque di dimensione prefissata, per cui il tempo frame sarà costante).
+
+Gli slot temporali che dobbiamo considerare per le collisioni sono quindi 2:
+$$
+[t_0 - 1, t_0) \cup (t_0, t_0 + 1]
+$$
+Ognuno di questi slot temporali equivale al tempo frame, e come abbiamo detto in ogni slot di tempo frame i nodi provano a trasmettere con probabilità $(1 - p)$.
+Il risultato è che la probabilità complessiva che un nodo trovi il mezzo libero (non incorra in collisioni) è $(1 - p)^{2(N - 1)}$.
+
+Si ha quindi che la probabilità che un nodo trasmetta con successo in uno slot sarà:
+$$
+p_\text{nodo} = p (1 - p)^{2(N - 1)}
+$$
+per cui la probabilità che un \textit{qualsiasi} nodo trasmetta con successo in uno slot sarà:
+$$
+p_\text{nodi} = N p (1 - p)^{2(N - 1)}
+$$
+
+Vogliamo quindi trovare $p^*$ che massimizza $p_\text{nodi}$.
+Derivando $p_\text{nodi}$ su $p$ si ha:
+$$
+\frac{d}{dp} \, p_\text{nodi} = N (1 - p)^{2 (N - 1)} - 2 N  (N - 1) (1 - p)^{2(N - 1) - 1}
+$$
+$$
+= N (1 - p)^{2N - 2} - 2 N p (N - 1) (1 - p)^{2N - 3}
+= N (1 - p)^{2N - 3} \left( (1 - p) - 2 p (N - 1) \right)
+$$
+che imponiamo uguale a zero:
+$$
+\frac{d}{dp} p_\text{nodi} = N (1 - p)^{2N - 3} \left( (1 - p) - 2 p (N - 1) \right) = 0
+$$
+Su $(1 - p)^{2N - 3}$ e $N$ valgono le stesse considerazioni già fatte.
+Poniamo quindi $p \neq 1 \implies (1 - p)^{2N - 3} \neq 0$, $N \neq 0$ e cancelliamo i rispettivi termini:
+$$
+(1 - p) - 2 p(N - 1) = 1 - p - 2 pN + 2 p = 1 + p - 2 pN = 0 \, \Rightarrow \, p(1 - 2n) = -1 \, \Rightarrow \, p = \frac{1}{2N - 1} 
+$$
+Per cui $p^* = \frac{1}{2N - 1}$ è la probabilità ottima dati $N$ nodi.
+
+Sostituiamo quindi $p^*$ ottima in $p_\text{nodi}$ per trovare la formula della probabilità ottima che non ci siano collisioni ad ogni turno:
+$$
+p_\text{nodi} = N \frac{1}{2N - 1} \left( 1 - \frac{1}{2N - 1} \right)^{2 (N - 1)} = \frac{N}{2N - 1} \left( 1 - \frac{1}{2N - 1} \right)^{2N - 2}
+$$
+Prendiamo quindi il limite per vedere qual'è l'efficienza ottima a $N \rightarrow +\infty$:
+$$
+\lim_{N \rightarrow + \infty} p_{\text{nodi}} = \lim_{N \rightarrow + \infty} \frac{N}{2N - 1} \left( 1 - \frac{1}{2N - 1} \right)^{2N - 2}
+$$
+
+Questo limite è leggermente più complicato di quello visto prima. Dividiamo in due termini:
+$$
+\lim_{N \rightarrow + \infty} p_\text{nodi} = 
+\lim_{N \rightarrow + \infty} \frac{N}{2N - 1} \cdot 
+\lim_{N \rightarrow + \infty} \left( 1 - \frac{1}{2N - 1} \right)^{2N - 2}
+$$
+Questo si può fare finche entrambi i termini ammettono limite finito. Dimostreremo che questo è il caso.
+\begin{itemize}
+	\item Prendiamo il primo termine:
+		$$
+		\lim_{N \rightarrow + \infty} \frac{N}{2N - 1} = \frac{1}{2}
+		$$
+		e questo è banale;
+	\item Prendiamo il secondo limite:
+		$$
+		\lim_{N \rightarrow + \infty} \left( 1 - \frac{1}{2N - 1} \right)^{2N - 2}
+		= \lim_{N \rightarrow + \infty} \left( 1 - \frac{1}{2N - 1} \right)^{2N - 1} \cdot \left( 1 - \frac{1}{2N - 1} \right)^{-1}
+		$$
+		Possiamo nuovamente dividere:
+		$$
+		= \lim_{N \rightarrow + \infty} \left( 1 - \frac{1}{2N - 1} \right)^{2N - 1} \cdot \lim_{N \rightarrow + \infty} \left( 1 - \frac{1}{2N - 1} \right)^{-1}
+		$$
+		\begin{itemize}
+			\item Di questi, il primo limite è sempre la versione negativa del limite di Nepero, fatta la sostituzione $x = 2N - 1$:
+		$$
+		\lim_{N \rightarrow + \infty} \left( 1 - \frac{1}{2N - 1} \right)^{2N - 1} = \lim_{x \rightarrow + \infty} \left( 1 - \frac{1}{x} \right)^{x} = \frac{1}{e}
+		$$
+	\item Il secondo è invece banale:
+		$$
+		\lim_{N \rightarrow + \infty} \left( 1 - \frac{1}{2N - 1} \right)^{-1} = 1
+		$$
+		\end{itemize}
+		Si ha quindi che il secondo limite è complessivamente:
+		$$
+		\frac{1}{e} \cdot 1 = \frac{1}{e}
+		$$
+\end{itemize}
+
+Il limite è quindi:
+$$
+\lim_{N \rightarrow + \infty} p_\text{nodi} = \frac{1}{2} \cdot \frac{1}{e} = \frac{1}{2e}
+$$
+
+Abbiamo quindi che l'utilizzazione complessiva nel limite di infiniti dispositivi sarà $\frac{1}{2e} \approx 18\%$: tanti calcoli per ottenere una brutta notizia!
 
 \par\medskip
 
-Abbiamo quindi trovato un protocollo che è molto più semplice e decentralizzato (non richiede sincronizzazione), ma ha un utilizzazione del canale di comuniazione che è di molto minore della versione slotted.
+Abbiamo quindi trovato un protocollo che è molto più semplice e decentralizzato (non richiede sincronizzazione), ma ha un utilizzazione del canale di comunicazione che è di molto minore della versione slotted.
+Potremmo voler trovare un approccio migliore.
 
 \subsubsection{Protocollo CSMA}
 Il protocollo \textbf{CSMA} (\textit{Carrier Sense Multiple Access}) prevede di \textit{ascoltare} prima di trasmettere: in questo caso si può rilevare la condizione del canale condiviso prima di provare ad accedervi.
