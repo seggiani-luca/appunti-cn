@@ -399,7 +399,7 @@ L'FSM in questo caso sarà semplice:
 \end{center}
 \begin{itemize}
 	\item Il trasmettitore avrà il compito di aspettare la chiamata dall'alto, e una volta arrivata di creare un \textit{pacchetto} da spedire sulla linea inaffidabile (incapsulandolo in un opportuno frame);
-	\item Il ricevitore avrà il compito di aspettare anch'esso la chiamata dall'alto, e una volta ricevuta mettersi in ascolto per il pacchetto spedito dal trasmettitore. Una volta arrivato, dovrà estrarre i dati dal pacchetto e consegnarli al livello superiore.
+	\item Il ricevitore avrà il compito di aspettare la chiamata dal basso, e una volta ricevuta ricevere il pacchetto spedito dal trasmettitore. Una volta arrivato, dovrà estrarre i dati dal pacchetto e consegnarli al livello superiore.
 \end{itemize}
 
 \subsection{RDT 2.0}
@@ -431,7 +431,7 @@ Lato ricevitore l'FSM sarà invece:
 	\includegraphics[scale=0.18]{../figures/rdt2fsm2.png}
 \end{center}
 \begin{itemize}
-	\item Il ricevitore dovrà restare in attesa della chiamata dall'alto, e rispondere quindi ai pacchetti ricevuti su linea inaffidabile dal trasmettitore;
+	\item Il ricevitore dovrà restare in attesa della chiamata dal basso, e rispondere quindi ai pacchetti ricevuti su linea inaffidabile dal trasmettitore;
 	\item Valutata la correzione degli errori sul pacchetto ricevuto, dovrà:
 		\begin{itemize}
 			\item Inviare il NAK nel caso il pacchetto sia corrotto;

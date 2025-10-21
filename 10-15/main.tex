@@ -270,7 +270,7 @@ Il ricevitore potrà a questo punto eseguire il seguente automa:
 
 In questo caso il flusso è:
 \begin{itemize}
-	\item Si aspetta per il primo pacchetto (dopo la chiamata dall'alto), si invia un pacchetto ACK nel caso questo arrivi integro e con numero di sequenza 0, NAK altrimenti;
+	\item Si aspetta per il primo pacchetto (dopo la chiamata dal basso), si invia un pacchetto ACK nel caso questo arrivi integro e con numero di sequenza 0, NAK altrimenti;
 	\item Si aspetta il secondo pacchetto, comportandoci in maniera analoga, ma verificando che il numero di sequenza sia 1.
 \end{itemize}
 
