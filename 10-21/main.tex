@@ -234,9 +234,12 @@ Riprendiamo la discussione dei protocolli MAC.
 
 \subsubsection{Protocollo FDMA}
 Avevamo parlato del protocollo \textit{TDMA}. Adesso vediamone la versione in partizionamento di stretto: l'\textbf{FDMA} (\textit{Frequency Division Multiple Access}).
-# non l' ha fatto
 
-\subsection{MAC ad acesso casuale}
+In questo caso si divide il canale in bande di frequenze. Le bande risultano così ugualmente distribuite fra tutti i nodi, e allo stesso modo il bitrate è diviso fra le bande.
+
+IN questo il FDMA ha gli stessi pro e contro del TDMA: i primi 2 requisiti sono soddisfatti direttamente. La centralizzazione (3) è sempre un problema in quanto qualcuno dovrà almeno definire quali sono le bande. Infine, il protocollo è nuovamente semplice (4) (ammesso che uno conosca la trasformata di Fourier discreta). 
+
+\subsection{MAC ad accesso casuale}
 Veniamo quindi a discutere i protocolli ad \textbf{accesso casuale}.
 In questo caso ipotizziamo che:
 \begin{itemize}
@@ -296,12 +299,21 @@ $$
 Vogliamo quindi trovare $p^*$ che massimizza $p_\text{nodi}$.
 Derivando $p_\text{nodi}$ su $p$ si ha:
 $$
-\frac{d}{dp} p_\text{nodi} = 
+\frac{d}{dp} \, p_\text{nodi} = N(1 - p)^{N - 1} - p N (N - 1) (1 - p)^{N - 2}
+= N (1 - p)^{N - 2} \left( (1 - p) - p(N - 1) \right)
 $$
-che imponiamo uguale a zero: # finisci
+che imponiamo uguale a zero:
 $$
-\frac{d}{dp} p_\text{nodi} = 0 \implies 
+\frac{d}{dp} p_\text{nodi} = N (1 - p)^{N - 2} \left( (1 - p) - p(N - 1) \right) = 0
 $$
+Ora, $(1 - p)^{N - 2}$ è sempre diverso da 0, salvo il caso $p = 1$ (che però sarebbe troppo facile, significherebbe che tutti i nodi ritrasmettono sempre, e le collisioni sono quindi assicurate).
+Inoltre, a meno che la nostra rete non sia banale, $N \neq 0$.
+Poniamo quindi $p \neq 1 \implies (1 - p)^{N - 2} \neq 0$, $N \neq 0$ e cancelliamo i rispettivi termini:
+$$
+N \left( (1 - p) - p(N - 1) \right) = 0 \implies
+$$
+
+# finisci!!!
 
 \subsubsection{Protocollo ALOHA pure}
 Eliminiamo l'ipotesi della sincronizzazione dal protocollo ALOHA in versione slotted: in questo caso, appena arriva un frame, il nodo inizia subito a trasmettere.
