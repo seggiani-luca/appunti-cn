@@ -319,14 +319,15 @@ Un \textbf{frame Ethernet} incapsula un datagramma IP (o un qualche altro pacche
 
 Se poniamo come $\tau$ il tempo di propagazione da host a ripetitore, o da ripetitore a ripetitore, abiamo che su una linea di distanza massima (4 ripetitori) il tempo di rilevamenteo di collisione è:
 $$
-t_\text{coll} = 2 \tau + \Delta R = \frac{2 l_\text{max}}{v} + \Delta R \leq \frac{L_\text{min}}{R}
+t_\text{coll} = 2 \tau + \Delta r = \frac{2 l_\text{max}}{v} + \Delta r \leq \frac{L_\text{min}}{R}
 $$
-dove $l_\text{max} = 500 \, \text{m}$ è la distanza del link, e $v$ la velocità di propagazione sul mezzo (per il rame circa 200.000 Km al secondo). $\Delta R$ è invece un ritardo dovuto al repeater attraversato.
+dove $l_\text{max} = 500 \, \text{m}$ è la distanza del link, e $v$ la velocità di propagazione sul mezzo (per il rame circa 200.000 Km al secondo). $\Delta r$ è invece un ritardo dovuto al repeater attraversato.
 $L_\text{min}$ sarà quindi la lunghezza minima del frame in modo che le collisioni possano essere rilevate in tempo utile (prima della completa trasmissione del frame). Abbiamo già messo a diseguaglianza il tempo di trasmissione $L_\text{min} / R$, quindi ricaviamoci $L_\text{min}$:
 $$
-L_\text{min} \geq \left( \frac{2 l_\text{max}}{v} + \Delta R \right) R
+L_\text{min} \geq \left( \frac{2 l_\text{max}}{v} + \Delta r \right) R
 $$
 Il valore di 48 byte si ricava esattamente in questo modo.
+(Notiamo che finora si è considerato $L_\text{max}$ e $L_\text{min}$ come lunghezza del payload, in verità si tiene chiaramente conto dell'overhead dato dai campi di controllo).
 
 		\end{itemize}
 
