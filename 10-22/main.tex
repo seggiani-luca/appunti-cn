@@ -311,7 +311,7 @@ Un \textbf{frame Ethernet} incapsula un datagramma IP (o un qualche altro pacche
 		Questo permette al ricevitore di rilevare transizioni anziché valori statici, e permette quindi nella fase (piuttosto lunga) di trasmissione del preambolo, la sincronizzazione dei clock.
 		
 	\item Gli indirizzi \lstinline|dest| e \lstinline|src| (rispettivamente \textit{destinazione} e \textit{sorgente}) sono su 6 byte, e sono di tipo MAC. Quando l'adattatore Ethernet riceve un frame con indirizzo MAC che combacia col suo (oppure un indirizzo broadcast, ad esempio per un pacchetto \textit{ARP}, che vedremo fra poco), inoltra i dati incapsulati nel frame (campo \lstinline|data|) al livello network. In caso contrario ignora il frame;
-	\item \lstinline|data| è il campo dati, cioè trasporta il \textit{payload} (il datagramma IP o simile). Ha dimensione variabile dai 48 ai 1500 byte. 
+	\item \lstinline|data| è il campo dati, cioè trasporta il \textit{payload} (il datagramma IP o simile). Ha dimensione variabile dai 46 ai 1500 byte. 
 
 		\begin{itemize}
 			\item La dimensione massima $L_\text{max} = 1500 \, \text{bit}$ è fissata per evitare la degradazione del segnale. Ethernet prevedeva infatti una distanza massima di 500m di cavo (200m per cavi più sottili), e l'introduzione di \textbf{repeater} (\textit{ripetitori}) per raggiungere distanze maggiori (fino a 4 in cascata, per un totale di 2.5 Km di copertura).
@@ -352,6 +352,7 @@ Vediamo come Ethernet implementa il protocollo CSMA/CD per permettere la condivi
 
 \subsubsection{Livelli datalink e physical in Ethernet}
 Ethernet è definito da una vasta gamma di \textit{standard} (100BASE-TX, 100BASE-T2, 100BASE-FX, 100BASE-T4, 100BASE-SX, 100BASE-BX), che hanno in comune il protocollo MAC e il formato dei frame. Le velocità invece differiscono ampiamente: 2, 10, 100 Mbps, oppure 1, 10, 40 Gbps.
+In particolare, i numeri nei nominativi degli standard indicano la velocità in Mbps o Gbps mentre le letter in fondo rappresentano il tipo di mezzo fisico (T significa \textit{twin pair} (doppino), F significa \textit{fiber} (fibra), ecc...).
 
 Questi standard definiscono informazioni utili al livello \textbf{datalink} (o semplicemente \textit{link}) e \textbf{physical}.
 Abbiamo infatti già introdotto come il vecchio Ethernet sfruttava, al livello fisico, bus su cavi coassiali, mentre oggi sfrutta collegamenti punto-punto (via doppino telefonico) dai nostri dispositivi ad un unico switch Ethernet centralizzato.

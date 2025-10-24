@@ -344,8 +344,11 @@ Questo si implementa sfruttando una porta (\textbf{trunk port}) degli switch coi
 \subsubsection{Frame VLAN}
 Dopo tutte le funzionalità di VLAN che abbiamo aggiunto agli switch, i frame che vengono inviati non potranno più essere a di tipo 802.1 Ethernet semplice, ma devono essere 802.1Q VLAN.
 
-Quello che si fa è estendere il campo \lstinline|type| del frame Ethernet, introducendo:
-# qualcosa
+Quello che si fa è estendere il campo \lstinline|type| del frame Ethernet di 4 byte, introducendo:
+\begin{itemize}
+	\item 2 byte di \textbf{TPID} (\textit{Tag Protocol Identifier}), che contiene una stringa fissa;
+	\item 2 byte di \textbf{TCI} (\textit{Tag Control Information}), che contiene 1 bit di identificatore VLAN e 3 bit di priorità.
+\end{itemize}
 
 \subsection{WAN}
 Il principio dello switching può essere implementato su reti non solo locali, ma anche a grande copertura geografica.
@@ -394,7 +397,5 @@ Individuiamo innanzitutto i 2 tipi di servizio che potremmo offrire:
 Veniamo adesso ad introdurre il concetto di \textbf{internetworking}, cioè collegamento di più reti fra di loro.
 
 Visto che più reti sfruttano standard diversi di comunicazione, bisognera dotarci di una qualche \textit{"lingua franca"} che ogni rete può usare per parlare con altre reti. Come abbiamo anticipato, questa sarà rappresentata dai \textbf{datagrammi} Internet.
-
-
 
 \end{document}
