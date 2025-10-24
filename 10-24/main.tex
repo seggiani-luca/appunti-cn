@@ -1,0 +1,400 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 24-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{Reti a commutazione di pacchetto}
+Iniziamo ad entrare nel dettaglio delle reti a commutazione di pacchetto, e quindi ad anticipare i concetti che saranno alla base del cosiddetto livello \textbf{network}.
+Per fare ciò introdurremo nuovi tipi di dispositivo, col compito di smistare pacchetti, fra cui \textbf{switch} e \textbf{router} (per adesso parliamo principalmente dei primi).
+
+\subsubsection{Hub Ethernet}
+Riprendiamo come esempio lo standard Ethernet.
+
+Avevamo introdotto l'idea di \textbf{hub} nel moderno Ethernet dove tutti i dispositivi sulla rete si collegano in modalità punto-punto. Questo ci permetteva di implementare la cosiddetta topologia a \textit{stella}.
+
+Questi hub possono essere intesi come \textit{ripetitori "stupidi"} a livello fisico, che si limitano a prendere i bit in entrata dal dispositivo ed inoltrarli a tutti gli altri dispositivi, allo stesso bitrate.
+
+Questo significa che tutti i nodi connessi all'hub possono collidere con gli altri, non si ha nessun tipo di bufferizzazione dei frame inviati, e non si implementa nessun tipo di CSMA/CD a livello hub: il compito di rilevare le collisioni è assegnato alle NIC dei dispositivi.
+
+\subsection{Switch Ethernet}
+Gli hub Ethernet sono stati oggi soppiantati da dispositivi più intelligenti: gli \textit{switch}. 
+
+Gli switch sono dispositivi di livello datalink, e hanno quindi un ruolo \textit{attivo} nella rete.
+Possono infatti:
+\begin{enumerate}
+	\item Immagazzinare i frame Ethernet ricevuti dai dispositivi;
+	\item Esaminare l'indirizzo MAC di destinazione del frame, e selettivamente inoltrarlo a uno o più link in uscita;
+	\item Implementare protocolli di rilevamento collisioni come CSMA/CD.
+\end{enumerate}
+
+Questo però non nega che lo switch deve essere comunque \textbf{trasparente} agli host sulla rete: questi non devono dover essere al corrente della sua esistenza.
+
+Un'altra caratteristica degli switch è che sono \textit{plug-and-play} e non richiedono configurazione.
+
+\par\smallskip
+
+Il compito dello switch è quindi quello di \textbf{commutare} le linee di ingresso con le linee di uscite: questo significa che gli host riescono ad avere una connessione dedicata e diretta con lo switch, e attraverso questo l'illusione di una connessione dedicata e diretta con l'host con cui stanno parlando.
+
+\subsubsection{Switch table}
+Per realizzare la funzionalità di instradamento degli switch si sfrutta una tabella, detta \textbf{switch table}. Ogni entrata della switch table contiene:
+\begin{itemize}
+	\item L'indirizzo MAC dell'host;
+	\item L'interfaccia (semplicemente la linea di uscita) su cui si trova tale host;
+	\item Un \textit{time stamp} che rappresenta il tempo di vita dell'interfaccia. 
+\end{itemize}
+
+Notiamo che propriamente dovremmo parlare di \textit{nodi}, e non di \textit{host}, in quanto i primi sono a livello datalink e i secondi sono a livello network. Ci fidiamo di capirci.
+
+La popolazione della switch table avviene attraverso l'\textbf{apprendimento automatico} dello switch: questo infatti \textit{impara} man mano che si inviano frame Ethernet quali host possono essere raggiunti attraverso quali interfacce.
+
+Vediamo come si tramsette il primo frame quando la switch table è vuota:
+\begin{enumerate}
+	\item Quando il frame arriva allo switch, questo può associare l'interfaccia del mittente al suo indirizzo MAC (contenuto nell'header del frame);
+	\item Per inoltrare il frame, controlla la sua switch table (che è attualmente vuota): non può quindi fare meglio che inoltrarlo a tutti (in quanto non sa a quale interfaccia corrisponde il MAC destinatario). Chiamiamo questo processo \textit{flooding};
+	\item Questo processo si ripete: man di mano che gli host inviano frame, lo switch riesce a farsi un idea della struttura della rete popolando la switch table. Questa è una pretesa ragionevole in quanto immaginiamo che gli host che ricevono pacchetti prima o poi ne invieranno di altri, rendendosi disponibili all'interno della switch table.
+\end{enumerate}
+
+In pseudocodice, il comportamento è simile al seguente:
+\begin{lstlisting}[language=C++, style=codestyle]	
+on <frame_received>:
+	record(<link>, <sending_MAC>);
+	entry = switch_table.index(<receiving_MAC>);
+	if(entry) {
+		forward(entry.link);
+	} else {
+		forward(all); // flood
+	}
+\end{lstlisting}
+
+\subsubsection{Gerarchie di switch}
+Gli switch Ethernet possono essere interconnessi fra di loro: uno switch che collega più host può a sua volta connettersi (assieme ad altri switch) ad un singolo switch principale, e questo processo può ripetersi ricorsivamente.
+
+Ad esempio, in un palazzo potremmo immaginare che ogni piano ha il suo switch (che collega i dispositivi di tale piano), e questi switch di piano vengono connessi da un singolo switch per l'intero palazzo.
+
+\subsubsection{Differenze fra switch e router}
+Possiamo quindi anticipare le differenze fra switch e ruoter: sappiamo che gli switch sono dispositivi di livello 2 (datalink), che guardano agli header di frame (e quindi indirizzi MAC), mentre i router sono dispositivi di livello 3 (network), che guardano agli header di pacchetto (e quindi indirizzi IP). 
+
+Rifacendoci alla pila protocollare, abbiamo che gli switch implementano i livello 1 e 2 (fisico e link), mentre i router implementano i livelli 1, 2 e 3 (fisico, link e network).
+
+Sia switch che router usano delle tabelle per governare l'instradamento dei messaggi ottenuti (frame per gli switch e pacchetti per i router), che negli switch sono dette \textit{switch table} e nei router \textit{routing table}.
+
+\subsection{Datacenter}
+I grandi fornitori di servizi su Internet sfruttano strutture dette \textbf{datacenter} per organizzare le loro macchine server.
+I datacenter rappresentano quindi l'altro \textit{"nodo"}, assieme a quello utente, dove si concentra la potenza di calcolo (e quindi in qualche modo l'\textit{"intelligenza"} che ci fornisce il servizio).
+
+Chiaramente i datacenter devono assicurare un servizio affidabile, continuativo nel tempo, e assicurare che il carico sulle macchine sia equamente distribuito.
+
+\subsubsection{Reti datacenter}
+All'interno dei datacenter si vanno a creare gerarchie di switch piuttosto complesse.
+I rack server sono composti da 20-40 \textit{server blade}, che rappresentano gli host veri e propri.
+Ogni rack ha poi un suo switch detto \textbf{TOR} (\textit{Top Of Rack switch}).
+I TOR sono connessi da switch di livello 1 (circa 16 per volta), e questi a loro volta sono connessi da switch di livello 2 (ancora, circa 16 per volta).
+
+Infine, l'intera rete viene esposta all'esterno usando router (più di uno per assicurare la ridondanza del servizio).
+
+\subsection{VLAN}
+Quando le reti LAN diventano molto grandi, si iniziano ad avere diversi problemi dati dal fatto che si ha a disposizione un \textbf{singolo dominio di broadcast}: tutti i nodi devono ricevere tutto il traffico di livello 2 (ARP, DHCP, frame con MAC broadcast, ecc...).
+Questo porta chiaramente a problemi di efficienza, sicurezza e privacy.
+
+Notiamo che in Ethernet moderno non è invece vero dire che si ha un \textbf{singolo dominio di trasmissione}: abbiamo visto come gli switch permettono di instradare il traffico fra singoli host, risparmiandolo agli altri host sulla rete. 
+
+Un'altra problematica è data dal fatto che il collegamento \textbf{fisico} agli switch è anche un collegamento \textbf{logico}: si potrebbe volere che un host collegato \textit{fisicamente} ad un certo switch, debba essere collegato \textit{logicamente} ad un altro switch. 
+
+Le \textbf{VLAN} (\textit{Virtual Area Network}) sono la soluzione a questi problemi.
+Gli switch che implementano funzionalità VLAN possono essere configurati per definire più LAN \textit{virtuali} su una singola infrastruttura LAN fisica.
+
+\subsubsection{VLAN a porte}
+Si possono avere \textbf{VLAN basate a porte}: le porte degli switch vengono raggruppate (da un certo software di configurazione dello switch), così che un singolo switch si comporti come più switch virtuali.
+Le switch virtuali sono confinate fra di loro: anche se è il solito switch fisico a gestire il traffico, questo non verrà instradato da una VLAN all'altra.
+
+Invece delle porte, si potrebbero usare anche i MAC di destinazione dei frame Ethernet.
+
+Per inoltrare i pacchetti fra più VLAN, si ha quindi bisogno di un vero e proprio router (stiamo effettivamente simulando più reti locali, e quindi più switch separati). Nella pratica, i produttori di switch VLAN spesso vendono combinazioni di switch e router.
+
+Le VLAN possono essere distribuite fra più switch: in questo modo più switch fisici rappresentano una singola unità logica (o parte di essa, o di più unità logiche).
+Questo si implementa sfruttando una porta (\textbf{trunk port}) degli switch coinvolti al trasporto di frame da uno switch all'altro. 
+
+\subsubsection{Frame VLAN}
+Dopo tutte le funzionalità di VLAN che abbiamo aggiunto agli switch, i frame che vengono inviati non potranno più essere a di tipo 802.1 Ethernet semplice, ma devono essere 802.1Q VLAN.
+
+Quello che si fa è estendere il campo \lstinline|type| del frame Ethernet, introducendo:
+# qualcosa
+
+\subsection{WAN}
+Il principio dello switching può essere implementato su reti non solo locali, ma anche a grande copertura geografica.
+Le reti che si vanno a formare vengono dette \textbf{WAN} (\textit{Wide Area Netowrk}).
+
+La topologia più adatta a questo punto non è più quella gerarchica che avevamo visto, ma una a \textit{mesh}, dove ogni switch è collegato con un certo numero di altri switch, $> 1$. Questo permette ridondanza nel caso i link, o addirittura interi switch, fuori operazione.
+
+Avere ridondanza introduce il problema del \textbf{routing}: bisogna capire qual'è il percorso migliore da seguire per instradare frame da un host all'altro. 
+Rimandiamo a dopo questo processo.
+
+\subsubsection{Forwarding}
+Parliamo invece del problema del \textbf{forwarding}, cioè come inoltrare effettivamente i pacchetti sul percorso desiderato.
+
+Individuiamo innanzitutto i 2 tipi di servizio che potremmo offrire:
+\begin{itemize}
+	\item \textbf{Connectionless}: in questo caso non si stabilisce alcuna connessione preliminare, e ogni pacchetto è gestito in maniera stateless come se fosse il primo. Questo tipo di servizio è detto anche \textbf{datagram} (in quanto è il modello di servizio usato in Internet).
+
+		In questo caso non prevediamo nessun tipo di connessione preliminare, e non chiediamo agli switch o router intermedi di mantenere alcuno stato sullo stato della connessione (in quanto non esiste un concetto di "connessione" in primo luogo).
+
+		I pacchetti vengono gestiti sulla base dell'indirizzo di destinazione: più pacchetti per la stessa destinazione potrebbero però prendere percorsi diversi sulla rete (magari per congestioni, ecc...).
+
+		Per gestire l'instradamento si fa uso di \textbf{forwarding table} simili alle switch table già viste: la differenza sta nel fatto che si possono mappare non singoli indirizzi, ma \textbf{range} di indirizzi, alle interfacce.
+
+	\item \textbf{Connection}: prima che la comunicazione inizi, un \textit{circuito virtuale} (o \textbf{VC}, \textit{Virtual Circuit}) viene stabilito. Da questo punto in poi, ogni pacchetto inviato segue lo stesso percorso nella rete.
+
+		Un circuito virtuale è un modo per emulare la funzionalità delle reti a \textbf{commutazione di circuito} (ad esempio la vecchia rete telefonica). In questo caso si prevedono fasi esplicite:
+		\begin{enumerate}
+			\item Fase di \textbf{chiamata}, dove l'host mittente \textit{chiama} l'host destinatario;
+			\item Fase di \textbf{accettazione} della chiamata, dove l'host destinatario inoltra un nuovo messaggio, appunto di accettazione della chiamata;
+			\item A questo punto la comunicazione può effettivamente avvenire. Chiaramente, prima o poi seguirà una fase di \textbf{chiusura} del circuito virtuale, dove con uno scambio di messaggi simile al precedente mittente e destinatario negoziano la chiusura delle comunicazioni;
+		\end{enumerate}
+
+		Il circuito virtuale, dal lato implementativo, deve essere qualcosa di noto sia agli host che agli switch o router che appartengono alla rete.
+
+		Prevediamo quindi per ogni VC:
+		\begin{itemize}
+			\item Un \textbf{percorso} da mittente a destinatario;
+			\item \textbf{Numeri VC}, uno per ogni link lungo il circuito;
+			\item Le entrate delle \textbf{forwarding table} degli switch o router lungo il percorso (la trattazione è generica, vale sia al livello 2 che al livello 3).
+		\end{itemize}
+
+		I pacchetti che viaggiano su un VC portano il numero di VC. Questo può quindi essere cambiato da switch o router, consultando la loro forwarding table. Ciò significa che gli switch mantengono informazioni sullo stato della connessione. 
+\end{itemize}
+
+\subsection{Internetworking}
+Veniamo adesso ad introdurre il concetto di \textbf{internetworking}, cioè collegamento di più reti fra di loro.
+
+Visto che più reti sfruttano standard diversi di comunicazione, bisognera dotarci di una qualche \textit{"lingua franca"} che ogni rete può usare per parlare con altre reti. Come abbiamo anticipato, questa sarà rappresentata dai \textbf{datagrammi} Internet.
+
+
+
+\end{document}
