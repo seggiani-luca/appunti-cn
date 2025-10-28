@@ -1,0 +1,434 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 28-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Ritorniamo sull'argomento dell'\textit{internetworking}.
+
+Al livello network il livello superiore è il transport: vorremo prendere i \textit{segmenti} transport e trasportarli in \textit{datagrammi}.
+
+\begin{itemize}
+	\item Il \textbf{trasmettitore} dovrà quindi prendere i segmenti dal livello superiore e incapsularli in datagrammi;
+	\item Il \textbf{ricevitore} dovrà invece prendere i datagrammi, estrarne i segmenti e fornirli al livello superiore.
+\end{itemize}
+
+Questo protocollo è implementato in tutti i dispositivi a livello network: questo significa \textbf{host} e \textbf{router} (gli switch non sono dispositivi a livello network, ma a livello datalink).
+
+Il compito dei \textit{router} è quindi chiaro a livello network: questi leggono i campi header dei \textit{datagrammi IP} che ricevono, e inoltrano (\textit{instradano}, da \textit{routing}) tali datagrammi verso la destinazione finale (attraverso la porta di uscita giusta) consultando una \textit{routing table}.
+
+\subsubsection{Funzioni livello network}
+Il livello network implementa due funzioni fondamentali:
+\begin{itemize}
+	\item \textbf{Forwarding}: spostare pacchetti da un \textit{link di ingresso} del router ad un appropiato \textit{link di uscita} (quella che prima abbiamo chiamato \textit{porta di uscita});
+	\item \textbf{Routing}: determinare il percorso fatto dai pacchetti dalla sorgente alla destinazione. In questo caso dobbiamo dotarci di appositi \textit{algoritmi di routing}.
+\end{itemize}
+
+\subsubsection{Data plane e control plane}
+Abbiamo quindi che i router lavorano fondamentalmente su due \textit{piani}: \textbf{piano dati} (\textit{data plane}) e \textbf{piano di controllo} (\textit{control plane}).
+\begin{itemize}
+	\item Il \textbf{piano dati} è una funzione \textit{locale}, che coinvolge il singolo router, e che riguarda lo spostamento del datagramma da porta di ingresso del router a porta di uscita;
+	\item Il \textbf{piano di controllo} è invece una funzione \textit{globale} alla rete, condivisa fra i router, che determina come il datagramma deve essere instradato fra i router nel percorso (\textbf{route}) da host mittente e host destinatario.
+
+		Esistono 2 modi per realizzare il piano di controllo:
+		\begin{itemize}
+			\item Adottare degli algoritmi di routing \textit{tradizionali}, implementati direttamente nel router. 
+
+				Chiaramente, questi algoritmi di routing dovranno essere distribuiti, cioè eseguiti da tutti i router che lavorano insieme per assicurare il corretto instradamento dei pacchetti (aggiornando le forwarding table di ogni router);
+			\item Sfruttando il \textit{Software Defined Networking} (\textbf{SDN}), cioè implementando gli algoritmi di routing nei server e facendo semplicemente eseguire al router il percorso trovato.
+
+			In questo caso si dovrà prevedere un controllore remoto che si occupi di installare le forwarding table in ogni router.
+		\end{itemize}
+\end{itemize}
+
+\subsubsection{Modello di servizio}
+Possiamo interrogarci quali sono le caratteristiche del servizio che Internet è capace di offrire attraverso il protocollo IP (quello che nell'Internet moderno implementa il livello network).
+
+Abbiamo che IP non garantisce nulla riguardo a \textit{bitrate}, \textit{perdita di dati}, \textit{ordinamento dei dati} o \textit{temporizzazione}.
+
+In questo rappresenta un servizio \textbf{best effort}:
+\begin{itemize}
+	\item Non si garantisce la consegna assicurata dei pacchetti;
+	\item Non si assicurano costanti minime di temporizzazione o l'ordinamento dei pacchetti;
+	\item Non si assicura la larghezza di banda massima al flusso da host a host. 
+\end{itemize}
+
+Il protcollo best effort potrebbe sembrare inizialmente svantaggioso, ma per Internet la fortuna è stata proprio rendere la rete \textit{"stupida"}, e concentrare l'intelligenza all'\textit{edge} (agli host, si pensi ai protocolli di trasporto, ecc...).
+
+Questo rende infatti molto più semplice ed economico realizzare l'infrastruttura di rete, e allocando abbastanza risorse in un secondo momento si riesce ad ottenere un servizio \textit{"abbastanza buono"} anche per applicazioni intensive sul bitrate come le videochiamate, ecc...
+
+\subsection{Router}
+Un \textbf{router} è in maniera estremamente generica un computer che ha delle \textbf{porte di entrata} e delle \textbf{porte di uscita}.
+
+Fra porte di ingresso e porte di uscita deve essere posta una qualche \textbf{rete di switching} estremamente veloce che permetta la commutazione da ingresso a uscita. Questa implementa il \textit{data plane}, e quindi il \textit{forwarding}.
+
+Questa dovrà quindi essere governata da un \textbf{processore di routing}. Questo implementa il \textit{control plane}, e quindi il \textit{routing}.
+
+Le porte del router implementano i primi 2 livelli dello stack protocollare, cioè:
+\begin{enumerate}
+	\item Livello \textbf{fisico}: si occupa della ricezione bit a bit del datagramma;
+	\item Livello \textbf{link}: ad esempio di tipo Ethernet, si occupa del rilevamento errori e si libera del frame di livello link;
+	\item Una volta superato il livello link, i payload dei frame di livello link (cioè i datagrammi veri e propri) vengono inoltrati effettuando un lookup sul loro campo header. 
+
+		Il forwarding può essere implementato in 2 modi:
+		\begin{itemize}
+			\item Forwarding \textbf{basato su destinazione}: basato solo sull'indirizzo IP estratto dall'header di datagramma. 
+
+				Abbiamo introdotto le \textit{switch table} in 15.2.1.
+Le \textbf{forwarding table} usate dai router sono molto simili: si definiscono \textit{range} di indirizzi che mappano a porte di uscita dei router.
+
+Quando i frame si sovrappongono, si usa il cosiddetto \textbf{longest prefix matching}, cioè si prova ad usare sempre l'indirizzo con prefisso di rete più lungo.
+			\item Forwarding \textbf{generalizzato}: basato su tutti i campi dell'header di datagramma.
+		\end{itemize}
+
+		Si prevede solitamente una coda per i datagrammi in arrivo, che viene riempita quando i datagrammi arrivano più velocemente di quanto si riesca ad instradarli.
+\end{enumerate}
+
+\subsubsection{Rete di switching}
+La \textbf{rete di switching} (dette anche \textit{switching fabric}) si occupa di trasferire i pacchetti dal link di ingresso al link di uscita.
+Definiamo \textbf{switching rate} la frequenza con cui i pacchetti vengono trasferiti da input a output.
+Solitamente viene esprressa come un multiplo del bitrate di linea input/output: chiaramente con $N$ input si cerca di avere uno switching rate pari ad $N$ volte il bitrate di linea.
+
+Esistono 3 tipi principali di switching fabric:
+\begin{enumerate}
+	\item Basato su \textbf{memoria}: si direbbe a \textit{memoria condivisa}. Solitamente viene infatti implementato nei computer tradizionali che fanno switching attraverso la CPU.
+
+		In questo caso si prendono i pacchetti in entrata e si copiano in memori asistema. Dalla memoria sistema si inoltrano quindi verso le porte di uscita.
+		
+		Questo chiaramente è limitato dal bitrate della memoria (bisogna passare dal bus 2 volte per datagramma, una volta in entrata dalla porta di ingresso alla memoria, una volta in uscita dalla memoria alla porta di uscita);
+	\item A \textbf{bus}: si usa un bus per collegare le porte di ingresso direttamente alle porte di uscita. 
+
+		In questo caso il problema principale è chiaremente la competizione sul bus, e il fatto che la velocità di trasferimento è limitata dal bitrate del bus;
+
+	\item A \textbf{rete di interconnessione}: in questo caso si sfruttano tecnologie sviluppate inizialmente per connettere i processori nei sistemi multiprocessore (\textit{crossbar}, \textit{clos networks}, ecc...).
+
+		L'evoluzione naturale di questi sistemi è l'uso di \textbf{switch multistage}: switch $n \times n$ realizzate attraverso più stadi formati da switch più piccole.
+		Questo approccio può sfruttare un certo grado di \textit{parallelismo}: si divide il datagramma in più \textit{celle} di lunghezza fissa, che vengono immesse nello switch e riassemblate in uscita.
+
+\end{enumerate}
+
+Notiamo che ulteriore parallelismo può essere sfruttato prevedendo più strutture di commutazione parallele (se vogliamo, più \textit{data plane} paralleli).
+
+\subsubsection{Accodamenti in ingresso}
+Se la rete di switching ha bitrate più lento del bitrate combinato delle porte di ingresso, si potrebbero formare delle \textbf{code} alle porte di ingresso. Questo porta a delay ed eventualmente anche perdita di dati.
+
+\begin{itemize}
+	\item Questo accade ad esempio in caso di \textbf{competizione} su una singola porta di uscita: se 2 pacchetti destinati alla stessa porta di uscita arrivano contemporaneamente a porte di ingresso diverse, uno dei due dovrà necessariamente aspettare che il secondo venga instradato;
+	\item I pacchetti successivi a blocchi per competizione su porte di uscita possono quindi subire blocking \textbf{HOL} (\textit{Head Of Line}): in questo caso bisogna attendere che la porta di ingresso si liberi perché il pacchetto in arriva venga effettivamente processato.
+\end{itemize}
+
+\subsubsection{Accodamenti in uscita}
+Anche le porta di uscita possono essere suscettibili a code: potremmo infatti richiedere del \textbf{buffering} in uscita quando la logica di commutazione è più veloce della logica di uscita (quella che implementa i livelli datalink e fisico, in quest'ordine).
+
+\subsubsection{Gestione di perdite}
+Anche in questo caso possono verificarsi delay ed eventualmente \textbf{perdita di dati}.
+Alcune politiche di gestione del buffer che potremmo adottare in questo caso potrebbero essere:
+\begin{itemize}
+	\item \textbf{Tail drop}: si scarta (\textit{"drop"}) il pacchetto in arrivo sul buffer pieno;
+	\item \textbf{Prioritaria}: si scartano i pacchetti su base prioritaria.
+\end{itemize}
+
+Può essere utile anche \textbf{marchiare} (\textit{"marking"}) quali pacchetti conviene scartare per primi in caso di congestione: ad esempio, i pacchetti ICMP saranno i primi ad essere scartati.
+
+\subsubsection{Scheduling in uscita}
+Anche su come si effettua lo \textbf{scheduling} dei pacchetti in uscita si possono fare delle considerazioni.
+Dovremo infatti prevedere un \textit{server} (di livello link) che si occupa di accedere alla coda dei pacchetti in uscita, e immettere nel livello fisico i pacchetti.
+
+Questi possono essere selezionati (\textit{schedulati}) secondo più modalità:
+\begin{itemize}
+	\item \textbf{FCFS} (\textit{First Come First Served}): il primo pacchetto viene inoltrato;
+	\item \textbf{Prioritaria}, cioè si assegna una qualche priorità assegnata dall'applicazione o al router al pacchetto;
+	\item \textbf{RR} (\textit{Round Robin}): si servono ciclicamente tutti i pacchetti;
+	\item \textbf{Weighted fair queueing}: si cerca di assegnare probabilità eque di trasmissione ad ogni pacchetto.
+\end{itemize}
+
+Approcci alternativi al FCFS possono essere utili in quanto non tutte le applicazioni che girano in rete sono uguali: alcune sono più importanti di altri (l'esempio precedente, pensiamo ICMP contro streaming ad alta velocità).
+
+\begin{itemize}
+	\item 
+		Un buon approccio ibrido può essere quello a \textbf{code multiple} FCFS.
+Si prevedono ad esempio due code, una \textbf{prioritaria} e una \textbf{non prioritaria}, gestite entrambe internamente come FCFS.
+
+Il traffico in entrata viene classificato fra queste due code, e quindi il traffico prioritario viene spedito per primo.
+
+Un problema apparente di questo approccio è la \textit{starvation} del traffico non prioritario.
+
+	\item 
+Per risolvere il problema della starvation potremmo prevedere lo stesso meccanismo di classificazione, e distinguere fra le code non in maniera prioritaria ma usando il \textbf{WFQ} (\textit{Weighted Fair Queueing}).
+
+Questo non è altro che un approccio round robin generalizzato dove ogni classe $i$ ha peso $w_i$ e ottiene un livello di servizio (magari in probabilità) ad ogni ciclo di:
+$$
+w_g = \frac{w_i}{\sum_j w_j}
+$$
+
+Questo approccio è quello che viene più usato nei moderni router.
+
+\end{itemize}
+
+\subsection{Protocollo IP}
+Il \textbf{protocollo IP} è oggi il protocollo a fondamento del livello network. Ne esistono di altri, ma in Internet si usa principalmente IP.
+
+Il livello network, e quindi il protocollo IP, ha il compito di implementare algoritmi di \textbf{path-selection} (protocolli di routing) sulla base di date \textit{forwarding table}.
+
+Il protocollo IP in praticolare si occupa di definire:
+\begin{itemize}
+	\item Il \textbf{formato} dei datagrammi;
+	\item Le modalità di \textbf{indirizzamento} a livello network;
+	\item \textbf{Convenzioni} per la gestione dei pacchetti.
+\end{itemize}
+
+Il protcollo IP si affianca all'\textbf{ICMP} (\textit{Internet Control Message Protocol}), inizialmente pensato per la notifica degli errori e la diagnostica, oggi usato perlopiù per diagnostica.
+
+\textbf{Datagramma IP}
+Il \textbf{datagramma IP} ha una struttura più complessa di quella che avevamo visto ad esempio per i frame Ethernet.
+
+Si hanno quindi almeno 5 parole da 32 bit di \textit{header}, e una sezione di \textit{payload} di lunghezza variabile: 
+\begin{lstlisting}[style=codestyle]	
+16 bit																16 bit
+<ver>	<header length>	<service type>	<length>									% header
+<identifier>													<flag>	<fragment offset>
+<time to live>				<upper layer>		<checksum>
+<source address (IP)>
+<destination address (IP)>
+<options>
+<payload> (lunghezza variabile)																	% payload
+\end{lstlisting}
+
+\begin{itemize}
+	\item Il campo \textbf{version} è su 4 bit, ed è seguito dalla \textbf{lunghezza dell'header}, il \textbf{tipo} di servizio offerto (inutilizzato, qui si metteva ad esempio il \textit{marking} di congestione) e la \textbf{lunghezza dell'intero datagramma};
+	\item La lunghezza massima di un datagramma IP è di 64 Kb, anche se solitamente si rimane sui 1500 bytes o meno;
+	\item Il campo \textbf{time to live} determina gli \textit{hop} di rete (trasferimenti da router a router) che il pacchetto può ancora avere prima di essere scartato. Assumiamo che ogni router decrementi questo campo, appunto, ad ogni hop effettuato;
+	\item Il campo \textbf{upper layer} contiene informazioni sul tipo di protocollo di trasporto usato (TCP o UDP);
+	\item Si ha quindi un campo di \textbf{checksum} per il controllo di errori;
+	\item Seguono i campi di \textbf{indirizzo} (sorgente e destinazione IP);
+	\item Si ha un campo opzionale di \textbf{options} specifiche al pacchetto;
+	\item Infine c'è il \textbf{payload} vero e proprio.
+\end{itemize}
+
+\end{document}
