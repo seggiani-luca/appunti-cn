@@ -326,7 +326,7 @@ Questo permette agli host di accedere ai seguenti servizi:
 	\item Riutilizzare tale indirizzo finché si mantiene in contatto con la rete.
 \end{itemize}
 
-Si assume che il server DHCP sia collegato al router che server la sottorete, in modo che possa servire tutte le sottoreti su tale router. Solitamente, DHCP sta sulla porta 68.
+Si assume che il server DHCP sia collegato al router che server la sottorete, in modo che possa servire tutte le sottoreti su tale router. Solitamente, DHCP sta sulla porta 67.
 
 Quando un host si collega alla rete:
 \begin{enumerate}
@@ -347,6 +347,6 @@ Il DHCP può fornire più informazioni, non solo l'indirizzo IP:
 	\item La lunghezza della maschera di sottorete sulla rete locale (che chiaramente all'host è ignota).
 \end{itemize}
 
-
+Per gli indirizzi forniti dal server DHCP è solitamente previsto un \textbf{lease time}, cioè un tempo limite entro il quale l'indirizzo IP è valido.
 
 \end{document}
