@@ -1,0 +1,352 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 29-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Riprendiamo l'argomento dei datagrammi IP.
+
+\subsubsection{Overhead di TCP/IP}
+Ricordiamo che il datagramma IP ha 20 byte di overhead per l'header.
+Visto che spesso trasporta payload rappresentato da segmenti TCP, che hanno anch'essi 20 byte di overhead, possiamo dire che l'overhead complessivo è $20 + 20 = 40$ byte di informazioni non direttamente collegate al payload che vogliamo trasportare.
+
+Abbiamo poi che alcuni campi dell'header IP sono legati al protocollo di trasporto sovrastante.
+Avevamo già notato infatti il campo \textit{upper layer}, contenente informazioni sul protocollo (TCP o UDP) usato.
+
+\subsubsection{Frammentazione IP}
+Il protocollo IP supporta un meccanismo di \textbf{frammentazione} e \textbf{riassemblaggio}, usato quando si inviano in rete datagrammi (header + segmento nel payload) più grandi della cosiddetta \textbf{MTU} (\textit{Max Transmission Unit}, cioè la dimensione massima dei frame di livello datalink). 
+
+I campi \textbf{identifier}, \textbf{flags} and \textbf{fragment offset} dell'header riguardano esattamente questo: l'\textit{identifier} identifica un datagramma, e il \textit{fragment offset} la posizione all'interno del datagramma specificato del frammento corrente.
+In sostanza, un datagramma è composto da frammenti, che sono anch'essi inseriti datagrammi per la trasmissione in rete.
+
+Il campo \textit{flags}, su 3 bit, determina la modalità della frammentazione.
+In particolare abbiamo i bit:
+\begin{lstlisting}[style=codestyle]	
+bit 0: riservato
+bit 1: DF (don't fragment)
+bit 2: MF (more fragments)
+\end{lstlisting}
+
+\begin{itemize}
+	\item Il campo \textbf{DF} (\textit{Don't Fragment}) significa che questo datagramma non dovrà essere frammentato, e che se è più grande della MTU dovrà essere scartato;
+	\item Il campo \textbf{MF} (\textit{More Fragments}) indica invece che questo datagramma è seguito da altri frammenti di un datagramma più grande.
+
+		Se vale 0 può significare equivalentemente che è l'ultimo frammento, o che come datagramma non era stato mai frammentato.
+		Il destinatario gestisce datagrammi frammento arrivati fuori ordine controllando se i datagrammi ricevuti finora, coi loro offset, riempiono completamente un dato buffer. Visto che un datagramma frammento arrivato in anticipo lascia necessariamente un "buco" (i datagrammi sono inviati per offset incrementali), questo funziona. 
+\end{itemize}
+
+Notiamo a questo punto che il \textit{fragment offset}, che rappresenta effettivamente l'offset del frammento all'interno del datagramma completo, è su 13 bit (mentre la dimensione del datagramma è su 16 bit).
+Questo significa che misuriamo gli offset non in byte, ma in blocchi da 64 bit (8 byte, in quanto $16 - 13 = 3 \rightarrow 2^3 = 8$).
+
+Vediamo quindi come devono comportarsi i router:
+\begin{itemize}
+	\item Il \textbf{trasmettitore} di livello network avrà quindi il (semplice) compito di, nota l'MTU, suddividere (\textit{frammentare}) i datagrammi troppo grandi in più datagrammi \textit{"di frammento"}, che poi inoltrera singolarmente sulla rete. 
+
+		Questo, chiaramente, nel caso il capmo DF non sia abilitato: in caso contrario semplicemente scarterà il datagramma;
+	\item Il \textbf{ricevitore} dovrà occuparsi invece di controllare l'header dei datagrammi IP, capire quando è stato inviato un frammento di un datagramma più grande (attraverso il campo \textit{flags}), e aspettare successivamente tutti i frammenti necessari a \textit{riassemblare} il datagramma.
+
+		Nel caso non tutti i frammenti arrivino in un quanto di tempo utile, si scarta il datagramma e si va avanti. Questo non ci turba, in quanto abbiamo detto IP è \textit{best effort}.
+\end{itemize}
+
+\subsection{Indirizzamento IP}
+Iniziamo quindi a vedere nel dettaglio l'\textbf{indirizzo IP}.
+
+Avevamo già introdotto l'\textit{indirizzo MAC}, o \textit{fisico}, associato alla NIC e assegnato su base globale (quindi solitamente unico per ogni dispositivo, ecc...).
+Gli indirizzi IP, come vederemo, sono invece assegnati su base \textbf{dinamica}.
+
+Un indirizzo IP è un identificatore su 32 bit per \textbf{interfacce} di \textit{host} e \textit{router}.
+Un'\textit{interfaccia} è la connessione fra host/router e il livello fisico.
+Solitamente gli host hanno un'interfaccia e i router più di una.
+
+\subsubsection{Subnet}
+Una \textbf{subnet}, o \textit{sottorete}, è un insieme di interfacce che possono comunicare fisicamente l'una con l'altra senza l'intervento di un router di livello 3.
+Sono sottoreti le reti LAN che abbiamo studiato in 14.1.
+
+Gli indirizzi IP sono fatti per gestire le sottoreti:
+\begin{itemize}
+	\item La prima parte dell'indirizzo identifica la sottorete, e quindi più dispositivi sulla stessa sottorete hanno gli stessi bit più significativi (un numero variabile di questi, specificato dalla \textbf{subnet mask} o \textit{maschera di sottorete});
+	\item L'ultima parte dell'indirizzo identifica quindi i singoli dispositivi.
+\end{itemize}
+
+Riguardo alla maschera di sottorete, abbiamo che questa è notata come \lstinline|<addr>/<mask>|, dove \lstinline|<mask>| è un numero da 0 a 32 che identifica quanti dei primi bit dell'indirizzo sono dedicati alla sottorete.
+
+Possiamo distinguere i seguenti tipi di indirizzo:
+\begin{itemize}
+	\item Indirizzi di \textbf{tipo A}: \lstinline|8 sottorete + 24 dispositivo|;
+	\item Indirizzi di \textbf{tipo B}: \lstinline|16 sottorete + 16 dispositivo|;
+	\item Indirizzi di \textbf{tipo C}: \lstinline|24 sottorete + 8 dispositivo|;
+\end{itemize}
+
+\subsubsection{CIDR}
+\textbf{CIDR} sta per \textit{Classless InterDomain Routing}, e rappresenta il formato standard degli indirizzi IP appena descritto:
+\begin{lstlisting}[style=codestyle]	
+a.b.c.d/x
+\end{lstlisting}
+dove \lstinline|x| è il numero di bit nella porzione di sottorete dell'indirizzo.
+Notiamo che, a scapito di quanto abbiamo detto sul tipo degli indirizzi nella scorsa sezione, \lstinline|x| non deve necessariamente essere multiplo di 8 bit, ma può essere su un numero arbitrario di bit fra 0 e 32. 
+
+Potremmo interrogarci su come vengono ottenuti gli indirizzi IP.
+\begin{itemize}
+	\item Per gli host, la risoluzione dell'IP all'interno della sua sottorete è fatta dall'amministratore di sistema, o dal protocollo \textbf{DHCP} \textit{Dynamic Host Configuration Protocol};
+	\item Per le sottoreti, gli amministratori di rete si rivologono agli ISP, che a loro volta (attraverso una struttura gerarchica) si rivolgono all'\textbf{ICANN} (\textit{Internet Corporation for Assigned Names and Numbers}).
+\end{itemize}
+
+\subsection{DHCP}
+Il \textbf{DHCP} (\textit{Dynamic Host Resolution Protocol}) è un protocollo di livello application che si occupa di fornire ai client di un server (il server DHCP, che si assume gestisca una certa sottorete) i loro indirizzi IP.
+
+Questo permette agli host di accedere ai seguenti servizi:
+\begin{itemize}
+	\item Richiedere ed ottenere un indirizzo IP quando si unisce ad una rete;
+	\item Riutilizzare tale indirizzo finché si mantiene in contatto con la rete.
+\end{itemize}
+
+Si assume che il server DHCP sia collegato al router che server la sottorete, in modo che possa servire tutte le sottoreti su tale router. Solitamente, DHCP sta sulla porta 68.
+
+Quando un host si collega alla rete:
+\begin{enumerate}
+	\item Avrà bisogno di un indirizzo IP, e quindi interrogherà la rete (con indirizzo broadcast, \lstinline|255.255.255.255| (tutti i bit a 1)) per un server DHCP. Questa fase si dice di \textbf{DHCP discover};
+	\item Il server DHCP, se presente sulla rete, risponderà al DHCP discover con un \textbf{DHCP offer}, cioè offrendo un indirizzo IP al client. Notiamo che anche la risposta del server è in broadcast: si disambigua fra host sfruttando un \textit{transaction ID} univoco generato dal client;
+	\item Il client può quindi rispondere con una \textbf{DHCP request}, dove richiede di poter sfruttarel'indirizzo IP usato. Anche questo messaggio è inviato in broadcast: potrebbe essere inviato all'IP del sever (ormai noto dalla fase di offer), ma il protocollo viene definito in questo modo;
+	\item Il server invia allora l'ultimo messaggio, il \textbf{DHCP acknowledge}, inviato sempre in broadcast, che dà la conferma al client di poter iniziare ad usare l'indirizzo IP ottenuto.
+\end{enumerate}
+
+Vediamo che le fasi del DHCP rispettano il cosiddetto acronimo \textbf{DORA}: \textit{Discover}, \textit{Offer}, \textit{Request} and \textit{Acknowledge}.
+
+Notiamo inoltre che queste richieste sono associate ad un certo \textit{lifetime}, che rappresenta il tempo di vita per cui la richiesta viene presa in considerazione dal server (oltre il lifetime, l'offerta dell'indirizzo IP viene scartata e quell'indirizzo può essere offerto ad altri host).
+
+Il DHCP può fornire più informazioni, non solo l'indirizzo IP:
+\begin{itemize}
+	\item Il \textbf{default gateway} della rete, cioè il router da contattare per uscire dalla sottorete;
+	\item I \textbf{server DNS} predefinito e secondario sulla rete;
+	\item La lunghezza della maschera di sottorete sulla rete locale (che chiaramente all'host è ignota).
+\end{itemize}
+
+
+
+\end{document}
