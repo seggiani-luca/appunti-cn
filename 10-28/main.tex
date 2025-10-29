@@ -303,7 +303,8 @@ Le porte del router implementano i primi 2 livelli dello stack protocollare, cio
 				Abbiamo introdotto le \textit{switch table} in 15.2.1.
 Le \textbf{forwarding table} usate dai router sono molto simili: si definiscono \textit{range} di indirizzi che mappano a porte di uscita dei router.
 
-Quando i frame si sovrappongono, si usa il cosiddetto \textbf{longest prefix matching}, cioè si prova ad usare sempre l'indirizzo con prefisso di rete più lungo.
+Il modo più semplice per mappare range di indirizzi è memorizzare indirizzi \textbf{prefix} (\textit{prefissi}), cioè memorizzare i primi $n$ bit di indirizzo, e l'intero $n$ stesso.
+Quando i range si sovrappongono, si usa il cosiddetto \textbf{longest prefix matching}, cioè si prova ad usare sempre l'indirizzo con prefisso di rete più lungo.
 			\item Forwarding \textbf{generalizzato}: basato su tutti i campi dell'header di datagramma.
 		\end{itemize}
 
