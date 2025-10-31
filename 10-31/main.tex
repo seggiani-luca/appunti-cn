@@ -1,0 +1,314 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 31-10-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsubsection{Limitazioni di IPv4}
+Abbiamo visto come gli indirizzi IP (versione 4) formano uno spazio di 32 bit (dimensione $2^32$, quindi circa 4 miliardi).
+L'\textbf{ICANN} (\textit{Internet Corporation for Assigned Numbers Autorithy}) gestisce tale spazio, attraverso 5 \textbf{RR} (\textit{Registri Nazionali}), che a loro volta allocano i loro registri privati.
+Questi registri allocano poi blocchi di indirizzi IP agli ISP, che a loro volta li forniscono ad organizzazioni, abitazioni, ecc... (secondo il \textbf{CIDR}, \textit{Classless InterDomain Routing}).
+
+Il problema è che lo spazio di indirizzi IPv4 (quelli a 32 bit) è stato esaurito nel 2011.
+Meccanismi come il \textit{NAT} aiutano a risolvere questo problema, ma ciò non toglie che uno spazio a 32 bit per gli indirizzi Internet è effettivamente poco.
+Per questo motivo è stata introdotta la \textit{versione 6} del protocollo IP (\textbf{IPv6}), che ha uno spazio di indirizzi a 128 bit.
+
+La transizione verso IPv6 è attualmente in corso, e il protocollo ad oggi non è sempre supportato.
+
+\subsection{NAT}
+Il \textbf{NAT} (\textit{Network Address Translation}) è un meccanismo secondo il quale più dispositivi su una rete locale condividono lo stesso indirizzo IPv4 per il resto del mondo.
+
+Ricordiamo che alcuni indirizzi IP sono riservati:
+\begin{itemize}
+	\item L'indirizzo \textit{tutto a 0} (\lstinline|0.0.0.0|) viene usato dagli host che ancora non hanno un loro indirizzo (ad esempio come sorgente nel DHCP);
+	\item L'indirizzo \textit{tutto a 1} (\lstinline|255.255.255.255|) è l'indirizzo di \textit{broadcast}. Esiste anche un'indirizzo di broadcast composto dalla maschera di rete, più il resto dei bit a 1;
+	\item Alcuni spazi di indirizzamento sono \textbf{privati}: questi sono \lstinline|10.0.0.0|, \lstinline|127.0.0.0|, \lstinline|192.168.0.0|, ecc...
+		Gli indirizzi privati non possono essere usati per collegarsi alla rete Internet pubblica (non sono indirizzi \textit{pubblici}), ma si limitano alla rete locale dove vengono usati.
+\end{itemize}
+
+Il modo in cui possono tornare utili gli indirizzi privati è effettuando un'apposita traduzione dalla rete locale alla rete Internet pubblica, effettuata appunto dal \textit{NAT}, quando i datagrammi IP che vengono inviati sulla rete privata sono destinati ad un host furoi dalla rete privata.
+
+In questo caso si sostituisce all'indirizo privato un indirizzo condiviso fra tutti gli host sulla rete privata (sostanzialmente quello del router).
+Dall'altra parte della rete, l'unica cosa che distinguerà datagrammi diversi dalla stessa rete NAT sarà il numero di porta.
+
+Dal punto di vista implementativo, quindi, un router che supporta NAT deve:
+\begin{itemize}
+	\item Per i datagrammi \textbf{in uscita}, rimpiazzare l'indirizzo privato col suo IP, e assegnare al datagramma una nuova porta;
+	\item \textbf{Ricordare} in una tabella, detta \textit{NAT Translation Table}, ogni coppia sorgente (indirizzo private all'interno della rete, porta originale) destinazione (indirizzo pubblico, nuova porta);
+	\item Per i datagrammi \textbf{in entrata}, effettuare la ricerca al contrario, rimpiazzando l'indirizzo pubblico con quello privato, e assegnando al datagramma la sua porta originale.
+\end{itemize}
+
+Un problema che potremmo avere è come indirizzare server su NAT.
+Nel nostro esempio attuale, dietro il NAT si trovava un client: questo fa le richieste, il router le traduce, il server inoltra risposte e il router sa come inoltrarle al client.
+
+Un server, di contro, non potrebbe apparentemente essere indirizzato se si trovasse dietro un NAT. 
+Una soluzione è quella di prevedere entrate nella NAT Translation Table, impostate manualmente, che associano ad esempio a ogni richiesta sulla porta 80 un singolo server all'interno del NAT.
+In questo modo ogni client che vuole accedere al web server all'indirizzo NAT (porta 80) potrà farlo, e il router tradurrà l'indirizzo all'indirizzo privato corrispondente al web server (porta 80).
+
+\subsection{IPv6}
+Abbiamo introdotto IPv6 IN 18.0.1, motivandone l'introduzione per:
+\begin{enumerate}
+	\item Superare l'esaurimento degli indirizzi ormai associato ad IPv4;
+	\item Limitare l'overhead di 40 byte di header di IPv4.
+\end{enumerate}
+
+Il protocollo IPv6, come vedremo, rimuove molte funzionalità presenti in IPv4 per essere più veloce ed efficiente.
+
+\subsubsection{Datagramma IPv6}
+Il \textbf{datagramma IP} versione 6 ha la seguente struttura:
+\begin{lstlisting}[style=codestyle]	
+16 bit						16 bit
+<ver> <pri> <flow_label>									% header
+<payload len>			<next hdr>	<hop limit>
+<source address (IPv6)>
+(128 bit)
+<destination address (IPv6)>
+(128 bit)
+<payload> (lunghezza variabile)						% payload
+\end{lstlisting}
+
+\begin{itemize}
+	\item Il campo \textbf{version} è su 4 bit, come per IPv4. Seguono campi di \textbf{priorità} è identificatori di \textbf{flusso} (il concetto di flusso non è ben definito);
+	\item Al contrario di IPv4, allochiamo la \textbf{lunghezza del payload} (anziché dell'intero datagramma). Questo anche per il fatto che IPv6 non prevede \textit{opzioni}, che in IPv4 potevano variare la lunghezza dell'header,
+	\item Il \textbf{checksum} non viene introdotto, in quanto andava ricalcolato ad ogni hop (si associa un \textbf{limite di hop}, quello che in IPv4 chiamavamo \textit{time to live}, che va aggiornato ad ogni hop);
+	\item \textbf{Next header} rappresenta il tipo dell'header di livello 4 incapsulato;
+	\item Come sempre, segue il \textbf{payload} vero e proprio.
+\end{itemize}
+
+Notiamo che, oltre al checksumming e le opzioni, IPv6 rimuove anche il supporto alla \textit{frammentazione}.
+Deleghiamo infatti tale compito al livello superiore, e ci limitiamo a scartare i datagrammi troppo grandi per il livello datalink.
+
+Notiamo che anche il protocollo \textit{ICMP} viene di conseguenza aggiornato, per fornire messaggi di notifica su quali datagrammi vengono scartati per dimensioni troppo grandi.
+
+\subsubsection{Coesistenza IPv4/IPv6}
+Ad oggi IPv4 e IPv6 \textit{coesistono} nella rete Internet: la transizione non è stata effettivamente ultimata e gli host potrebbero usare uno dei 2 protocolli.
+
+Questo può essere realizzato usando router che conoscono entrambi i protocolli.
+
+\end{document}

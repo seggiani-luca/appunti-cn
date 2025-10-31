@@ -406,8 +406,8 @@ Il protocollo IP in praticolare si occupa di definire:
 
 Il protcollo IP si affianca all'\textbf{ICMP} (\textit{Internet Control Message Protocol}), inizialmente pensato per la notifica degli errori e la diagnostica, oggi usato perlopiù per diagnostica.
 
-\textbf{Datagramma IP}
-Il \textbf{datagramma IP} ha una struttura più complessa di quella che avevamo visto ad esempio per i frame Ethernet.
+\subsubsection{Datagramma IPv4}
+Il \textbf{datagramma IP} versione 4 ha una struttura più complessa di quella che avevamo visto ad esempio per i frame Ethernet.
 
 Si hanno quindi almeno 5 parole da 32 bit di \textit{header}, e una sezione di \textit{payload} di lunghezza variabile: 
 \begin{lstlisting}[style=codestyle]	
@@ -415,8 +415,8 @@ Si hanno quindi almeno 5 parole da 32 bit di \textit{header}, e una sezione di \
 <ver>	<header length>	<service type>	<length>									% header
 <identifier>													<flag>	<fragment offset>
 <time to live>				<upper layer>		<checksum>
-<source address (IP)>
-<destination address (IP)>
+<source address (IPv4)>
+<destination address (IPv4)>
 <options>
 <payload> (lunghezza variabile)																	% payload
 \end{lstlisting}
