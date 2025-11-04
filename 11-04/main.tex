@@ -1,0 +1,373 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 04-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsubsection{Tunneling}
+Continuiamo a parlare della coesistenza fra IPv4 e IPv6.
+Abbiamo già introdotto nella scorsa lezione l'opzione della \textit{dual architecture}, cioè lo sviluppo di router che parlano sia la \textit{"lingua"} dell'IPv4 che dell'IPv6.
+
+Un'altro approccio valido è il \textbf{tunneling}: si incapsulano i datagrammi IPv6 all'interno di datagrammi IPv4, in modo che questi possano essere instradati da infrastruttura pensata per IPv4 (cioè ad esempio attraverso una rete Ethernet che supporta solo IPv4).
+
+Chiaramente questo approccio porta a 2 visioni separate:
+\begin{itemize}
+	\item La \textbf{visione logica}, che vede i router IPv4/v6 come connessi, appunto, da un \textit{tunnel IPv4};
+	\item La \textbf{visione fisica}, che vede i router IPv4/v6 semplicemente connessi ad una rete di router IPv4, su cui instradano anziché datagrammi IPv6, datagrammi IPv4 che incapsulano nel loro campo payload datagrammi IPv6.
+\end{itemize}
+
+\subsection{ARP}
+Il protocollo \textbf{ARP} (\textit{Address Resolution Protocol}) è usato per associare indirizzi MAC (utili per l'indirizzamento su rete locale) ad indirizzi IP.
+
+Ogni nodo IP (cioè host e router) ha una tabella ARP che contiene mappe IP/MAC per gli altri nodi "adiacenti" (e chiaramente un certo time-to-live di validità dell'associazione, in quanto ricordiamo gli IP sono variabili (e fino ad un certo punto lo sono anche i MAC)).
+
+Il funzionamento di ARP è il seguente:
+\begin{enumerate}
+	\item Poniamo che $A$ voglia inviare un datagramma a $B$, e $B$ non sia nella tabella ARP di $A$;
+	\item $A$ invierà quindi un pacchetto di richiesta ARP in broadcast a tutti i nodi sulla rete locale;
+	\item $B$ ricevera il pacchetto di richiesta ARP, e se questo è ben formato sarà l'unico a rispondere, inoltrando ad $A$ il suo indirizzo MAC;
+	\item $A$ potrà quindi inviare il datagramma a $B$. Inoltre, ci aspettiamo che $A$ memorizzi il MAC ricevuto nella sua tabella ARP (associandolo appunto all'IP di $B$): in questo modo per successive trasmissione non dovrà ripetere la richiesta. 
+\end{enumerate}
+
+\subsection{ICMP}
+Il protocollo \textbf{ICMP} (\textit{Internet Control Message Protocol}) è stato già introdotto più volte. Viene usato dagli host e dai router per scambiarsi informazioni di livello network come notifiche, errori, ecc...
+Inoltre, supporta il meccanismo del \lstinline|ping|, cioè i pacchetti di \textbf{echo}.
+
+Il protocollo ICMP è sempre un protocollo di livello network, ma costruito su IP.
+Ha infatti 3 campi che vengono incapsulati nel datagramma IP:
+\begin{itemize}
+	\item \textbf{Tipo} del messaggio;
+	\item \textbf{Codice} del messaggio, che assieme al tipo permette di specificare completamente la natura del messaggio ICMP;
+	\item \textbf{Header} e \textbf{primi 8 byte} del datagramma IP che ha causato la notifica.
+\end{itemize}
+
+Alcuni esempi di coppie tipo e codice ICMP sono i seguenti:
+\begin{table}[h!]
+	\center \rowcolors{2}{white}{black!10}
+	\begin{tabular} { c | c || c }
+		\bfseries Tipo & \bfseries Codice & \bfseries Descrizione \\
+		\hline
+		0 & 0 & Echo reply (ping) \\ 
+		3 & 0 & Network destinazione irraggiungibile \\
+		3 & 1 & Host destinazione irraggiungibile \\
+		3 & 2 & Protocollo destinazione irraggiungibile \\
+		3 & 3 & Porta destinazione irraggiungibile \\
+		3 & 6 & Network destinazione sconosciuto \\
+		3 & 7 & Host destinazione sconosciuto \\
+		8 & 0 & Echo request (ping) \\
+		9 & 0 & Route advertisement, usato dai router per pubblicizzare un percorso \\
+		10 & 0 & Router discovery, usato dai router per presentarsi \\
+		11 & 0 & TTL del datagramma scaduto \\
+		12 & 0 & Header IP malformato
+	\end{tabular}
+\end{table}
+
+Riguardo a quanto detto su tipo e codice notiamo come, ad esempio, il tipo 3 è destinato ad errori di trasmissione (con il codice che discrimina \textit{quale} fra diversi errori di trasmissione).
+
+\subsection{Forwarding generalizzato}
+Avevamo introdotto il modello \textbf{match plus action} per il forwarding: quando arriva un pacchetto, si fanno combaciare i bit con la tabella di forwarding (\textit{match}) e quindi si fa una qualche \textit{azione}.
+Nel \textbf{destionation based forwarding} (\textit{forwarding basato su destinazione}), questa azione è di inoltrare i pacchetti verso l'indirizzo IP destinazione, basandosi solamente sull'indirizzo IP destinazione.
+
+Nel \textbf{generalized forwarding} (\textit{forwarding generalizzato}), invece, si cerca di usare tutti i campi dell'header IP per informare l'azione compiuta.
+Questa azione, infatti, potrà essere non solo l'\textit{inoltrare} il pacchetto, ma anche lo \textit{scartare}, \textit{copiare}, \textit{modificare} o \textit{loggare} il pacchetto. 
+
+Chiaramente questo approccio prevede di fornirsi di un'astrazione diversa dalla tabella di forwarding, che chiamiamo \textbf{tabella di flusso}.
+\begin{itemize}
+	\item 
+Nella tabella di flusso associamo esplicitamente campi \textit{match} a campi \textit{action}.
+	\item
+Il \textbf{flusso}, appunto, che questa tabella definisce sarà definito da diversi campi dell'header (di livello link, network e transport). L'esempio tipico è di prendere sia i campi sorgente che destinazione;
+	\item
+		Le \textbf{azioni}, come abbiamo già detto, sono più variegate di quelle previste dal modello basato su destinazione (possono prevedere di \textit{scartare} pacchetti, \textit{archiviarli}, ecc...);
+	\item 
+Occore definire una \textbf{priorità} per i pattern di match che si sovrappongono (come disambiguiamo su quale eseguire?);
+	\item
+Infine dovemo prevedere \textbf{contatori} per quanti byte e quanti pacchetti coinvolgono le regole definite, a scopo di statistica. 
+\end{itemize}
+
+\subsubsection{OpenFlow}
+\textbf{OpenFlow} è un protocollo standard per il forwarding generalizzato.
+
+Ogni entrata di una tabella di flusso OpenFlow ha 3 campi:
+\begin{enumerate}
+	\item \textbf{Match}: può offrire un'operazione di match per diversi campi header MAC, IP e TCP/UDP;
+	\item \textbf{Action}: definisce diverse operazioni, fra cui:
+		\begin{itemize}
+			\item Forwarding verso porte;
+			\item Drop di pacchetti (scarta pacchetti);
+			\item Modifica campi negli header di pacchetto;
+			\item Incapsula pacchetto e inoltra a \textit{controller};
+			\item Ecc...
+		\end{itemize}
+	\item \textbf{Stats}: permette di contare quanti pacchetti di un certo tipo sono stati analizzati, o quanti byte sono passati sul router, ecc...
+\end{enumerate}
+
+L'astrazione match plus action permette di unificare tutta una serie di dispositivi diversi:
+\begin{itemize}
+	\item \textbf{Router}: implementando regole di instradamento basate sui campi header IP;
+	\item \textbf{Switch}: implementando regole di instradamento basate sui campi header MAC, magari appoggiandosi anche su azioni di \textit{flooding} (trasmissioni in broadcast);
+	\item \textbf{Firewall}: facendo match su indirizzi IP e numeri di porta TCP/UDP, e sfruttando azioni di drop o instradamento pacchetto;
+	\item \textbf{NAT}: facendo match su indirizzi IP e numeri di porta TCP/UDP e sfruttando azioni di modifica dei pacchetti (riscrittura indirizzi UP e porte TCP/UDP).
+\end{itemize}
+
+\par\smallskip
+
+Riassumendo, abbiamo quindi che l'astrazione \textit{match plus action} è basata su operazioni di match su più di un campo header, e azioni più variegate rispetto al semplice inoltro. Permette di definire il cosiddetto \textit{forwarding generalizzato}, e \textit{OpenFlow} ne è un'implementazione standard.
+Abbiamo che attraverso questa operazione possiamo reliazzare reti effettivamente \textbf{programmabili}, cioè il cui comportamento può essere configurato, a livello di tabelle di flusso, da dispositivi di ordine superiore (che magari automatizzano la configurazione sulla base di informazioni di livello più alto).
+
+\subsection{Middlebox}
+Vengono detti \textbf{middlebox} tutti i dispositivi che non sono né host né router. Ad esempio, il \textit{NAT} è un middlebox, come lo sono il \textit{firewoll}, l'\textit{IDS} (\textit{Intrusion Detection System}), i \textit{load balancer}, le \textit{cache} e tutta un'altra serie di dispositivi ad uso speficico ad applicazioni (ad esempio si pensi all'infrastruttura richiesta dai \textit{CDN}).
+
+Le middlebox nascono come soluzioni proprietarie, e quindi a sorgente e specifiche \textit{chiuse}.
+In seguito, ci siamo spostati verso le cosiddette \textit{"whitebox"}, cioè hardware implementato attraverso API open source, programmabili attraverso il match plus action.
+
+Questo permette di avvicinarsi al cosiddetto \textbf{SDN} (\textit{Software Defined Networking}), cioè la centralizzazione del controllo e della configurazione dei dispositivi che compongono la rete, spesso da remoto (\textit{cloud}, ecc...).
+
+\subsection{Comunicazione fra processi}
+Abbiamo visto finora la comunicazione fra \textbf{host}.
+
+Studiando il livello application, però, abbiamo visto che veramente siamo interessati all'\textbf{IPC} (\textit{Inter Process Communication}), cioè la comunicazione fra più processi all'interno della stessa o più macchine.
+
+Possiamo basarci sui livelli fisici, datalink e network per realizzare il trasporto fra macchine, e ci basiamo su un ultimo livello, il livello \textbf{transport}, per realizzare l'IPC.
+Ricordiamo che i protocolli di questo livello sono \textbf{TCP} (\textit{Transmission Control Protocol}) e \textbf{UDP} (\textit{Universal Datagram Protocol}). 
+Oltre alla comunicazione diretta (almeno dal loro punto di vista) fra processi, vedremo come i protocolli di livello transport possono implementare servizi come:
+\begin{itemize}
+	\item \textbf{Multiplexing} e \textbf{demultiplexing} di più messaggi sulla stessa linea;
+	\item \textbf{Reliable data transfer}, già visto in 10.3 al livello datalink;
+	\item Controllo \textbf{flusso} e \textbf{congestione}.
+\end{itemize}
+
+Il compito dei protocolli di livello transport è quindi quello di permettere la comunicazione \textit{logica} fra più processi applicazione in esecuzione su macchine diverse. Ricordiamo, \textit{logica}, in quanto la comunicazione effettiva avviene attraverso l'intero stack protocollare (fisico, datalink, network e quindi transport).
+
+Al livello transport la comunicazione avviene in \textbf{segmenti} passati al livello network.
+Questo perché il livello transport non vede pacchetti, ma vede \textit{byte}: si vuole infatti creare l'astrazione di un \textit{flusso} continuo di byte, e un segmento non è altro che una parte di questo flusso (che viene quindi diretta in rete sotto forma di pacchetti).
+
+Il livello transport dell'host mittente divide quindi i messaggi di livello application in più segmenti, che vengono ricomposti dal livello transport dell'host destinatario per essere quindi consegnati al relativo livello application, realizzando effettivamente questa astrazione di \textit{byte stream} fra livelli application (cioè fra processi).
+
+\end{document}
