@@ -1,0 +1,433 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 05-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Riprendiamo la trattazione della comunicazione fra processi, in particolare riferendoci al livello transport implementato alternativamente dai protocolli \textit{TCP} e \textit{UDP}.
+
+\subsection{Multiplexing}
+Abbiamo detto che l'obiettivo è implementare la comunicazione fra \textit{processi}, a determinate \textit{porte} (che sono astrazioni costruite al livello transport).
+
+Abbiamo che se si vuole implementare questa trasmissione per \textit{porte}, bisogna prevedere un passo di \textbf{multiplexing} al client dei messaggi di tutte le applicazioni (e quindi tutte le porte attive), e di \textbf{demultiplexing} al server dei messaggi provenienti verso tutte le applicazioni (e quindi tutte le porte attive).
+
+\subsubsection{Demultiplexing connectionless}
+Possiamo parlare di demultiplexing \textbf{connectionless} quando il protocollo non ha concetto di "connessione" (si pensi a UDP).
+In questo caso, l'host riceve datagrammi IP che contengono:
+\begin{itemize}
+	\item Indirizzi IP sorgente e destinazione;
+	\item Il segmento livello transport (nel payload);
+	\item Numeri di porta sorgente e destinazione, contenuto nell'header del segmento di livello transport.
+\end{itemize}
+
+Quello che fa l'host è usare l'indirizzo IP e il numero di porta per dirigere il segmento verso il socket corrispondente (cioè il socket che è assaciato alla porta destinataria). 
+
+\subsubsection{Demultiplexing connection-oriented}
+Nel caso di protocolli che invece hanno concetto di connessione (si pensi a TCP), si parla di demultiplexing \textbf{connection-oriented}.
+
+Un socket TCP è identificato da più informazioni rispetto al semplice socket connectionless.
+In particolare, si adota una 4-upla:
+\begin{enumerate}
+	\item Indirizzo IP sorgente;
+	\item Indirizzo IP destinatario;
+	\item Numero di porta sorgente;
+	\item Numero di porta destinatario.
+\end{enumerate}
+
+Il vantaggio di questo approccio è che possiamo associare più socket alla stessa porta, in quanto la connessione è identificata anche dai dati provenienti dal client.
+
+Questo è il classico esempio dei server TCP, che prevedono un socket di \textit{ascolto} (magari il socket alla porta 80 nei web server), e poi tutta una serie di socket, individuati dalla 4-upla vista sopra, che gestiscono i singoli client.
+Chiaramente, i singoli client hanno prima parlato col socket di ascolto per ricevere un socket alla loro 4-upla. 
+
+\subsection{UDP}
+Veniamo quindi alla trattazione vera e propria del protocollo \textbf{UDP} (\textit{User Datagram Protocol}).
+
+Ricordiamo che questo era un protocollo semplice, privo di servizi aggiuntivi, e basato sul modello \textit{best service} di servizio.
+Questo significa che i pacchetti possono essere persi, o consegnati fuori ordine all'applicazione.
+
+Inoltre, caratteristica fondamentale del protocollo UDP è che è \textit{connectionless}: non c'è alcun concetto di connessione fra trasmettitore e ricevitore, nessun tipo di handshaking prima o dopo la comunicazione, e ogni segmento UDP viene considerato come a sé stante.
+
+I vantaggi dell'UDP sono:
+\begin{itemize}
+	\item L'estrema semplicità e velocità: il RTT di handshaking è inesistente, e il supporto software al ricevitore e al trasmettitore può essere estremamente semplice (non bisogna mantenere informazioni di stato);
+	\item La dimensione ridotta degli header;
+	\item Non esiste controllo di congestione e di flusso: oltre a risparmiare tempo sui controlli, si ha che in alcuni casi UDP può funzionare anche nonostante la congestione.
+\end{itemize}
+
+Le applicazioni di UDP comprendono il DNS, SNMP, e anche protocolli RDT come HTTP/3 (che implementa il suo livello di RDT, detto QUIC).
+Inoltre, UDP è largamente usato in applicazioni ad alte prestazioni come lo streaming e i videogiochi.
+
+\subsubsection{Segmento UDP}
+L'header di segmento UDP è estremamente semplice:
+\begin{lstlisting}[style=codestyle]	
+16 bit				16 bit
+<source port> <destination port>	% header
+<length>			<checksum>
+<payload> (lunghezza variabile)		% payload
+\end{lstlisting}
+
+\begin{itemize}
+	\item Abbiamo l'indicazione del \textbf{numero di porta} e l'\textbf{indirizzo} destinatario, usati per il demultiplexing;
+	\item La \textbf{lunghezza} del payload, cioè il messaggio di livello application, che può essere variabile;
+	\item Un campo di \textbf{checksum} per l'intero segmento.
+
+		Questo è calcolato prenendo i contenuti del segmento come sequenze di numeri su 16 bit e sommandoli bit a bit in complemento a 1. Il checksum è memorizzato in complemento a 1 nel campo \lstinline|<checksum>|: quello che fa il ricevitore e ricalcolare il checksum e confrontarlo con quello nel pacchetto (fare la AND).
+
+		Se risultano uguali, tutto è (apparentemente) a posto. Altrimenti il segmento è corrotto.
+	\item Segue il \textbf{payload} vero e propri.
+\end{itemize}
+
+\subsection{Protocollo TCP}
+Veniamo quindi alla discussione del protocollo \textbf{TCP} (\textit{Transmission Control Protocol}). 
+
+Questo è un protocollo \textit{punto-punto}, cioè astrae un canale di comunicazione (\textit{pipe}) fra due host specifici, trasmettitore e ricevitore.
+
+Implementa anche il concetto di \textit{byte stream}, cioè un flusso di byte ordinato e affidabile (non si possono perdere byte).
+
+Infine, ricordiamo che è \textit{full duplex}, cioè permette la comunicazione bidirezionale sulla stessa connessione (trasmettitore e ricevitore possono scambiarsi di ruolo contemporaneamente sulla stessa connessione). 
+
+Come abbiamo anticipato, la dimensione massima di un segmento TCP su protocollo datalink di tipo Ethernet è 1460 byte, in quanto si perdono 20 byte di header datagramma IP e 20 byte di header segmento TCP (lo vedremo fra poco).
+
+Notiamo inoltre che TCP supporta gli \textit{ACK cumulativi} sui segmenti inviati, capacità di \textit{pipelining}, e supporto al controllo di \textit{flusso} e \textit{congestione}.
+
+\subsubsection{Segmento TCP}
+Il segmento TCP è visibilmente più complesso del segmento UDP:
+\begin{lstlisting}[style=codestyle]	
+16 bit													16 bit
+<source port> 									<destination port>	% header
+<sequence number>
+<acknowledgement number>
+<length> <inutilizzato> <flags> <receive window>
+<checksum>											<urgent data pointer>
+<options> (lunghezza variabile)
+<payload> (lunghezza variabile)											% payload
+\end{lstlisting}
+
+\begin{itemize}
+	\item Immancabili sono il \textbf{numero di porta} e l'\textbf{indirizzo} destinatario, situati nella stessa posizione del segmento UDP;
+	\item Segue il \textbf{numero di sequenza}, su 32 bit.
+
+		Notiamo la particolarità che, essendo TCP orientato al byte, questo indicizza byte anziché segmenti.
+	\item Il \textbf{numero di acknowledge} indica il numero di sequenza del prossimo byte aspettato: in congiunzione al flag A, segnala che il segmento è di ACK. 
+	\item Il campo \lstinline|<length>| è riferito alla \textbf{lunghezza} del solo header TCP;
+	\item Il campo dei \textbf{flag} prevede diversi bit, che sono:
+		\begin{itemize}
+			\item Bit \textbf{C} ed \textbf{E}, pensati per notificare le congestioni (oggi di fatto inutilizzati);
+			\item Bit \textbf{U}, pensato per segnalare dati urgenti (oggi di fatto inutilizzato);
+			\item Bit \textbf{A}, già nominato, segnala che il segmento è di ACK;
+			\item Bit \textbf{P}, sempre legato ai dati urgenti (oggi di fatto inutilizzato);
+			\item Bit \textbf{R} (\textit{RST}), \textbf{S} (\textit{SYN}) e \textbf{F} (\textit{FIN}), usati per la gestione della connessione.
+		\end{itemize}
+	\item Il campo \textbf{receive window} è utile al flow control, in quanto sepcifica il numero di byte che il ricevitore è pronto ad accettare. In questo modo si riescono ad evitare buffer overflow quando si trasmettono più byte di quanti il ricevitore è capace di memorizzare;
+	\item Prevediamo un campo \textbf{checksum} come in TCP;
+	\item L'\lstinline|<urgent data pointer>| è legato alla gestione di dati urgenti (come i bit U e P), oggi è perlopiù inutilizzato; 
+	\item Segue, come in IP, una sezione di \textbf{opzioni} TCP a lunghezza variabile;
+	\item Infine c'è il \textbf{payload} vero e proprio che verrà trasmesso al socket TCP.
+\end{itemize}
+
+\subsubsection{Numeri di sequenza TCP}
+Abbiamo detto che i \textbf{numeri di sequenza} in TCP sono orientati al byte (e non al segmento).
+
+Quelli che gli host vogliono rendere disponibili alle applicazioni sono stream di byte.
+Il campo numero di sequenza di un segmento TCP contiene l'indice del primo byte contenuto nel campo payload del segmento stesso.
+
+Avevamo visto in 11.2 come i byte (o comunque le unità di informazione minima che vogliamo spedire, al tempo le avevamo chiamate pacchetti) possono trovarsi, all'interno di una pipeline, in uno di 4 stati:
+\begin{enumerate}
+	\item Inviati e seguiti da ACK del destinatario, quindi sostanzialmente "dimenticati" sia da ricevitore che da trasmettitore;
+	\item Inviati e non ancora seguiti da ACK, anche detti \textit{in-flight};
+	\item Utilizzabili ma non ancora inviati dal mittente;
+	\item Non ancora utilizzabili dal mittente.
+\end{enumerate}
+
+Per inviare informazioni riguardo alla pipeline, usiamo i campi \textit{numero di sequenza} e \textit{numero di acknowledgement} del segmento TCP.
+In particolare, un segmento dal mittente che contiene un certo numero di sequenza segnala che i byte ivi contenuti stanno passando dallo stato 3 (non ancora spediti) a  2 (appena spediti).
+In risposta, un segmento di ACK (quindi con bit A alzato e numero di acknowledgement impostato) rappresenta una transizione da stato 3 (inviato e senza ACK) a stato 2 (inviato e con ACK).
+
+In altre parole, possiamo dire che il \textit{numero di sequenza} punta all'inizio della sezione \textbf{3} come vista dal mittente, mentre il \textit{numero di acknowledgement} punta all'inizio della sezione \textbf{2} come vista dal destinatario. 
+
+\subsubsection{Gestione connessione TCP}
+Veniamo quindi a come TCP implementa la \textbf{gestione delle connessione}.
+Iniziamo col considerare la fase di \textbf{apertura}.
+
+Vediamo del tipico codice per creare una connessione fra client e server attraverso i classici socket di BSD:
+\begin{itemize}
+	\item Lato client:
+\begin{lstlisting}[language=C++, style=codestyle]	
+// creiamo un socket
+int sc = socket(AF_INET, SOCK_STREAM, 0);
+// richiediamo la connessione del socket all'indirizzo server
+int sts = connect(sd, (struct sockaddr*) &serv_addr, sizeof(serv_addr));
+\end{lstlisting}
+	\item Lato server:
+\begin{lstlisting}[language=C++, style=codestyle]	
+// creiamo un socket di ascolto
+int sl = socket(AF_INET, SOCK_STREAM, 0);
+// leghiamo il socket di ascolto all'indirizzo del server
+bind(sl, (struct sockaddr*) &serv_addr, sizeof(serv_addr));
+// mettiamo in ascolto il socket
+listen(sl, 10);
+// accettiamo una connessione TCP col client dal socket di ascolto
+int sc = accept(sl, NULL, NULL); 
+\end{lstlisting}
+\end{itemize}
+
+Quello che due host che eseguono questo codice mettono in atto in fase di connessione è il cosiddetto \textbf{handshake} a 3-vie:
+\begin{enumerate}
+	\item Inizia il client che si trova nel cosiddetto stato di LISTEN, che invia un messaggio TCP SYN al server. Il numero di sequenza viene scelto in maniera arbitraria. Con questa operazione il client transisce a stato SYNSENT;
+	\item Il server, anch'esso in stato di LISTEN risponde con un messaggio SYNACK, cioè l'ACK del messaggio SYN del client. Il numero di acknowledgement è impostato per seguire quello inviato dal client. Un altro numero di sequenza arbitrario è fornito dal server, e con questa operazione il server transisce a stato SYN RCVD;
+	\item Il client risponde con un ultimo ACK per il SYN ACK. Il segmento che contiene questo ACK potrebbe contenere dati per il server. Inoltre, il numero di acknowledgement è impostato per seguire quello inviato dal server. Con questa operazione, il client transisce a stato di ESTAB.
+		
+		Ad ogni modo, questo ultimo ACK segnala al server che il client è vivo e pronto a trasmettere, e quindi di poter transire allo stato ESTAB.
+\end{enumerate}
+
+I numeri di sequenza vengono scelti in maniera casuale per disambiguare, sul socket di ascolto, fra più richieste di connessione TCP concorrenti.
+
+\par\smallskip
+
+Veniamo all'inevitabile (a meno di errori) fase di \textbf{chiusura} della connessione.
+Questa è più complessa dell'apertura, in quanto l'ultimo ricevitore potrebbe avere dei dati ancora da leggere in fase di chiusura. 
+
+Il procedimento è quindi simile al seguente, ponendo che sia il client a richiedere la chiusura della connessione (non si riporta codice in quanto consiste semplicemente in due \lstinline|close()| sui descrittori di socket):
+\begin{enumerate}
+	\item Il client richiede la chiusura attraverso un segmento FIN;
+	\item Il server riceve il segmento FIN e risponde con un ACK. 
+
+		Chiude quindi la connessione dal suo lato, inviando a sua volta un FIN;
+	\item Il client riceve il FIN del server, ed entra in una fase di \textit{timed wait}, dove rispondera con ACK ad eventuali FIN;
+	\item Il server riceve l'ACK del cliente, e la connessione è effettivamente chiusa.
+\end{enumerate}
+
+Interroghiamoci sui dettagli di questo processo.
+Abbiamo che in fase di creazione della connessione, sia server che client devono allocare risorse necessarie alla gestione della connessione (TCP è \textit{stateful}, per cui richiede informazioni allocate sugli host).
+Queste informazioni dovrebbero ragionevolmente essere deallocate in fase di chiusura della connessione.
+
+Questo però non è esattamente il caso: come abbiamo accennato, se l'host che chiude la connessione elimina subito i suoi descrittori, potrebbe verificarsi una situazione dove non è più in grado di fare ACK ad eventuali ultime richieste dell'altro host (mettiamo che il suo ACK si perde, ecc...).
+Per questo prevediamo una fase di \textit{timed wait} (passo 3 nella sequenza appena vista), dove l'host che ha richiesto la chiusura aspetta, dopo la richiesta di chiusura dell'altro host, in modo da poter fare ACK ad eventuali richieste. 
+
+\end{document}
