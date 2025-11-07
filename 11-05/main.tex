@@ -341,7 +341,7 @@ Il segmento TCP è visibilmente più complesso del segmento UDP:
 			\item Bit \textbf{C} ed \textbf{E}, pensati per notificare le congestioni (oggi di fatto inutilizzati);
 			\item Bit \textbf{U}, pensato per segnalare dati urgenti (oggi di fatto inutilizzato);
 			\item Bit \textbf{A}, già nominato, segnala che il segmento è di ACK;
-			\item Bit \textbf{P}, sempre legato ai dati urgenti (oggi di fatto inutilizzato);
+			\item Bit \textbf{P}, indica che il ricevitore dovrebbe inviare i dati al livello superiore immediatamente (oggi di fatto inutilizzato);
 			\item Bit \textbf{R} (\textit{RST}), \textbf{S} (\textit{SYN}) e \textbf{F} (\textit{FIN}), usati per la gestione della connessione.
 		\end{itemize}
 	\item Il campo \textbf{receive window} è utile al flow control, in quanto sepcifica il numero di byte che il ricevitore è pronto ad accettare. In questo modo si riescono ad evitare buffer overflow quando si trasmettono più byte di quanti il ricevitore è capace di memorizzare;
@@ -402,7 +402,7 @@ Quello che due host che eseguono questo codice mettono in atto in fase di connes
 	\includegraphics[scale=0.25]{../figures/tcp_setup.png}
 \end{center}
 \begin{enumerate}
-	\item Inizia il client che si trova nel cosiddetto stato di LISTEN, che invia un messaggio TCP SYN al server. Il numero di sequenza viene scelto in maniera arbitraria. Con questa operazione il client transisce a stato SYNSENT;
+	\item Inizia il client che si trova nel cosiddetto stato di LISTEN, che invia un messaggio TCP SYN al server. Il numero di sequenza viene scelto in maniera arbitraria. Con questa operazione il client transisce a stato SYN SENT;
 	\item Il server, anch'esso in stato di LISTEN risponde con un messaggio SYNACK, cioè l'ACK del messaggio SYN del client. Il numero di acknowledgement è impostato per seguire quello inviato dal client. Un altro numero di sequenza arbitrario è fornito dal server, e con questa operazione il server transisce a stato SYN RCVD;
 	\item Il client risponde con un ultimo ACK per il SYN ACK. Il segmento che contiene questo ACK potrebbe contenere dati per il server. Inoltre, il numero di acknowledgement è impostato per seguire quello inviato dal server. Con questa operazione, il client transisce a stato di ESTAB.
 		
