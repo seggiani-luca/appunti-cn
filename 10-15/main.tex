@@ -334,6 +334,12 @@ $$
 Cioè l'utilizzazione è terribile: del tempo che impieghiamo a trasmettere un pacchetto, meno dell'$0.001\%$ è effettivamente usato per trasmettere i dati che ci interessano!
 Il problema è chiaramente che passiamo molto tempo ad \textit{aspettare}, quando potremmo avvantaggiarci con l'invio dei pacchetti successivi.
 
+Un diagramma che descrive la situazione incontrata è il seguente:
+\begin{center}
+	\includegraphics[scale=0.3]{../figures/rdt_nopipe.png}
+\end{center}
+Dove vediamo che molta della banda disponibile (effettivamente il tempo) viene sprecata ad aspettare che i pacchetti vengano consegnati, e gli ACK ritornino, quando il tempo di trasmissione di pacchetto è invece piuttosto contenuto.
+
 \subsection{Pipelining}
 Il \textbf{pipelining} è un meccanismo attraverso il quale il trasmettitore può inviare più pacchetti in massa, senza aver ancora ricevuto l'ACK.
 Lo poniamo come alternativa allo \textit{stop-and-wait} visto finora.
@@ -344,7 +350,15 @@ U_{\text{sender}} = \frac{ 3 L/R }{ RTT + L/R } = \frac{0.0024}{30 + 0.0008} = 0
 $$
 che non è molto ma è già di più.
 
-Chiaramente questo comporta delle complicazioni lato ricevitore: dovremmo prevedere la bufferizzazione dei pacchetti in entrata, e ingrandire il contatore del numero di sequenza (2 valori non basteranno più).
+\newpage
+
+Vediamo cosa accade rispetto al grafico della scorsa sezione:
+\begin{center}
+	\includegraphics[scale=0.3]{../figures/rdt_pipe.png}
+\end{center}
+Come si nota dal diagramma, l'obiettivo è quello di riempire la finestra di tempo che passavamo ad aspettare l'arrivo del pacchetto e del seguente ACK, inviando altri pacchetti.
+
+Chiaramente questo tipo di approccio comporta delle complicazioni lato ricevitore: dovremmo prevedere la bufferizzazione dei pacchetti in entrata, e ingrandire il contatore del numero di sequenza (2 valori non basteranno più).
 
 Trascurando quanto avviene lato ricevitore, una domanda interessante è \textit{quanti} pacchetti possiamo anticipare prima dell'ACK successivo: dovremmo riempire la finestra del $RTT$ con più tramissioni (ciascuna occupante tempo $\frac{L}{R}$), cioè inviare un numero di pacchetti al massimo pari a:
 $$
@@ -371,7 +385,7 @@ Il trasmettitore mantiene quindi un timeout per gli ultimi $N$ pacchetti inviati
 
 \par\smallskip
 
-Lato implementativo si ha quindi che il trasmettitore spedisce fino a $N$ pacchetti consecutivi sulla pipeline.
+Dal punto di vista delle FSM si ha quindi che il trasmettitore spedisce fino a $N$ pacchetti consecutivi sulla pipeline.
 Il ricevitore invia da parte sua ACK consecutivi al pacchetto con numero di sequenza più alto ricevuto fino a quel momento (se bufferizzare o meno i pacchetti che non combaciano col numero di sequenza aspettato è una scelta implementativa).
 
 Quando il primo pacchetto della sequenza spedita viene ricevuto, il trasmettitore sposta in avanti la sua finestra e spedisce il successivo, spostandosi così lungo il blocco di pacchetti.
@@ -379,12 +393,44 @@ Quando il primo pacchetto della sequenza spedita viene ricevuto, il trasmettitor
 Se un pacchetto viene perso, il trasmettitore aspetta senza spostare la finestra: prima o poi scatterà il timeout del pacchetto perso e verrà reinviato.
 Lato ricevitore, possiamo aspettarci che questo passerà lo stesso intervallo temporale a inviare ACK sempre sull'ultimo pacchetto valido (con numero di sequenza consecutivo) ricevuto, e che il trasmettitore abbia ignorato tale ACK in quanto ascolta solo l'ACK più grande ricevuto.
 
-\subsubsection{Selective repeat}
+\par\smallskip
+
+Vediamo quindi come si implementa a livello di buffer l'approccio go-back-N.
+Vorremo mantenere nel trasmettitore due puntatori, uno a \lstinline|send_base|, cioè il primo pacchetto non ancora soggetto ad ACK, e uno a \lstinline|nextseqnum|, cioè il prossimo pacchetto da inviare (contenuti nella finestra) non ancora ricevuto dal livello superiore.
+Per fissare quanto detto prima, \lstinline|send_base| avanza con gli ACK cumulativi del ricevitore, e \lstinline|nextseqnum| avanza con i dati ottenuti dal livello superiore.
+
+A questo punto potremo individuare le regioni:
+\begin{center}
+	\includegraphics[scale=0.26]{../figures/gobackn_win.png}
+\end{center}
+\begin{itemize}
+	\item Il range da 0 a \lstinline|send_base| (non compreso) sarà formato da pacchetti inviati e soggetti ad ACK, quindi ignorati;
+	\item Il range da \lstinline|send_base| a \lstinline|nextseqnum| sarà formato da pacchetti inviati e per cui ancora non si è ricevuto ACK;
+	\item Il range da \lstinline|nextseqnum| a \lstinline|send_base| $+ N$ (dimensione finestrai) sarà formato da pacchetti non ancora inviati ma usabili (presenti nella finestra);
+	\item Infine, il range da \lstinline|send_base| $+ N$ in poi non è ancora considerato in quanto fuori dalla finestra.
+\end{itemize}
+
+\subsubsection{Selective-repeat}
 In questo caso il trasmettitore invia $N$ pacchetti senza ACK in pipeline (come sopra).
 La differenza è che il ricevitore invia ACK per ogni pacchetto: il trasmettitore deve quindi mantenere un timer per ogni pacchetto inviato, e nel caso questo timer faccia timeout inviare solo il pacchetto corrispondente.
 
 Questo approccio è chiaramente più efficiente: si ritrasmettono solo i pacchetti persi, a costo di un'implementazione più costosa sia lato trasmettitore (dobbiamo mantenere più timer) che ricevitore (dobbiamo inviare ACK separati per ogni pacchetto).
 
 Il caso in cui approcci come il go-back-N vengono comunque usati è quello di dispositivi \textit{constraining} (come quelli che si usano nell'IoT): questi hanno prestazioni meno soddisfacenti e quindi impongono di usare protocolli meno efficienti.
+
+\par\smallskip
+
+Vediamo quindi anche il selective-repeat a livello di buffer e finestre.
+\begin{center}
+	\includegraphics[scale=0.26]{../figures/selrep_win.png}
+\end{center}
+
+Come notiamo dal grafico, lato trasmettitore le cose restano sostanzialmente uguali, se non per il fatto che il range da \lstinline|send_base| a \lstinline|nextseqnum| (che in go-back-N) avevamo considerato come formato da pacchetti inviati ma senza ACK) può adesso contenere sia pacchetti senza ACK che con ACK.
+Questo viene naturalmente dal fatto che accettiamo gli ACK come relativi a un singolo pacchetto, e non cumulativi fino a quel pacchetto.
+
+Vediamo poi come anche il ricevitore deve fornire la sua finestra.
+In particolare, questa parte \lstinline|rcv_base|, cioè il primo pacchetto che ci aspettiamo di ricevere ma non è ancora arrivato.
+Tutti i pacchetti nel range da \lstinline|rcv_base| a \lstinline|rcv_base| $+ N$ sono, per il ricevitore, pronti per essere ricevuti. Quando si ricevono, si fa l'ACK e si marchiano come ricevuti.
+Se è il paccheto a \lstinline|rcv_base| ad essere ricevuto, spostiamo avanti la finestra fino al prossimo pacchetto non ricevuto. 
 
 \end{document}

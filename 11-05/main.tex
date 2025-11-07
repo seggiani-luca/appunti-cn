@@ -398,6 +398,9 @@ int sc = accept(sl, NULL, NULL);
 \end{itemize}
 
 Quello che due host che eseguono questo codice mettono in atto in fase di connessione è il cosiddetto \textbf{handshake} a 3-vie:
+\begin{center}
+	\includegraphics[scale=0.25]{../figures/tcp_setup.png}
+\end{center}
 \begin{enumerate}
 	\item Inizia il client che si trova nel cosiddetto stato di LISTEN, che invia un messaggio TCP SYN al server. Il numero di sequenza viene scelto in maniera arbitraria. Con questa operazione il client transisce a stato SYNSENT;
 	\item Il server, anch'esso in stato di LISTEN risponde con un messaggio SYNACK, cioè l'ACK del messaggio SYN del client. Il numero di acknowledgement è impostato per seguire quello inviato dal client. Un altro numero di sequenza arbitrario è fornito dal server, e con questa operazione il server transisce a stato SYN RCVD;
@@ -413,7 +416,12 @@ I numeri di sequenza vengono scelti in maniera casuale per disambiguare, sul soc
 Veniamo all'inevitabile (a meno di errori) fase di \textbf{chiusura} della connessione.
 Questa è più complessa dell'apertura, in quanto l'ultimo ricevitore potrebbe avere dei dati ancora da leggere in fase di chiusura. 
 
+\newpage
+
 Il procedimento è quindi simile al seguente, ponendo che sia il client a richiedere la chiusura della connessione (non si riporta codice in quanto consiste semplicemente in due \lstinline|close()| sui descrittori di socket):
+\begin{center}
+	\includegraphics[scale=0.32]{../figures/tcp_tear.png}
+\end{center}
 \begin{enumerate}
 	\item Il client richiede la chiusura attraverso un segmento FIN;
 	\item Il server riceve il segmento FIN e risponde con un ACK. 
