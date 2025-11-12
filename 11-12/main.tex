@@ -1,0 +1,382 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 12-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{RDT su TCP}
+Abbiamo visto i frame del protocollo TCP e le sue funzionalità di gestione della connessione.
+Adesso concentriamoci su come TCP implementa il \textbf{RDT} (\textit{Reliable Data Transfer}).
+
+In 10.3 avevamo introdotto l'RDT su un mezzo qualsiasi (che al tempo associavamo ad un link fisico inaffidabile). Vediamo adesso che tale mezzo inaffidabile può essere rappresentato anche da un link di livello network, come quello offerto dal protocollo IP.
+Quello che fa TCP è quindi implementare un livello di RDT al di sopra di questo link inaffidabile.
+
+\subsubsection{Stima del RTT}
+Un problema che dobbiamo risolvere prima di poter implementare l'RDT su TCP è quello della stima del \textbf{RTT} (\textit{Round Trip Time}), cioè il tempo necessario a inviare un segmento e riceverne l'ACK.
+
+Questo è infatti utile, ad esempio, per calcolare il valore del timeout per i segmenti TCP trasmessi:
+\begin{itemize}
+	\item Se il timeout è troppo corto, si hanno ritrasmissioni inutili;
+	\item Se il timeout è troppo lungo, si ha una reazione troppo lenta alla perdita di segmenti.
+\end{itemize}
+
+L'approccio che possiamo usare è quello di fare una stima \textit{a posteriori} dei RTT precedenti, campionati in sede di trasmissioni precedenti. 
+Una nota riguardo a questa stima è che preferiamo non valutare il tempo impiegato da segmenti che richiedono ritrasmissione, in quanto questi sono chiaramente degli \textit{outlier} (sposterebbero la stima inutilmente verso l'alto).
+
+Possiamo quindi realizzare la nostra stima come \textit{media esponenziale mobile}:
+\begin{lstlisting}[language=C++, style=codestyle]	
+avg_rtt = sample_rtt * h + avg_rtt * (1 - h)
+\end{lstlisting}
+dove \lstinline|avg_rtt| è l'RTT medio che vogliamo considerare, \lstinline|sample_rtt| è l'ultimo RTT che abbiamo valutato, e \lstinline|h| è una qualche costante, con:
+$$
+\text{\lstinline|h|} \in (0, 1)
+$$
+
+Al variare di \lstinline|h| si può dare più o meno peso alle misurazioni passate dell'RTT. Una buona regola è di dare meno peso all'ultima misurazione (prendere $\text{\lstinline|h|} < 0.5$, solitamente $\sim 0.125$).
+
+\par\smallskip
+
+Possiamo svolgere il calcolo dell'RTT stimato (chiamiamolo ERTT) sulla base degli $\text{RTT}_i$ misurati, cioè espandere completamente la media esponenziale mobile: \\
+$
+\text{ERTT}_1 = \text{RTT}_0
+$ \\
+$
+\text{ERTT}_2 = h \cdot \text{RTT}_1 + (1 - h) \cdot \text{RTT}_1
+$ \\
+$
+\text{ERTT}_3 = h \cdot \text{RTT}_2 + (1 - h) h \cdot \text{RTT}_1 + (1 - h)^2 \cdot \text{RTT}_1
+$ \\
+$
+...
+$ \\
+$
+\text{ERTT}_{n + 1} = h \cdot \text{RTT}_n + h (1 - h) \cdot \text{RTT}_{n - 1} + h (1 - h)^2 \cdot \text{RTT}_{n - 2} + ... + (1 - h)^n \cdot \text{RTT}_0
+$
+
+che si riscrive semplicemente come: \\
+$
+\text{ERTT}_{n + 1} = h \cdot \text{RTT}_n + (1 - h) \cdot \text{ERTT}_{n}
+$
+\par\smallskip
+Quest'ultima formula è esattamente quello che lo pseudocodice riportato sopra codifica.
+
+\par\smallskip
+
+Risulta utile tenere conto anche della deviazione dell'RTT, stimata secondo lo stesso metodo:
+\begin{lstlisting}[language=C++, style=codestyle]	
+avg_devrtt = abs(avg_rtt - sample_rtt) * k + avg_devrtt * (1 - k)
+\end{lstlisting}
+dove \lstinline|k| è solitamente $\sim 0.25$.
+
+A questo punto avremo modo di calcolare il timeout ideale (secondo l'euristica presa), come:
+\begin{lstlisting}[language=C++, style=codestyle]	
+timeout = avg_rtt + j * avg_devrtt
+\end{lstlisting}
+dove $j$ esprime la grandezza di un qualche \textit{"margine di sicurezza"}, con $j$ solitamente $\sim 4$. 
+
+\par\smallskip
+
+Per concludere questa sezione, vediamo l'esempio di una stima su un dataset casuale, effettuata usando la media esponenziale mobile con $h = 0.125$:
+# grafico
+
+\subsubsection{Trasmettitore TCP semplificato}
+Iniziamo quindi a vedere come opera un \textbf{trasmettitore TCP}.
+Avremo che questo andrà sviluppato per \textit{eventi}:
+\begin{itemize}
+	\item Evento: dati ricevuti da applicazione.
+		\begin{enumerate}
+			\item Crea un segmento con numero di sequenza pari al numero, nel bytestream, del primo byte nel segmento;
+			\item Avvia il timer se non è già stato avviato. Consideriamo questo timer come un timer per il più vecchio segmento privo di ACK. 
+
+				In questo TCP è più simile al \textit{go-back-N} (vedere 10.3) che al \textit{selective repeat}, con la differenza che ritrasmettiamo il primo segmento e non tutti i successivi per cui non si è avuto ACK.
+				In ogni caso, c'è un solo timer in ogni momento.
+
+				Notimo inoltre che il tempo di timeout è ottenuto dai calcoli visti nella scorsa sezione.
+		\end{enumerate}
+
+	\item Evento: timeout.
+		\begin{enumerate}
+			\item Ritrasmetti il segmento che ha causato timeout (quindi il più vecchio segmento privo di ACK);
+			\item Riavvia il timer.
+		\end{enumerate}
+
+	\item Evento: ACK ricevuto. 
+
+		In questo caso procediamo solo se l'ACK è per segmenti ancora privi di ACK.
+		\begin{enumerate}
+			\item Aggiorna lo stato interno impostando il segmento su cui si è fatto ACK come fornito di ACK;
+			\item Se ci sono ancora segmenti privi di ACK (i successivi su cui avevamo detto non si fa ACK come in \textit{go-back-N}), riavvia il timer.
+		\end{enumerate}
+\end{itemize}
+
+\subsubsection{Ricevitore TCP semplificato}
+Discutiamo quindi il \textbf{ricevitore TCP}.
+Anche qui adottiamo un simile approccio ad \textit{eventi}:
+\begin{itemize}
+	\item Evento: arrivo di un segmento in ordine con numero di sequenza aspettato. Tutti i dati precedenti hanno già ricevuto ACK.
+		\begin{enumerate}
+			\item Effettuiamo un ACK ritardato: iniziamo con aspettare 500ms;
+			\item Quando i 500ms scadono, se non è stato ottenuto nessun segmento, si fa ACK.
+		\end{enumerate}
+
+	\item Evento: arrivo di un segmento in ordine con numero di sequenza aspettato. Almeno un'altro segmento ha un ACK in attesa (dall'ACK ritardato).
+		\begin{itemize}
+			\item Si fa immediatamente un ACK cumulativo per gli ultimi due segmenti in ordine. 
+		\end{itemize}
+
+	\item Evento: arrivo di un segmento fuori ordine. Si rileva un buco.
+		\begin{itemize}
+			\item Si fa immediatamente un \textbf{ACK duplicato}, indicando il numero di sequenza del prossimo byte aspettato.
+		\end{itemize}
+
+	\item Evento: arrivo di un segmento che riempie parzialmente o completamente un buco.
+		\begin{itemize}
+			\item Si invia immediatamente un ACK, ammesso che il segmento risieda nell'estremo inferiore del buco.
+		\end{itemize}
+\end{itemize}
+
+Abbiamo quindi introdotto una nuova funzionalità non ancora discussa: quella dell'\textit{ACK duplicato}.
+Questo è un meccanismo che il ricevitore TCP può sfruttare per richiedere al trasmettitore una \textbf{ritrasmissione rapida}.
+
+Sostanzialmente, abbiamo che una ritrasmissione normale avviene quando scatta il timeout su un certo segmento (che abbiamo detto essere il primo privo di ACK lato trasmettitore).
+In TCP si prevede anche che il ricevitore segnali esplicitamente al trasmettitore di aver perso un segmento, appunto attraverso gli ACK duplicati.
+Quando il trasmettitore riceve un ACK duplicato, reinvia immediatamente i dati richiesti senza aspettare il timer.
+
+In verità, la maggior parte delle implementazioni di TCP non si aspettano propriamente ACK duplicati, ma aspettano una serie di ACK consecutivi con lo stesso numero di sequenza (nell'ordine di $\sim 3$) prima di effettuare una ritrasmissione. 
+
+\subsection{Controllo di flusso TCP}
+Iniziamo quindi a vedere le basi del \textbf{controllo di flusso} in TCP.
+Questo non è da confondersi col \textit{controllo di congestione}, che verrà visto in seguito.
+
+L'obiettivo del controllo di flusso è infatti realizzare una coordinazione fra trasmettitore e ricevitore, che permetta al primo di modulare la sua velocità di trasmissione in modo che il secondo non incorra in problemi di overflow del buffer.
+
+L'idea di fondo del controllo di flusso TCP è quello di permettere al ricevitore di \textit{"pubblicizzare"} lo spazio di buffer libero.
+Ricordiamo che nell'header di segmento TCP (visto in 20.3.1) avevamo previsto un campo \lstinline|<receive window>|. Questo può essere appunto usato per indicare la dimensione del buffer disponibile al ricevitore.
+
+\end{document}

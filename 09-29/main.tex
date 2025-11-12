@@ -288,9 +288,9 @@ Su questa base, potremmo classificare alcune applicazioni sulla base dei requisi
 \subsubsection{Protocolli livello transport}
 Potrebbe essere utile, per capire come realizzare le specifiche sopra descritte, studiare ad alto livello i due protocolli di trasporto principali:
 \begin{itemize}
-	\item \textbf{TCP} (\textit{Transmission Control Protocol}): assicura il trasporto \textit{affidabile} di messaggi tra processi, controllo del \textit{flusso} e delle \textit{congestioni}, ma ha promesse più scarse nel campo della temporizzazione e del throughput (sebbene assicuri un \textit{throughput minimo}).
+	\item \textbf{TCP} (\textit{Transmission Control Protocol}): assicura il trasporto \textit{affidabile} di messaggi tra processi, controllo di \textit{flusso} e di \textit{congestione}, ma ha promesse più scarse nel campo della temporizzazione e del throughput (sebbene assicuri un \textit{throughput minimo}).
 		Orientato alla \textit{connessione} fra processi client e server, è più sicuro dell'alternativa;
-	\item \textbf{UDP} (\textit{User Datagram Protocol}): meno sicuro e affidabile, non fornisce servizi di controllo flussi o congestioni, né throughput minimo. Questo lo rende adatto per soluzioni a basso overhead, dove le prestazioni sono più significative della correttezza dei dati.
+	\item \textbf{UDP} (\textit{User Datagram Protocol}): meno sicuro e affidabile, non fornisce servizi di controllo di flusso o congestione, né throughput minimo. Questo lo rende adatto per soluzioni a basso overhead, dove le prestazioni sono più significative della correttezza dei dati.
 \end{itemize}
 
 Il controllo del flusso e delle congestioni si collega a quanto visto nella sezione 2.2:
@@ -307,8 +307,8 @@ Vediamo quindi una tabella riassuntiva delle differenze fra TCP e UDP:
 		\hline
 		Integrità & Assicurata & Non assicurata \\ 
 		Velocità & Minima assicurata & Massima \\ 
-		Controllo flusso & Si & No \\ 
-		Controllo congestioni & Si & No \\ 
+		Controllo di flusso & Si & No \\ 
+		Controllo di congestione & Si & No \\ 
 		Paradigma & Connessioni & Senza connessioni
 	\end{tabular}
 \end{table}

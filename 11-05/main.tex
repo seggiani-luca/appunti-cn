@@ -344,7 +344,7 @@ Il segmento TCP è visibilmente più complesso del segmento UDP:
 			\item Bit \textbf{P}, indica che il ricevitore dovrebbe inviare i dati al livello superiore immediatamente (oggi di fatto inutilizzato);
 			\item Bit \textbf{R} (\textit{RST}), \textbf{S} (\textit{SYN}) e \textbf{F} (\textit{FIN}), usati per la gestione della connessione.
 		\end{itemize}
-	\item Il campo \textbf{receive window} è utile al flow control, in quanto sepcifica il numero di byte che il ricevitore è pronto ad accettare. In questo modo si riescono ad evitare buffer overflow quando si trasmettono più byte di quanti il ricevitore è capace di memorizzare;
+	\item Il campo \textbf{receive window} è utile al flow control, in quanto specifica il numero di byte che il ricevitore è pronto ad accettare. In questo modo si riescono ad evitare buffer overflow quando si trasmettono più byte di quanti il ricevitore è capace di memorizzare;
 	\item Prevediamo un campo \textbf{checksum} come in TCP;
 	\item L'\lstinline|<urgent data pointer>| è legato alla gestione di dati urgenti (come i bit U e P), oggi è perlopiù inutilizzato; 
 	\item Segue, come in IP, una sezione di \textbf{opzioni} TCP a lunghezza variabile;
