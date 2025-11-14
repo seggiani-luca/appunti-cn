@@ -355,6 +355,12 @@ La particolarità è come si effettuano tali aumenti e riduzioni:
 	\item La \textit{riduzione} è invece \textbf{moltiplicativo}: si divide per 2 in evento di triplo ACK duplicato, portando a riduzioni molto più ripide degli aumenti.
 \end{itemize}
 
+Algoritmi di controllo di congestione di tipo AIMD portano ad un andamento della frequenza di traffico in uscita dai trasmettitori a \textit{"dente di sega"}, come evidenziato dal grafico:
+\begin{center}
+	\includegraphics[scale=0.3]{../figures/tcp_saw.png}
+\end{center}
+Questo andamento è dato dal fatto che l'andamento lineare viene tagliato bruscamente e in maniera proporzionale in luogo di eventi di perdita (timeout o tripli ACK duplicati), dando vita ai \textit{"denti"} della sega.
+
 \par\smallskip
 
 Nel dettaglio, l'attivita di controllo di congestione del trasmettitore dovrà svolgersi in \textit{fasi}:
@@ -414,7 +420,13 @@ Un'ulteriore evoluzione di \textit{TCP Reno} è data da \textbf{TCP Cubic}.
 
 Senza perdersi nei dettagli, abbiamo che TCP Cubic varia solamente la fase di \textit{congestion avoidance}: in particolae prevediamo che la fase di aumento non sia lineare, ma \textit{cubica}, quindi più veloce per aumentare il throughput.
 
-TCP Cubic è usato di default ad esempio nei sistemi Linux.
+Vediamo un semplice grafico che mostra la differenza, in fase di \textit{congestion avoidance} raggiunta dopo lo \textit{slow start}, fra TCP Reno (l'approccio visto finora, a 3 stati) e TCP Cubic:
+\begin{center}
+	\includegraphics[scale=0.3]{../figures/tcp_cubic.png}
+\end{center}
+Come notiamo dal grafico, l'approccio porta ad un throughput complessivamente maggiore da parte del trasmettitore, e quindi un migliore utilizzo della rete.
+
+TCP Cubic è usato di default ad esempio nei sistemi Linux (dalla versione 2.6 circa, rendendolo il metodo più utilizzato nei server).
 
 \subsubsection{Fairness TCP}
 Uno degli obiettivi di TCP è la \textbf{fairness}: nel caso di $n$ host che condividono un link di bitrate $R$, vorremo che ogni host avesse un throughput pari a:
