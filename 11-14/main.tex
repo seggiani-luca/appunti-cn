@@ -1,0 +1,470 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 14-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Riprendiamo la discussione del controllo di flusso TCP.
+
+\par\smallskip
+
+Avevamo introdotto come il ricevitore TCP poteva in qualche modo \textit{"pubblicizzare"} lo spazio libero di buffer attraverso il campo \lstinline|<receive window>| dell segmento TCP.
+Ciò che fa il trasmettitore è quidni limitare il numero di segmenti privi di ACK (i cosiddetti segmenti \textit{in-flight}) allo spazio pubblicizzato in \lstinline|<receive window>|.
+
+Interroghiamoci su come sono disposti i buffer di ricevitore e trasmettitore a tempo di trasmissione di una certa mole di dati.
+\begin{itemize}
+	\item 
+Vediamo innanzitutto il \textbf{ricevitore}.
+Ci aspetteremo di mantenere nel suo buffer i seguenti puntatori:
+\begin{itemize}
+	\item \lstinline|last_byte_read|: punta all'ultimo byte letto dal livello applicazione;
+	\item \lstinline|last_byte_acked|: punta all'ultimo byte ricevuto correttamente, su cui si è fatto ACK, non ancora letto dal livello applicazione;
+	\item \lstinline|last_byte_recv|: punta all'ultimo byte ricevuto su cui non si è ancora fatto ACK. Notiamo che questo potrebbe trovarsi oltre \lstinline|last_byte_acked| in quanto potrebbero esserci buchi nel buffer (segmenti in ordine non ancora ricevuti, per cui \lstinline|last_byte_recv| punta a un segmento fuori ordine (o la fine di un loro blocco)).
+\end{itemize}
+
+Assunto che la dimensione completa del buffer è \lstinline|buf_size|, ci chiediamo come quantificare lo spazio libero del buffer.
+Certamente i segmenti di \textit{"buco"} presenti fra \lstinline|last_byte_acked| e \lstinline|last_byte_recv| non andranno considerati, in quanto se sono arrivati segmenti fuori ordine successivi, i segmenti precedenti sono stati trasmessi e quindi verranno ritrasmessi dal server a breve.
+
+Calcoliamo lo spazio libero come \lstinline|buf_size| meno lo spazio occupato, cioè:
+\begin{lstlisting}[language=C++, style=codestyle]	
+receive_window = buf_size - (last_byte_recv - last_byte_read + buf_size) % buf_size
+\end{lstlisting}
+che sarà esattamente quello che inseriremo nei segmenti di ACK del ricevitore, al campo \lstinline|<receive window>|.
+
+	\item
+Vediamo quindi il \textbf{trasmettitore}.
+Nel suo buffer vorremo i puntatori:
+\begin{itemize}
+	\item \lstinline|last_byte_acked|: punta all'ultimo byte inviato correttamente su cui si è ricevuto un ACK;
+	\item \lstinline|last_byte_sent|: punta all'ultimo byte inviato, su cui non si è ancora ricevuto ACK.
+\end{itemize}
+
+Quello che il trasmettitore dovrà fare sarà quindi mantenere il numero di byte privi di ACK al di sotto della \lstinline|<receive window>| ricevuta, ergo assicurare che:
+\begin{lstlisting}[language=C++, style=codestyle]	
+(last_byte_sent - last_byte_acked + buf_size) % buf_size <= receive_window
+\end{lstlisting}
+\end{itemize}
+
+\subsection{Controllo di congestione TCP}
+Vediamo quindi un altro meccanismo fornito da TCP: il \textbf{controllo di congestione}.
+
+Una \textbf{congestione} si verifica quando le sorgenti di una rete inviano dati a una frequenza troppo alta per essere gestita dalla rete.
+Per le applicazioni si manifesta sotto forma di:
+\begin{itemize}
+	\item Lunghi \textit{ritardi} (dati dall'accodamento nei router);
+	\item \textit{Perdita} di pacchetti (dati dall'overflow nei buffer di router, cioè sempre nelle code).
+\end{itemize}
+
+\subsubsection{Differenze col controllo di flusso}
+Potrebbe essere facile confondere \textit{controllo di flusso} e \textit{controllo di congestione} TCP.
+Ricordiamone le differenze:
+\begin{itemize}
+	\item Il \textbf{controllo di flusso} si occupa di prevenire sovraccarichi al \textit{ricevitore}, assunto che la rete stessa funzioni a pieno regime;
+	\item Il \textbf{controllo di congestione} non si preoccupa invece del ricevitore (che assume come a capacità infinita), ma ha come obiettivo la salvaguardia della rete stessa. Questo significha che ha come obiettivo la prevenzione di sovraccarichi dell'infrastruttura di rete stessa (cioè dei router).
+\end{itemize}
+
+La soluzione per il controllo di flusso era stata ottenere esplicitamente lo spazio di buffer disponibile dal ricevitore e modulare il numero di segmenti \textit{in-flight} su di esso.
+Per il controllo di congestione dovrà invece essere una limitazione complessiva della frequenza di trasmissione, coordinata con i router e fra più sorgenti all'interno della stessa rete.
+
+\subsubsection{Controllo di congestione network-assisted}
+Il controllo di congestione \textit{network-assisted} (o \textbf{assistito dalla rete}) prevede che i router siano capaci di segnalare alle sorgenti che inviano dati il suo stato di congestione.
+
+Ciò che vorremo segnalare sarà quindi il \textit{livello} di congestione in corso, se non direttamente specificare alle sorgenti la frequenza di trasmissione desiderata.
+
+Riguardo a \textit{come} i router possono effettuare questo tipo di comunicazione a ritroso verso le sorgenti, possiamo fare alcune considerazioni: 
+Avevamo detto, discutendo il segmento TCP in 20.3.1, che sono presenti due bit (C ed E) di notifica di congestione esplicita. Il router potrebbe aspettare, per un dato datagramma inviato, il successivo ACK per impostare tale bit.
+Era già stato appurato, però, che questa soluzione è effettivamente inutilizzata.
+
+\subsubsection{Controllo di congestione end-to-end}
+Vediamo quindi l'approccio alternativo al controllo di congestione, detto \textbf{end-to-end}, che viene più usato oggi.
+
+In questo caso non prevediamo che i router ci diano alcun tipo di feedback, ma \textit{rileviamo} la congestione agli host sulla base dei ritardi e la perdita di segmenti osservati.
+
+Esistono diversi modi per rilevare la perdita di segmenti: 
+\begin{itemize}
+	\item Semplicemente, lo scatto del timeout di segmento segnala che quel segmento è stato realisticamente perso, e va reinviato;
+	\item Come abbiamo introdotto in 21.1.3, una funzionalità del TCP è che un certo numero di \textit{ACK duplicati} (avevamo detto 3) segnalano con molta probabilità che un segmento è stato perso.
+\end{itemize}
+
+Notiamo che la perdita dei segmenti non è direttamente legata alla congestione di rete: ad esempio i segmenti si possono perdere per malfunzionamenti a livelli inferiori.
+In ogni caso, i nostri obiettivo sono: 
+\begin{itemize}
+	\item Ottenere la \textit{massima} frequenza di trasmissione;
+	\item Contemporaneamente, ridurre al \textit{minimo} le congestioni.
+\end{itemize}
+I due obiettivi sono chiaramente in contrasto.
+
+\subsubsection{Finestra di congestione}
+Vediamo quindi come le sorgenti agiscono sul traffico in uscita quando si rileva una congestione.
+
+Quello che vorremo stabilire è una certa \lstinline|congestion_window| (finestra di congestione), che ci darà una disequazione simile a quella vista per il controllo di flusso:
+\begin{lstlisting}[language=C++, style=codestyle]	
+(last_byte_sent - last_byte_acked + buf_size) % buf_size <= congestion_window
+\end{lstlisting}
+
+\lstinline|congestion_window| e \lstinline|receive_window| potrebbero sembrarci simili.
+Effettivamente, il trasmettitore è limitato, in quanto a segmenti \textit{in-flight}, da:
+$$
+\text{\lstinline|window|} = \text{min}\left( \text{\lstinline|receive_window|}, \text{\lstinline|congestion_window|} \right)
+$$
+
+La differenza starà nel fatto che la \lstinline|congestion_window| detterà anche la \textit{frequenza} di trasmissione del trasmettitore.
+In particolare, vorremo che:
+$$
+f = \frac{\text{\lstinline|congestion_window|}}{RTT}
+$$
+dovee l'RTT è il \textit{Round Trip Time} stimato come in 21.1.1 (al tempo ci serviva per determinare il timeout), e \lstinline|congestion_window| varia nel tempo sulla base della congestione di rete percepita dal trasmettitore.
+
+Ciò che vogliamo fare è quindi, nella pratica, assicurarci di inviare al massimo \lstinline|congestion_window| byte per ogni RTT.
+
+\subsubsection{Stima della finestra di congestione}
+Per la stima della finestra di congestione adottiamo un'approccio detto \textbf{AIMD} (\textit{Additive Increase, Multiplicative Decrease}).
+
+I trasmettitori in questo caso possono aumentare la frequenza di trasmessione finché non si verifica perdita di segmenti (che segnala congestione).
+A questo punto sono obbligati a ridurre la frequenza.
+
+La particolarità è come si effettuano tali aumenti e riduzioni:
+\begin{itemize}
+	\item L'\textit{aumento} è \textbf{additivo}: si aggiunge una certa quantità di banda (1 MSS) ad ogni iterazione, portando ad un andamento lineare;
+	\item La \textit{riduzione} è invece \textbf{moltiplicativo}: si divide per 2 in evento di triplo ACK duplicato, portando a riduzioni molto più ripide degli aumenti.
+\end{itemize}
+
+\par\smallskip
+
+Nel dettaglio, l'attivita di controllo di congestione del trasmettitore dovrà svolgersi in \textit{fasi}:
+\begin{enumerate}
+	\item \textbf{Slow start};
+	\item \textbf{Congestion avoidance};
+	\item \textbf{Reazione ad eventi di timeout}.
+\end{enumerate}
+
+La fase di \textit{congestion avoidance} è quella vista finora.
+Analizziamo nel dettaglio le altre 2.
+
+\subsubsection{Slow start}
+Vediamo quindi la prima fase, quella di \textbf{slow start}.
+
+All'inizio della connessione si stabilisce \lstinline|congestion_window| uguale a 1 MSS, e quindi la frequenza di trasmissione:
+$$
+f = \frac{MSS}{RTT}
+$$
+
+La frequenza viene quindi aumentata esponenzialmente (raddoppiando i segmenti inviati, cioè incrementando \lstinline|congestion_window| di 1 per ogni ACK ricevuto).
+Tale regime di operazione viene mantenuto fino a che, alternativamente:
+\begin{itemize}
+	\item Si ha il primo evento di timeout o perdita segmento;
+	\item La \lstinline|congestion_window| raggiunge una certa \textit{soglia prefissata}. 
+
+		La soglia stessa viene modificata quando si verificano eventi di timeout. Vedremo poi come questo è necessario in quanto potremmo tornare nella fase di slow start in seguito. 
+\end{itemize}
+
+\par \smallskip
+
+Dalla fase di slow start si passa quindi alla fase di \textit{congestion avoidance}, discussa nella scorsa sezione, dove si impiega l'approccio AIMD.
+
+\subsubsection{Reazione ad eventi di timeout}
+L'ultima fase, quella di \textbf{reazione ad eventi di timeout}, ci mostra come eventi di perdita pacchetti esplicita (triplo ACK duplicato) e eventi di timeout vengono trattati diversamente:
+\begin{itemize}
+	\item Il \textit{triplo ACK duplicato} viene gestito normalmente in fase di \textit{congestion avoidance}, segnala perdita di segmenti e quindi richiede una divisione per due della \lstinline|congestion_window|.
+
+	Nel caso il triplo ACK duplicato arrivi in fase di slow start, invece, si prende come un evento di perdita e si passa alla fase di congestion avoidance;
+\item Gli eventi di \textit{timeout} vengono invece gestiti, quando in fase di \textit{congestion avoidance}, passando nuovamente alla fase di \textit{slow start}. 
+
+	Questo spiega come mai, nella scorsa sezione, avevamo detto che la soglia della \lstinline|congestion_window| viene aggiornata in sede di eventi di timeout: ogni volta che rientriamo nella fase di slow start vogliamo uscirne prima, con una finestra di dimensione massima più piccola.
+
+	Nella fase di slow start, l'evento di timeout è sempre visto come evento di perdita e quindi comporta transizione a fase di \textit{congestion avoidance}.
+\end{itemize}
+
+\subsubsection{Fast recovery}
+Esiste una quarta fase, non ancora vista, che esiste in qualche modo in maniera ancillare alla fase di \textit{congestion avoidance}.
+Questa è la fase di \textbf{fast recovery}, dove si giunge in caso di triplo ACK duplicato.
+
+Ciò che accade in fast recovery è che si aumenta \lstinline|congestion_window| di 1 MSS per ogni ACK duplicato ricevuto sul segmento che a causato l'entrata in fase di fast recovery.
+
+Questo meccanismo è opzionale per TCP, ed è stato introdotto in \textbf{TCP Reno}. Le versioni precedenti (dette \textbf{TCP Tahoe}) preferivano entrare in fase di slow start a partire sia da un evento di triplo ACK duplicato che di timeout.
+
+\subsubsection{TCP Cubic}
+Un'ulteriore evoluzione di \textit{TCP Reno} è data da \textbf{TCP Cubic}.
+
+Senza perdersi nei dettagli, abbiamo che TCP Cubic varia solamente la fase di \textit{congestion avoidance}: in particolae prevediamo che la fase di aumento non sia lineare, ma \textit{cubica}, quindi più veloce per aumentare il throughput.
+
+TCP Cubic è usato di default ad esempio nei sistemi Linux.
+
+\subsubsection{Fairness TCP}
+Uno degli obiettivi di TCP è la \textbf{fairness}: nel caso di $n$ host che condividono un link di bitrate $R$, vorremo che ogni host avesse un throughput pari a:
+$$
+R_i = \frac{R}{n}
+$$
+
+Immaginiamo allora l'esempio di due sessioni TCP in competizione, che sfruttano l'approccio AIMD:
+\begin{itemize}
+	\item L'aumento additivo dà pendenza 1, in quanto è lineare;
+	\item La riduzione moltiplicativa riduce invece il throughput in maniera proporzionale.
+\end{itemize}
+
+Questa configurazione favorisce la fairness, in quanto:
+\begin{enumerate}
+	\item Inizialmente, entrambe le sessioni cercano di ottenere nuova banda in maniera lineare, cioè aumentare le loro frequenze di trasmissione $R_1$ e $R_2$;
+	\item Prima o poi la frequenza di trasmissione cumulativa $R_1 + R_2$ supera $R$, per cui si verificano eventi di perdita.
+		In questo caso, per AIMD, si ha una riduzione proporzionale della banda: questo significa che la sessione che aveva più banda perde \textit{più} banda dell'altra sessione;
+	\item Questo processo si ripete in maniera iterativa ogni volta che le due sessioni superano in frequenza cumulativa il bitrate massimo $R$.
+\end{enumerate}
+
+Il risultato è che si ha uno spostamento delle frequenze di trasmissione, sul lungo termine, verso la divisione equa della banda (in quanto chi invia di più ha effetti più significativi in fase di eventi di perdita).
+
+Possiamo spiegare cosa succede usando il seguente grafico:
+\begin{center}
+	\includegraphics[scale=0.15]{../figures/tcp_fair.png}
+\end{center}
+dove la linea piena indica la barriera di limite massimo ($R_1 + R_2 \leq R$) del bitrate, e la linea tratteggiata indica dove le sessioni si trovano in competizione equa.
+Come vediamo, il percorso seguito dalle frequenze di trasmissione si avvicina, iterativamente, verso quest'ultima linea.
+
+Chiaramente questo discorso è valido solo in un mondo \textit{ideale}: non ci aspettiamo che nella realtà tutti gli host rispettino il controllo di congestione TCP.
+\begin{itemize}
+	\item 
+I trasmettitori UDP, infatti, non hanno tale meccanismo e usano il rate che preferiscono in ogni momento.
+Per questo motivo si preferisce usare UDP per applicazioni ad altra prestazione come videogiochi o streaming video.
+	\item
+		Un altro modo per \textit{"barare"} su TCP può essere quello di stabilire \textit{più} connessioni TCP parallele: se vogliamo che ognuna di queste sia fair, aprendo $m$ connessioni TCP si ha $m$ volta la banda che ci meritiamo.
+Questo è ciò che fanno i browser: aprono diverse connessioni TCP con lo stesso server per ottenere contemporaneamente più dati della stessa pagina.
+Visto che tale approccio può essere effettivamente considerato poco \textit{fair}, molti amministratori server limitano il numero di connessioni parallele cohe un singolo client può aprire.
+\end{itemize}
+
+\subsection{Protocollo QUIC}
+Esite un protocollo nato per risolvere \textit{anche} i problemi di fairness visti nell'ultima sezione, e per offrire un'evoluzione a TCP.
+Di recente si preferisce infatti usare il protocollo \textbf{QUIC} (\textit{Quick UDP Internet Connection}) su HTTP/3.
+
+Questo è un protocollo di trasporto, ma implementato a livello application sopra UDP.
+I vantaggi di QUIC sono che:
+\begin{itemize}
+	\item Riduce il numero di hanshake necessari, dai 2 di TCP su TLS a solo 1;
+	\item Supporta nativamente le connessioni parallele, evitando le problematiche di fairness introdotte dalle connessioni parallele TCP.
+\end{itemize}
+
+\end{document}
