@@ -275,25 +275,25 @@ Questo è per un motivo diagnostico: i comandi client sono letti dalla macchina,
 
 \par\smallskip
 
-Facciamo un'esempio pratico per capire meglio il funzionamento del protocollo. Poniamo che Alice voglia inviare un messaggio a Biagio:
+Facciamo un'esempio pratico per capire meglio il funzionamento del protocollo. Poniamo che Francesca voglia inviare un messaggio a Maurizio:
 \begin{enumerate}
-	\item Alice \lstinline|alice@unipi.it| usa l'user agent per comporre un messaggio e-mail al destinatario Biagio \lstinline|biagio@altroente.edu|;
+	\item Francesca \lstinline|alice@unipi.it| usa l'user agent per comporre un messaggio e-mail al destinatario Maurizio \lstinline|biagio@altroente.edu|;
 	\item L'user agent di alice invia il messaggio al mail server di \lstinline|unipi.it| via SMTP, che lo mettte nella coda dei messaggi;
-	\item Il mail server di Alice apre una connessione TCP, comportandosi come client, con il mail server \lstinline|altroente.edu|;
-	\item Il messaggio di Alice viene trasferito verso tale mail server sulla rete TCP;
-	\item Il mail server di Biagio mette il messaggio nella mailbox di Biagio;
-	\item In un secondo momento, l'user agent di Biagio richiede la mailbox al suo mail server, che quindi gli invia il messaggio di Alice. 
+	\item Il mail server di Francesca apre una connessione TCP, comportandosi come client, con il mail server \lstinline|altroente.edu|;
+	\item Il messaggio di Francesca viene trasferito verso tale mail server sulla rete TCP;
+	\item Il mail server di Maurizio mette il messaggio nella mailbox di Maurizio;
+	\item In un secondo momento, l'user agent di Maurizio richiede la mailbox al suo mail server, che quindi gli invia il messaggio di Francesca. 
 \end{enumerate}
 
-Qui il protcollo SMTP viene usato nella comunicazione fra l'UA di Alice ai server di \lstinline|unipi.it|, e nella comunicazione fra questi e i server di \lstinline|altroente.edu|.
-Per portare la posta dai server di \lstinline|altroente.edu| all'UA di Biagio, invece, verrà usato un altro protocollo (come già detto IMAP o POP3).
+Qui il protcollo SMTP viene usato nella comunicazione fra l'UA di Francesca ai server di \lstinline|unipi.it|, e nella comunicazione fra questi e i server di \lstinline|altroente.edu|.
+Per portare la posta dai server di \lstinline|altroente.edu| all'UA di Maurizio, invece, verrà usato un altro protocollo (come già detto IMAP o POP3).
 
 Abbiamo quindi, per riassumere un ultima volta, che i mail server si comportano come \textit{client} quando devono \textit{inviare} messaggi ad altri mail server, e come \textit{server} quando devono \textit{ricevere} messaggi da altri mail server.
 Verso gli user agent, invece, sono sempre server: si richiede al server di \textit{inviare} una mail, e si richiede al server di \textit{scaricare la mailbox} corrente (il server non ci contatterà come client per inviarci la posta come farebbe con un altro mail server, ma siamo noi a doverlo invocare). 
 
 \subsubsection{Parole chiave SMTP}
 Vediamo l'esempio dei messaggi che viaggiano in una connessione TCP, in plain text, durante lo svolgimento del protocollo TCP.
-Mettiamo ad esempio di leggere la comunicazione fra il server \lstinline|unipi.it| al servizio di Alice dell'esempio precedente, quando questo inoltra la posta al mail server \lstinline|altroente.edu| di Biagio.
+Mettiamo ad esempio di leggere la comunicazione fra il server \lstinline|unipi.it| al servizio di Francesca dell'esempio precedente, quando questo inoltra la posta al mail server \lstinline|altroente.edu| di Maurizio.
 
 Qui \lstinline|S:| significa server (\lstinline|altroente.edu|) e \lstinline|C:| significa client (\lstinline|unipi.it|):
 \begin{lstlisting}[language=html, style=codestyle]	
@@ -306,7 +306,7 @@ C: RCPT TO: <biagio@altroente.edu>
 S: 250 biagio@altroente.edu ... Recipient ok
 C: DATA
 S: 354 Enter mail, end with "." on a line by itself
-C: Ciao Biagio ! 
+C: Ciao Maurizio ! 
 C: .
 S: 250 Message accepted for delivery
 C: QUIT

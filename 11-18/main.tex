@@ -286,20 +286,20 @@ La sicurezza di rete si pone di assicurare:
 \end{itemize}
 
 \subsubsection{Un semplice modello}
-Riprendiamo i personaggi di Alice e Biagio, assunto che fra i due sia presente un canale di comunicazione non sicuro, e introduciamo un nuovo personaggio, \textit{Gastone} (da \textit{Intruder}), che ha come obiettivo quello di spiare e manomettere la conversazione fra Alice e Biagio. 
+Riprendiamo i personaggi di Francesca e Maurizio, assunto che fra i due sia presente un canale di comunicazione non sicuro, e introduciamo un nuovo personaggio, \textit{Giuseppina}, che ha come obiettivo quello di spiare e manomettere la conversazione fra Francesca e Maurizio. 
 
-Chiaramente, Alice e Biagio saranno un modello per due host che trasmettono informazioni sensibili, come client e server di un servizio Web di transazioni online, server DNS o router che si scambiano tabelle di routing, ecc... 
+Chiaramente, Francesca e Maurizio saranno un modello per due host che trasmettono informazioni sensibili, come client e server di un servizio Web di transazioni online, server DNS o router che si scambiano tabelle di routing, ecc... 
 
-Ci sono molte azioni dannose che Trudy potrebbe intraprendere sulla comunicazione fra Alice e Biagio, come ad esempio:
+Ci sono molte azioni dannose che Giuseppina potrebbe intraprendere sulla comunicazione fra Francesca e Maurizio, come ad esempio:
 \begin{itemize}
 	\item \textbf{Sniffing} dei messaggi;
 	\item \textbf{Inserimento} di nuovi messaggi sul canale;
-	\item \textbf{Impersonazione} di Alice o Biagio, replicando il loro indirizzi IP;
-	\item \textbf{Manomissione} della comunicazione fra Alice e Biagio, ad esempio rimuovendo uno dei due dal canale di comunicazione;
-	\item \textbf{Denial of service}, cioè prevenire che il servizio venga usato (eliminando i messaggi sul canale o sovraccaricando le risorse di Alice o Biagio).
+	\item \textbf{Impersonazione} di Francesca o Maurizio, replicando il loro indirizzi IP;
+	\item \textbf{Manomissione} della comunicazione fra Francesca e Maurizio, ad esempio rimuovendo uno dei due dal canale di comunicazione;
+	\item \textbf{Denial of service}, cioè prevenire che il servizio venga usato (eliminando i messaggi sul canale o sovraccaricando le risorse di Francesca o Maurizio).
 \end{itemize}
 
-\subsubsection{Introduzione alla crittografia}
+\subsection{Introduzione alla crittografia}
 Il primo meccanismo di difesa che abbiamo a disposizione è la \textbf{crittografia}.
 
 Definiamo un tipo di crittografia generale, basata su un dato \textit{algoritmo crittografico}.
@@ -307,25 +307,159 @@ Un algoritmo crittografico è un algoritmo che prende in ingresso una stringa co
 
 L'algoritmo crittografico prende come argomento una chiave, che usa per crittografare il messaggio in chiaro. Fissiamo l'algoritmo e diciamo che la sua applicazione al messaggio in chiaro $m$ con chiave $K$ si può semplicemente indicare come $K(m)$.
 
-Tornando ad Alice e Biagio, diciamo che Alice possiede la chiave crittografica $K_A$ e Biagio la chiave $K_B$.
+Tornando ad Francesca e Maurizio, diciamo che Francesca possiede la chiave crittografica $K_A$ e Maurizio la chiave $K_B$.
 Vogliamo come condizione che per qualsiasi $m$:
 $$
 m = K_B(K_A(m))
 $$
 cioè $K_B$ \textit{decifra} i messaggi cifrati con $K_A$.
 
-A questo punto quello che Alice invierà sulla linea sarà $K_A(m)$, e Biagio potrà successivamente usare la sua chiave $K_B$ per ottenere il messaggio $m$ secondo la stessa equazione di prima.
+A questo punto quello che Francesca invierà sulla linea sarà $K_A(m)$, e Maurizio potrà successivamente usare la sua chiave $K_B$ per ottenere il messaggio $m$ secondo la stessa equazione di prima.
 
-Diciamo anche che $K_A$ è la chiave \textit{pubblica}, cioè quella che può essere nota a tutti (e lo sarà ad Alice come a Trudy), in quanto viene usata per crittografare i messaggi destinati a Biagio.
-$K_B$ sarà invece la chiave \textit{privata}, cioè quella che solo Biagio deve avere, e che egli può usare per decifrare i messaggi rivolti a sé.
-Questo è sicuro in quanto, una volta crittografati, nessuno (né Alice ne Trudy) può decifrare i messaggi rivolti a Biagio, se non Biagio stesso.
+Diciamo anche che $K_A$ è la chiave \textit{pubblica}, cioè quella che può essere nota a tutti (e lo sarà ad Francesca come a Giuseppina), in quanto viene usata per crittografare i messaggi destinati a Maurizio.
+$K_B$ sarà invece la chiave \textit{privata}, cioè quella che solo Maurizio deve avere, e che egli può usare per decifrare i messaggi rivolti a sé.
+Questo è sicuro in quanto, una volta crittografati, nessuno (né Francesca ne Giuseppina) può decifrare i messaggi rivolti a Maurizio, se non Maurizio stesso.
 
 \subsubsection{Approcci alla decifratura}
-Vediamo quindi come Trudy, entrata in possesso di un messaggio crittografato da Alice per Biagio, potrebbe procedere alla decodifica del messaggio.
+Vediamo quindi come Giuseppina, entrata in possesso di un messaggio crittografato da Francesca per Maurizio, potrebbe procedere alla decodifica del messaggio.
 \begin{itemize}
-	\item Un primo approccio è chiaramente quello di ottenere in qualche modo la chiave di Biagio. Questo non è un approccio attuabile nella pratica (ci aspettiamo che Biagio custodisca attentamente la sua chiave), ma se non altro ci dimostra che non esistono approcci \textit{"a prova di idiota"}, e cioè che non facendo attenzione con le chiavi si possono invalidare anche gli schemi crittografici più complessi;
-	\item Un altro approccio è quello a \textbf{forza bruta}: si può provare a decrittografare raccogliendo a priori un insieme di chiavi possibili, ecc... il messaggio di Alice applicando l'algoritmo crittografico (che abbiamo detto è prefissato e noto) con tutte le chiavi possibili: questo però richiede grandi capacità computazionali e non è quasi mai conveniente;
+	\item Un primo approccio è chiaramente quello di ottenere in qualche modo la chiave di Maurizio. Questo non è un approccio attuabile nella pratica (ci aspettiamo che Maurizio custodisca attentamente la sua chiave), ma se non altro ci dimostra che non esistono approcci \textit{"a prova di idiota"}, e cioè che non facendo attenzione con le chiavi si possono invalidare anche gli schemi crittografici più complessi;
+	\item Un altro approccio è quello a \textbf{forza bruta}: si può provare a decrittografare raccogliendo a priori un insieme di chiavi possibili, ecc... il messaggio di Francesca applicando l'algoritmo crittografico (che abbiamo detto è prefissato e noto) con tutte le chiavi possibili: questo però richiede grandi capacità computazionali e non è quasi mai conveniente;
 	\item Un approccio più intelligente è quello di tipo statistico, cioè si può pensare di fare un'\textbf{analisi statistica} prima di applicare la forza bruta, magari raccogliendo a priori un insieme di chiavi possibili, ecc... 
 \end{itemize}
+
+\subsection{Crittografia a chiave simmetrica}
+Il metodo di crittografia più semplice è quello a \textbf{chiave simmetrica}.
+
+In questo caso sia Francesca che Maurizio sono in possesso della stessa chiave, detta $K_S$ (da \textit{chiave Simmetrica}).
+Assumiamo allora che la doppia applicazione della chiave porta alla decifratura del messaggio, cioè:
+$$
+m = K_S(K_S(m))
+$$
+per cui basta che Francesca cifri il messaggio con la sua chiave, e Maurizio (che ha una sua copia della stessa chiave) potrà decifrare il messaggio una volta ricevuto.
+
+Il problema è chiaramente quello di come Francesca e Maurizio possono scambiarsi la chiave, in particolare se l'unico mezzo di comunicazione che hanno a disposizione è lo stesso mezzo inaffidabile su vogliono cifrare i loro messaggi.
+
+\subsubsection{Metodi di sostituzione}
+Uno dei più semplici metodi per la cifratura è il cosiddetto \textbf{cifrario di sostituzione} (noto anche come \textit{cifrario di Cesare}).
+
+\begin{itemize}
+	\item 
+L'esempio più semplice è il cifrario per sostituzione \textit{monoalfabetico}, dove si sostituisce ogni lettera con un'altra lettera dello stesso alfabeto, equivalente alla lettera originale spostata avanti secondo la chiave (che sarà quindi un intero).
+Se assumiamo l'alfabeto a 26 lettere, questo metodo crea una mappatura da 26 lettere a 26 lettere, per cui per ogni lettera abbiamo 25 possibili altri lettere con cui sostituire (tralasciando la cifratura banale, cioè l'identità).
+
+Ciò porta a 25 possibili chiavi da testare, che sui moderni calcolatori è sostanzialmente banale. Abbiamo bisogno di un metodo migliore;
+
+\item Un miglioramento del cifrario per sostituzione monoalfabetico si ha assumendo non di spostare ogni lettera in avanti, ma di mappare in maniera arbitraria ogni lettera ad un altra lettera.
+	Assumendo sempre 26 possibili lettere nell'alfabeto, questo porta a $26!$ possibili chiavi, che è già migliore rispetto all'approccio precedente. 
+
+\item Un altro miglioramento che possiamo attuare è quello di prevedere $n$ chiavi di sostituzione cicliche, e assumere che ogni lettera successiva è cifrata con la prossima fra le chiavi cicliche. 
+	
+	Poniamo ad esempio di avere $M_0$, $M_1$ e $M_2$ come chiavi di sostituzione. In questo caso una stringa come \textit{"Rio"} sarà ottenuta:
+	\begin{itemize}
+		\item Decifrando $R$ col cifrario $M_0$;
+		\item Decifrando $i$ col cifrario $M_1$;
+		\item Decifrando $o$ col cifrario $M_2$;
+	\end{itemize}
+
+	Dovrebbe essere apparente come la complessità dello schema di cifratura esplode in maniera esponenziale, per cui metodi di questo tipo risultano ancora più sicuri (metodi di forza bruta effettivamente impossibili da applicare, metodi statistici più inefficaci, ecc..).
+	Il tradeoff è però che chiavi di questo tipo occupano dimensioni sempre più grandi man di mano che complichiamo lo schema.
+\end{itemize}
+
+\subsubsection{Tipi di cifrari simmetrici}
+Esistono 2 tipi particolari di applicazione dei metodi a chiave simmetrica nelle reti informatiche:
+\begin{itemize}
+	\item Cifrari di \textbf{stream}: dove ogni byte viene cifrato. Questo approccio viene usato ad esempio per le connessioni \textbf{SSL/TLS} (\textit{Secure Sockets Layer / Transport Layer Security}), le connessioni \textbf{Bluetooth}, e le reti cellulari;
+	\item Cifrari di \textbf{blocco}: dove i messaggi in chiaro vengono divisi in blocchi di dimensione uguale, ed ogni blocco viene cifrato a sé. Questo metodo è usato ad esempio per gli standard \textbf{DES} (\textit{Data Encryption Standard}), \textbf{3DES} (\textit{Triple DES}), \textbf{AES} (\textit{Advanced Encryption Standard}) e \textbf{IDEA} (\textit{International Data Encryption Algorithm}).
+\end{itemize}
+
+Vediamo nel dettaglio alcuni di questi algoritmi: 
+\begin{itemize}
+	\item 
+Il \textbf{DES} (\textit{Data Encryption Standard}) è un metodo con chiavi simmetriche a 56 bit, e input a blocchi di 64 bit (con \textit{block chaining}).
+Prove sperimentali hanno dimostrato che una stringa crittografata con DES può essere decifrata in meno di un giorno.
+	\item
+Lo stesso algoritmo è stato quindi riproposto sotto la forma di \textbf{3DES} (\textit{Triple DES}), che consiste nel crittografare 3 volte con DES usando chiavi diverse;
+	\item 
+L'\textbf{AES} (\textit{Advanced Encryption Standard}) è un altro approccio a chiave simmetrica, con chiavi su 128, 192 o 256 bit e input a blocchi di 128 bit. Risulta già migliore del DES in quanto a forza bruta si richiede qualcosa nell'ordine dei 149 migliaia di miliardi di anni, contro circa un secondo del DES (forse meno con la potenza di calcolo odierna).
+\end{itemize}
+
+\subsubsection{Scambio di chiavi simmetriche}
+Torniamo al problema che ci eravamo posti in subito in 23.3.2: come possono Francesca e Maurizio, se vogliono usare un approccio a chiave simmetrica, scambiarsi tale chiave prima di iniziare la comunicazione?
+\begin{itemize}
+	\item L'approccio più sicuro (ideale) è chiaramente quello di scambiarsi la chiave su un canale diverso da quello inaffidabile, come ad esempio di persona. Questo è impossibile nel caso non si abbiano altri canali di comunicazione a disposizione;
+	\item Si può usare la crittografia a chiave pubblica, che abbiamo già introdotto in 23.3;
+	\item Si può pensare di usare un centro di distribuzione di chiavi, cioè un \textbf{KDC} (\textit{Key Distribution Center}).
+		Questo dovrà essere un ente terzo, fidato, a cui Francesca e Maurizio potranno iscriversi per ottenere una chiave fidata nota solo a loro.
+		Compito del KDC sarà assicurarsi che solo Francesca e Maurizio possano entrare in possesso della chiave, e non terzi (come ad esempio Giuseppina).
+		Nella pratica, ciò che abbiamo ottenuto è lo spostamento del problema, da Francesca e Maurizio e il loro canale inaffidabile, al KDC.
+
+		Dettagliamo questo processo:
+		\begin{enumerate}
+			\item Quando vuole iniziare una comunicazione, Francesca contatta il KDC, con cui inizia una comunicazione ottenendo una chiave detta $K_{A-KDC}$. Come si ottiene la chiave per il KDC non ci è di interesse (diciamo che se la sono scambiata di persona);
+			\item Maurizio, di lato suo, avrà a disposizione una sua chiave per il suo KDC locale, detta $K_{B-KDC}$;
+			\item Visto che lo scopo di Francesca non è comunicare col KDC, ma con Maurizio, questa invia una richiesta cifrata al KDC che segnala l'intenzione di comunicare con Maurizio, cioè invia il messaggio:
+				$$
+				K_{A-KDC}(A, B)
+				$$
+				Il KDC risponderà quindi con una \textit{chiave di sessione} (la chiave $R_1$), che avrà una certa scadenza prefissata.
+				Oltre alla chiave di sessione, il KDC invierà ad Francesca la chiave di sessione di Maurizio, cifrata usando la chiave $K_(B-KDC)$ (cioè la chiave simmetrica di Maurizio con il KDC), a cui avrà annesso l'informazione riguardo a \textit{chi} sta richiedendo la comunicazione (cioè Francesca).
+				
+				In simboli, ciò che il KDC invierà a Francesca sarà:
+				$$
+				K_{A-KDC} \left( R_1, K_{B-KDC} \left( A, R_1 \right) \right)
+				$$
+				
+				Notiamo che il messaggio destinato a Maurizio, cioè $K_{B-KDC} \left( A, R_1 \right)$, sarà inviato a Francesca ma risulterà a lei effettivamente indecifrabile.
+
+			\item A questo punto Francesca potrà inviare il messaggio cifrato secondo la chiave di Maurizio a Maurizio, e da qui in poi questo conoscerà la chiave di sessione e chi richiede la comunicazione (Francesca).
+				Da qui in poi la comunicazione può avere inizio.
+		\end{enumerate}
+\end{itemize}
+
+\subsection{Crittografia a chiave pubblica}
+Le limitazioni della crittografia a chiave simmetrica dovrebbero ormai esserci chiare: si richiede che trasmettitore e ricevitore conoscano a priori la chiave simmetrica, senza che nessun'altro possa entrarne in possesso, e questo non è banale.
+
+Potrebbe quindi essere utile sfruttare un approccio a \textbf{chiave pubblica}, che abbiamo già accennato in 23.3.
+Questo è un approccio completamente diverso, dove ricevitore e trasmettitore non devono condividere una chiave condivisa, ma esistono 2 chiavi:
+\begin{itemize}
+	\item Una chiave \textbf{pubblica} di cifratura, nota a tutti;
+	\item Una chiave \textbf{privata} di decifratura, nota solo al ricevitore.
+\end{itemize}
+
+Il funzionamento è semplice: una volta che il ricevitore ha generato la coppia di chiavi, tiene sotto custodia la chiave privata e diffonde la chiave pubblica a tutti quelli che vogliono parlare con lui in maniera cifrata.
+Questi si occuperanno quindi di cifrare i messaggi destinati al ricevitore (messaggi che, una volta cifrati, non potranno più leggere), e inviarli.
+Il ricevitore sarà quindi il solo che potrà usare la chiave privata per decifrare i messaggi ricevuti.
+Gli unici che necessitano di conoscere il messaggio in questo processo sono trasmettitore e ricevitore.
+
+In simboli, diciamo che $K_B^+$ è la chiave pubblica di Maurizio, mentre $K_B^-$ è la sua chiave privata.
+Varrà l'equazione, per un qualsiasi messaggio in chiaro $m$:
+$$
+m = K_B^- \left( K_B^+ (m) \right)
+$$
+Quello che Francesca metterà sul canale sarà quindi:
+$$
+K_B^+ (m)
+$$
+cioè il messaggio in chiaro crittografato con la chiave pubblica di Maurizio, da cui Maurizio potrà ricavare il significato originale sfruttando l'equazione scritta sopra. 
+
+\subsubsection{Algoritmi di crittografia a chiave pubblica}
+Nel descrivere la crittografia a chiave pubblica, abbiamo fatto la pretesa (non banale) di avere a disposizione un \textbf{algoritmo} di cifratura (assunto fisso) e una coppia di chiavi $K_B^+$, $K_B^-$ tali che:
+$$
+m = K_B^- \left( K_B^+ (m) \right)
+$$
+
+Un'altra proprietà, che aggiungiamo ora (e ci tornerà utile in seguito), è la seguente:
+$$
+m = K_B^- \left( K_B^+ (m) \right) = K_B^+ \left( K_B^- (m) \right)
+$$
+
+Un'algoritmo tipico di questo tipo è l'\textbf{RSA} (da Ron Rivest, Adi Shamir e Leonard Adleman, che lo pubblicarono nel 1977).
+
+\subsubsection{Chiavi di sessione}
+Il problema dell'RSA è che la cifratura è molto complessa dal punto di vista computazionale: ad esempio, DSA è circa 100 volte più veloce dell'RSA.
+
+Un approccio migliore è quindi quello dove l'RSA (o comunque la crittografia a chiave pubblica) viene usato per stabilire una prima connessione sicura, sulla quale si stabilisce una seconda chiave, la cosiddetta \textbf{chaive di sessione} (simbolo $K_S$), con cui la comunicazione vera e propria può essere effettuata per crittografia a chiave simmetrica.
+Questo è effettivamente l'approccio a cui avevamo accennato in 23.4.3. 
 
 \end{document}
