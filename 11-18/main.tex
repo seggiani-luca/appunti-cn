@@ -1,0 +1,331 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 18-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{Riassunto di Internet}
+Cerchiamo di mettere insieme quanto visto sull'infrastruttura Internet osservando la vita di un messaggio relativo ad un applicazione che conosciamo bene, cioè una \textit{richiesta Web}.
+
+Poniamo di avere un host, come ad esempio un portatile o un telefono cellulare, collegato alla rete locale (magari una LAN istituzionale su Ethernet).
+
+\begin{enumerate}
+	\item Appena arrivato sulla rete, l'host non avrà indirizzo IP, per cui dovrà inviare un messaggio di \textit{Discovery} \textbf{DHCP} sulla sua rete locale. Ricordiamo che DHCP è un protocollo di livello application, per cui questo messaggio verrà incapsulato in un segmento UDP, incapsulato in un datagramma IP, incapsulato in un frame Ethernet 802.3 con indrizzo di \textit{broadcast}.
+
+		Il server DHCP riceve il messaggio, demultiplexando il datagramma IP e il segmento UDP, e risponde. Questo processo si ripete per il cosiddetto \textit{4-way handshake} DHCP (Discovery, Offer, Request, Acknowledge).
+
+		Al termine della trasmissione di \textit{Acknowledge}, quindi, l'host conosce l'indirizzo del server DHCP, del DNS locale, il gateway predefinito e il suo indirizzo IP all'interno della rete;
+	
+	\item Il secondo passaggio è quello della risoluzione del nome di dominio attraverso il \textbf{DNS}. Verrà quindi creata una query DNS (che è nuovamente un protocollo di livello application), che verrà incapsulata in un segmento UDP, incapsulato in un datagramma IP, incapsulato nuovamente in un frame Ethernet 802.3 inviato al server DNS della rete locale.
+
+		Il server DNS riceve tale messaggio, e in maniera iterativa o ricorsiva interroga i server DNS dal top-level (o più in basso se ha cache), fino al server autoritativo associato al dominio cercato.
+		Da questo ottiene un record contenente l'indirizzo IP del Web server con cui l'host desidera comunicare.
+		Questo indirizzo viene inserito in una risposta DNS inviata all'host.
+
+		A questo punto l'host riceve la richiesta: conosce l'indirizzo IP del Web server con cui deve parlare;
+
+	\item Si stabilisce una connessione \textbf{TCP} col Web server, attraverso il classico \textit{3-way handshake} TCP sul socket di ascolto.
+		
+		Il Web server riceve l'handshake, e da lato suo provvede ad aprire una nuova connessione TCP con relativo socket. Le modalità con cui gestisce questo nuovo socket potrebero essere variegate (processi, thread, server iterativi, ecc...).
+
+		Al termine di questa fase sia host che Web server hanno dei socket TCP attivi e sono pronti a scambiarsi dati;
+
+	\item Infine, l'host, che a questo punto si comporterà da client \textbf{HTTP}, inviando una richiesta HTTP ad esempio per la pagina \lstinline|index.html| del Web server contattato, sulla porta 80.
+		La richiesta verrà incapsulata su TCP, e quindi in datagrammi IP e frame Ethernet che raggiungeranno il gateway di rete. Da lì in poi attraverso il protocollo IP la richiesta raggiungerà il server.
+
+		Il server riceverà la richiesta, che verrà demultiplexata da TCP sulla porta 80, cercherà la risorsa desiderata e invierà indietro una risposta HTTP che la contiene. Questo processo si svolge analogamente a prima, ma nella direzione opposta.
+
+		Quando il client riceve la pagina, il browser ivi installato potrà accedere al messaggio di risposta HTTP inviato dal server, accedere ai dati HTML che contiene, e visualizzare la pagina sullo schermo.
+\end{enumerate}
+
+\subsection{Sicurezza in rete}
+Un problema che abbiamo finora ignorato delle reti è la \textbf{sicurezza}.
+La sicurezza di rete si pone di assicurare:
+\begin{itemize}
+	\item \textbf{Confidenzialità}: solo sorgente e destinatario dei messaggi in rete dovrebbero essere in grado di decodificare il contenuto del messaggio.
+		In questo si vuole che il \textit{trasmettitore} \textbf{cifri} il messaggio, e il \textit{ricevitore} lo \textbf{decifri}.
+
+		Questo permette di evitare attachi del tipo \textit{man-in-the-middle} o di \textit{sniffing}, cioè a eventuali malintenzionati di \textit{"spiare"} la conversazione fra 2 o più host;
+	\item \textbf{Autenticazione}: si vuole che ricevitore e trasmettitore possano confrmare l'identità l'uno dell'altro.
+
+		Questo è chiaramente importante nel caso di sistemi che devono verificare l'identità degli utenti (pagine di login, ecc...);
+	\item \textbf{Integrità dei messaggi}: vogliamo assicurarci che i messaggi in transito non vengano modificati, o comunque che non vengano modificati senza la possibilità di rilevare le modifiche.
+
+		Anche questo torna utile nel caso di attacchi del tipo \textit{man-in-the-middle} (quando non \textit{"spiamo"} soltanto i messaggi, ma li manomettiamo), o semplicemente per combattere le imprecisioni date dalle caratteristiche di inaffidabilità dei mezzi di comunicazione stessi;
+	\item \textbf{Accesso e disponibilità}: vogliamo assicurare che i servizi Internet che offriamo siano accessibili e disponibili agli utenti, anche di fronte a elementi di disturbo o carico consistente.
+
+		Questo è particolarmente importante per il paradigma client-server, dove vogliamo che il server sia disponibile in qualsiasi momento, e si può incorrere in attacchi \textbf{DoS} (\textit{Denial of Service}) mirati appunto ad impedire l'accesso ai server sovraccaricandoli. 
+
+		Altri attacchi di questo tipo sono quelli di tipo \textbf{ransomware}, dove si mira a crittografare i dati degli utenti, chiedendo riscatto per la decifrazione (in questo caso l'accesso che sottraiamo è quello ai dati stessi). Secondo l'Anastasi questo è un buon modo per fare soldi facili.
+\end{itemize}
+
+\subsubsection{Un semplice modello}
+Riprendiamo i personaggi di Alice e Biagio, assunto che fra i due sia presente un canale di comunicazione non sicuro, e introduciamo un nuovo personaggio, \textit{Gastone} (da \textit{Intruder}), che ha come obiettivo quello di spiare e manomettere la conversazione fra Alice e Biagio. 
+
+Chiaramente, Alice e Biagio saranno un modello per due host che trasmettono informazioni sensibili, come client e server di un servizio Web di transazioni online, server DNS o router che si scambiano tabelle di routing, ecc... 
+
+Ci sono molte azioni dannose che Trudy potrebbe intraprendere sulla comunicazione fra Alice e Biagio, come ad esempio:
+\begin{itemize}
+	\item \textbf{Sniffing} dei messaggi;
+	\item \textbf{Inserimento} di nuovi messaggi sul canale;
+	\item \textbf{Impersonazione} di Alice o Biagio, replicando il loro indirizzi IP;
+	\item \textbf{Manomissione} della comunicazione fra Alice e Biagio, ad esempio rimuovendo uno dei due dal canale di comunicazione;
+	\item \textbf{Denial of service}, cioè prevenire che il servizio venga usato (eliminando i messaggi sul canale o sovraccaricando le risorse di Alice o Biagio).
+\end{itemize}
+
+\subsubsection{Introduzione alla crittografia}
+Il primo meccanismo di difesa che abbiamo a disposizione è la \textbf{crittografia}.
+
+Definiamo un tipo di crittografia generale, basata su un dato \textit{algoritmo crittografico}.
+Un algoritmo crittografico è un algoritmo che prende in ingresso una stringa comprensibile all'uomo (cioè in \textit{chiaro}) e restituisce una stringa crittografata, cioè incomprensibile.
+
+L'algoritmo crittografico prende come argomento una chiave, che usa per crittografare il messaggio in chiaro. Fissiamo l'algoritmo e diciamo che la sua applicazione al messaggio in chiaro $m$ con chiave $K$ si può semplicemente indicare come $K(m)$.
+
+Tornando ad Alice e Biagio, diciamo che Alice possiede la chiave crittografica $K_A$ e Biagio la chiave $K_B$.
+Vogliamo come condizione che per qualsiasi $m$:
+$$
+m = K_B(K_A(m))
+$$
+cioè $K_B$ \textit{decifra} i messaggi cifrati con $K_A$.
+
+A questo punto quello che Alice invierà sulla linea sarà $K_A(m)$, e Biagio potrà successivamente usare la sua chiave $K_B$ per ottenere il messaggio $m$ secondo la stessa equazione di prima.
+
+Diciamo anche che $K_A$ è la chiave \textit{pubblica}, cioè quella che può essere nota a tutti (e lo sarà ad Alice come a Trudy), in quanto viene usata per crittografare i messaggi destinati a Biagio.
+$K_B$ sarà invece la chiave \textit{privata}, cioè quella che solo Biagio deve avere, e che egli può usare per decifrare i messaggi rivolti a sé.
+Questo è sicuro in quanto, una volta crittografati, nessuno (né Alice ne Trudy) può decifrare i messaggi rivolti a Biagio, se non Biagio stesso.
+
+\subsubsection{Approcci alla decifratura}
+Vediamo quindi come Trudy, entrata in possesso di un messaggio crittografato da Alice per Biagio, potrebbe procedere alla decodifica del messaggio.
+\begin{itemize}
+	\item Un primo approccio è chiaramente quello di ottenere in qualche modo la chiave di Biagio. Questo non è un approccio attuabile nella pratica (ci aspettiamo che Biagio custodisca attentamente la sua chiave), ma se non altro ci dimostra che non esistono approcci \textit{"a prova di idiota"}, e cioè che non facendo attenzione con le chiavi si possono invalidare anche gli schemi crittografici più complessi;
+	\item Un altro approccio è quello a \textbf{forza bruta}: si può provare a decrittografare raccogliendo a priori un insieme di chiavi possibili, ecc... il messaggio di Alice applicando l'algoritmo crittografico (che abbiamo detto è prefissato e noto) con tutte le chiavi possibili: questo però richiede grandi capacità computazionali e non è quasi mai conveniente;
+	\item Un approccio più intelligente è quello di tipo statistico, cioè si può pensare di fare un'\textbf{analisi statistica} prima di applicare la forza bruta, magari raccogliendo a priori un insieme di chiavi possibili, ecc... 
+\end{itemize}
+
+\end{document}
