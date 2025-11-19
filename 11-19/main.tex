@@ -1,0 +1,415 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 19-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsection{Integrità dei messaggi}
+Veniamo quindi a discutere il secondo grande tema della sicurezza in reta, cioè l'\textbf{integrità dei messaggi} trasmessi.
+
+In questo caso non ci è di particolare interesse lo \textit{sniffing} dei messaggi, e quindi nemmeno la loro cifratura (assumiamo di trasmettere dati che tutti possono leggere in sicurezza).
+Piuttosto, vogliamo impedire che ci siano \textit{manomissioni} del messaggio in transito.
+
+In particolare, vogliamo fornire alle parti comunicanti la possibilità di verificare che i messaggi ricevuti siano autentici, cioè:
+\begin{itemize}
+	\item Il sorgente del messaggio sia chi si pensa che sia (il problema dell'\textit{autenticazione});
+	\item I contenuti del messaggio non siano stati manomessi;
+	\item Il messaggio non sia stato replicato da messaggi precedenti;
+	\item La sequenza di messaggi venga mantenuta. 
+\end{itemize}
+
+\subsubsection{Digest}
+Per verificare l'integrità dei messaggi ci poniamo di realizzare una sorta di \textit{"impronta digitale"} \textit{digitale} (heh) di lunghezza fissa e veloce da calcolare.
+
+L'approccio banale è quello di applicare una certa funzione hash $H$ al messaggio $m$, per ottenere $H(m)$, che chiamiamo anche \textbf{digest} del messaggio.
+
+Le proprietà della funzione di hash $H$ che cerchiamo dovranno essere le seguenti:
+\begin{itemize}
+	\item \textbf{Veloce} da calcolare;
+	\item \textbf{Irreversibile}: dato $x = H(m)$, deve essere computazionalmente impossibile ricavare $m$;
+	\item Resistente alle \textbf{collisioni}, cioè dati $(m, H(m))$ deve essere computazionalmente impossibile trovare $m'$ che abbia $H(m') = H(m)$ (si verifichi una \textit{collisione});
+	\item L'output deve sembrare apparentemente \textbf{casuale}.
+\end{itemize}
+
+Notiamo che con \textit{computazionalmente impossibile} intendiamo dire che può succedere, ma con probabilità estremamente bassa.
+
+Vediamo l'esempio di alcuni funzioni di hash usate nei digest:
+\begin{itemize}
+	\item 
+Notiamo che in qualche modo la \textbf{checksum Internet} (quella che troviamo nei pacchetti IP) ha alcune proprietà di una funzione di hash: produce digest di 16 bit (calcolati come somme) per messaggio.
+Il problema è che è una funzione di hash molto scadente: dato un messaggio $m$ è molto facile trovare un secondo messaggio $m'$ con la stessa checksum Internet (basta scambiare parole da 16 bit o aggiungere valori modulo $2^16$ a parole da 16 bit);
+\item Un'approccio più utilizzato è \textbf{MD5} (\textit{Message Digest 5}), che genera digest su 128 bit attraverso un approccio con 4 passaggi;
+\item Anche \textbf{SHA-1} (\textit{Secure Hashing Algorithm 1}) è molto usato, che genera digest su 160 bit (solitamente rappresentati come esadecimali su 40 cifre).
+\end{itemize}
+
+\subsubsection{MAC}
+Vediamo quindi i \textbf{MAC} (\textit{Message Authentication Code}), da non confondere col MAC del \textit{Medium Access Protocol}.
+
+Questi sono codici associati a messaggi che permettono di autenticare il mittente del messaggio e verificare l'integrità del messaggio.
+Abbiamo già visto come la crittografia può risolvere questo problema: vediamo però un modo basato sulle funzioni di hash.
+
+Introduciamo l'idea del \textit{segreto condiviso}, che non va confusa ma è in qualche modo parallela alla \textit{chiave condivisa} degli algoritmi di cifratura a chiave condivisa.
+Questo sarà semplicemente rappresentato da una stringa di bit nota solamente alle 2 parti coinvolte nella comunicazione.
+
+\begin{enumerate}
+	\item 
+Ciò che si fa è quindi appendere il segreto al messaggio da inviare, e calcolare con un algoritmo di hash un codice (appunto il MAC) a partire da questo valore.
+Tale MAC viene quindi appeso al messaggio stesso, che viene trasmesso sul canale inaffidabile. 
+	\item 
+Il ricevitore può quindi estrarre il messaggio vero e proprio da quanto riceve sul canale inaffidabile, e ricalcolare il MAC esattamente come aveva fatto il trasmettitore. 
+A questo punto basta confrontare il valore ottenuto col codice MAC ricevuto per verificare che il messaggio non sia stato manomesso.
+\end{enumerate}
+
+\subsubsection{HMAC}
+\textbf{HMAC} (\textit{Hash-Based MAC}) è uno standard MAC molto popolare: può usare sia MD5 che SHA-1.
+Il suo funzionamento è il seguente:
+\begin{enumerate}
+	\item Si concatena il segreto all'inizio del messaggio: $[s|m]$;
+	\item Si calcola l'hash del messaggio concatenato: $H([s|m])$;
+	\item Si concatena il segreto all'inizio del digest: $[H([s|m])|m]$;
+	\item Si ricalcola l'hash di questa combinazione: $H([H([s|m])|m])$.
+\end{enumerate}
+
+\subsubsection{Replicazione di messaggi}
+Quando si è stabilito un metodo di verifica dell'integrità dei messaggi funzionante, resta comunque il problema della \textbf{replicazione dei messaggi}: non abbiamo modo di distinguere se un messaggio ottenuto e già ricevuto in precedenza è stato reinviato dalla sorgente che ci aspettiamo, o inserito da un terzo malintenzionato. 
+
+\begin{itemize}
+	\item 
+Una soluzione che possiamo immaginare è quella di inserire in ogni messaggio in un timestamp.
+Il timestamp figurerà nel calcolo del MAC, per cui la sua trasmissione sarà affidabile, e assunto che gli host siano sincronizzati, si potranno scartare messaggi troppo vecchi come replicati.
+	\item
+Un altro approccio è quello delle \textbf{OTP} (\textit{One Time Password}), cioè codici richiesti dal destinatario che il mittente deve inserire nel messaggio che vuole inviare.
+
+Questo significa che le trasmissioni con OTP devono svolgersi in 3 fasi. Riprendiamo l'esempio di Francesca e Maurizio: 
+\begin{enumerate}
+	\item Se Francesca vuole inviare un messaggio a Maurizio, dovrà prima chiedere a Maurizio una OTP che Maurizio genererà, memorizzera e provvederà a fornire;
+	\item Una volta ottenuta l'OTP, Francesca la annetterà al messaggio (che secondo il metodo del MAC già visto verrà trasmesso in maniera sicura);
+	\item Ricevuto il messaggio con OTP, Maurizio potrà confrontare l'OTP ricevuto con quello generato in precedenza, e quindi validare il messaggio.
+\end{enumerate}
+
+Intrusi come Giuseppina non potranno replicare il messaggio, in quanto dopo la prima trasmissione l'OTP verrà invalidata, e messaggi con la stessa OTP non verranno più accettati.
+
+\end{itemize}
+
+\subsubsection{Firme digitali}
+Veniamo adesso ad una tecnica crittografica del tutto analoga alle firme scritte a mano: quella delle \textbf{firme digitali}.
+
+Una firma digitale deve avere le seguenti caratteristiche:
+\begin{enumerate}
+	\item \textbf{Verificabile}: il destinatario deve essere capace di provare che il mittente (noto), e solo il mittente ha firmato il documento;
+	\item \textbf{Non falsificabile}: la firma falsificata da un altro deve essere rilevata;
+	\item \textbf{Non ripudiabile}: il destinatario deve poter provare che il mittente ha firmato il documento $m$, e non un altro documento $m'$;
+	\item \textbf{Integra}: il mittente deve poter provare di aver firmato il documento $m$, e non un altro documento $m'$;
+\end{enumerate}
+
+Il corrispettivo più vicino alla firma che abbiamo visto finora è il codice MAC con segreto. Il problema è che per il MAC è impossibile capire chi ha messo la firma fra le 2 parti coinvolte nella comunicazione (entrambi hanno accesso sia al segreto che alla funzione di hash).
+Effettivamente, l'unica caratteristica dei MAC fra le 4 che cerchiamo è la 4 (integrità), mentre le altre 3 non vengono soddisfatte.
+
+Per risolvere il problema, reintroduciamo i concetti di chiavi pubbliche e private (visti in 23.5).
+Ciò che potremmo fare di base è criptare il messaggio $m$ con la chiave privata del mittente.
+\begin{enumerate}
+	\item 
+Tornando ai nostri esempi, Maurizio firma un documento con la sua chiave privata $K_B^-$, dando vita alla firma $K_B^-(m)$.
+	\item
+A questo punto Francesca potrà verificare che la firma è effettivamente di Maurizio usando la chiave pubblica, cioè calcolare:
+$$
+m =  K_B^+ \left( K_B^- (m) \right)
+$$
+Se l'uguaglianza risulta verificata, la firma è valida.
+\end{enumerate}
+
+Abbiamo quindi soddisfatto tutte le caratteristiche, in quanto Francesca può verificare che:
+\begin{itemize}
+	\item Maurizio ha firmato $m$;
+	\item Nessun altro ha firmato $m$;
+	\item Maurizio ha firmato $m$ e non $m'$;
+\end{itemize}
+che è la caratteristica 1.
+Inoltre la firma non si può ripudiare (solo Maurizio può generare $K_B^-(m)$, in quanto nessun altro ha $K_B^-$) (caratteristiche 2 e 3).
+Infine, Maurizio potrà dimostrare di aver firmato solo il documento $m$ e non il documento $m'$, che abbiamo detto è la caratteristica 4 che il MAC già ci assicurava. 
+
+\par\smallskip
+
+Quello che si fa nella pratica, in verità, è calcolare le firme non su $m$ ma su hash di $m$, che ci risulta più funzionale.
+Dettagliamo quindi un ultima volta il processo:
+\begin{enumerate}
+	\item 
+Maurizio firma l'hash di un documento $m$ con la sua chiave privata $K_B^-$, dando vita alla firma $K_B^-(H(m))$.
+	\item
+A questo punto Francesca potrà verificare che la firma è effettivamente di Maurizio usando la chiave pubblica, cioè calcolare:
+$$
+H(m) =  K_B^+ \left( K_B^- (H(m)) \right)
+$$
+Ciò si può fare, in quanto sia Maurizio che Francesca hanno accesso a $m$ e alla funzione di hash $H$.
+Se l'uguaglianza risulta verificata, la firma è valida.
+\end{enumerate}
+
+Notiamo quindi le differenze principali fra MAC e firme digitali:
+\begin{itemize}
+	\item Nel MAC, ciò che facciamo e calcolare $m|s$ (concateniamo messaggio e segreto), prendere l'hash $H(m|s)$, e inviare $[m, H(m|s)]$, cioè messaggio e codice MAC. Il ricevitore, noto il segreto, può ricalcolare il MAC verificare;
+	\item Nella firma digitale prendiamo invece l'hash $H(m)$ di $m$, e lo cifriamo con la chiave privata del mittente, ottenendo $K^-(H(m))$. La coppia $[m, K^-(H(m))]$ può quindi essere inviata.
+\end{itemize}
+
+La firma digitale è un metodo più pesante dei codici MAC: richiede \textbf{PKI} (\textit{Public Key Infrastructure}), cioè infrastruttura a supporto della distribuzione affidabile di chiavi pubbliche. 
+
+\subsubsection{Autorità di certificazione}
+Le \textbf{CA} (\textit{Certification Authority}, o in italiano \textit{autorità di certificazione}) sono enti che memorizzano e rilasciano \textbf{certificati digitali}.
+Un \textbf{certificato digitale} lega un dato ente $E$ alla sua chiave pubblica $K^+$: per avere conferma che una data chiave pubblica $K^+$ appartiene all'ente $E$ ci si può rivolgere al CA.
+
+Ciò che il CA fa nella pratica è dettagliato in seguito:
+\begin{enumerate}
+	\item Il CA riceve da chi vuole registrare la sua chiave pubblica una \textit{prova di identità};
+	\item Quando l'identità e confermata, il CA firma la chiave pubblica $K^+$ con la sua chiave privata $K_{CA}^-$. La chiave pubblica firmata dal CA rappresenta quindi il \textit{certificato digitale}, che conferma che tale chiave appartiene all'ente che la ha depositata. 
+\end{enumerate}
+
+Chi vuole confermare un certificato quindi, può semplicemente richiedere la chiave pubblica del CA dal CA stesso (cosa che ci aspettiamo un CA sappia fare), e applica tale chiave al certificato digitale. Se si ottiene una copia esatta della chiave associata al certificato, tale chiave è valida.
+
+\subsection{Autenticazione}
+Andiamo quindi a dettagliare il problema dell'\textbf{autenticazione}.
+Ciò che vogliamo stabilire è un \textit{protocollo} che permetta ad un soggetto di \textit{autenticarsi} con un altro soggetto, cioè verificare la sua identità.
+
+\begin{itemize}
+	\item Un approccio banale potrebbe essere quello di usare pacchetti contenenti l'identità del mittente. 
+
+		Coi nostri esempi, Francesca invia un messaggio a Maurizio contenente la stringa \textit{"Sono Francesca"}. Questo approccio però non è sicuro, in quanto facilmente replicabile da Giuseppina.
+
+	\item Un approccio leggermente migliore è quello di inviare un pacchetto contenente la stringa \textit{"Sono Francesca"} e l'IP di Francesca. Anche questo però è facilmente replicabile da Giuseppina secondo la tecnica dell'\textit{IP-spoofing};
+
+	\item Introduciamo quindi una \textit{password}. Inviamo l'IP di Alice (per identificazione), la password (che non vorremo inviare in chiaro, ma cifrare secondo un algoritmo noto sia a Maurizio che a Francesca), e la stringa di autenticazione. Nemmeno questo approccio, però, è valido, in quanto a Giuseppina basterà replicare esattamente il messaggio inviato da Francesca per potersi autenticare con Maurizio;
+
+	\item Se abbiamo a disposizione la crittografia a chiave simmetrica, possiamo inviare indietro, su richieste di autenticazione, un cosiddetto \textit{nonce}, cioè una stringa casuale. A questo punto chi vuole autenticarsi (poniamo Francesca) può cifrare il nonce attraverso la chiave condivisa, e reinviare il nonce cifrato a Maurizio.
+		Maurizio, che ha generato il nonce e ha accesso alla stessa chiave, può quindi confrontare il nonce cifrato ottenuto e verificare l'identità di Francesca;
+
+	\item Se vogliamo far funzionare l'approccio precedente con le chiavi pubbliche, possiamo chiedere a Francesca, anziché il solo nonce cifrato, il nonce cifirato con chiave pubblica ($K_A^+$) e la chiave pubblica stessa.
+\end{itemize}
+
+Notiamo che nessuno di questi metodi è sicuro dai cosiddetti attacchi \textbf{man-in-the-middle}, cioè attacchi dove un terzo malintenzionato si finge Maurizio quando parla con Francesca, e viceversa Francesca quando parla con Maurizio.
+L'unico modo che abbiamo per adesso di risolvere questo problema è usare una chiave pubblica certificata quando s usa la cifratura a chiave pubblica.
+
+\end{document}
