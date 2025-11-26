@@ -263,6 +263,10 @@ A questo punto possiamo pensare che Francesca dovrà:
 
 L'approccio ancora migliore, che combina gli ultimi 3 fattori visti, è quello criptare sia la firma che il messaggio, assicurando quindi \textit{confidenzialità} oltre che a \textit{integrità} e \textit{autenticazione}.
 
+\par\smallskip
+
+Lo schema crittografico che abbiamo descritto finora è sostanzialmente quello della \textbf{PGP} (\textit{Pretty Good Privacy}), libreria scritta nel 1991, ad oggi uno dei primi esempi di applicazioni per la sicurezza in rete largamente distribuite.
+
 \subsection{TLS}
 Veniamo quindi al \textbf{TLS} (\textit{Transport Layer Security}), un protocollo di sicurezza implementato al di sopra del livello trasporto, supportato dalla maggior parte dei server e browser (gli web server forniscono pagine su TLS sull aporta 443).
 
@@ -335,9 +339,17 @@ $$
 Questo signfica che la connessione TCP non può essere chiusa finché non si chiude la connessione TLS soprastante, dove le richieste di terminazinoe avvengono in maniera criptata.
 
 \subsubsection{Posizionamento del TLS}
-Può essere interessante vedere dove il TLS si posiziona a livello di stack protocollare:
+Può essere interessante vedere dove il TLS si posiziona a livello di stack protocollare, in 3 configurazioni diverse (\textit{HTTP/2 clear}, cioè senza TLS, \textit{HTTP/2} normale con TLS, e \textit{HTTP/3}, che abbiamo introdotto in 5.2 e approfondito in 22.2):
 
-# grafico HTTP/2 HTTP/2 con TLS HTTP/3 (QUIC su UDP)
+\begin{center}
+	\includegraphics[scale=0.37]{../figures/stack_tls.png}
+\end{center}
+
+\begin{itemize}
+	\item Per quanto riguarda \textbf{HTTP/2 clear}, abbiamo che il TLS chiaramente non è presente, e quindi il protocollo HTTP a livello application si svolge interamente sopra il socket TCP;
+	\item Se dotiamo l'\textbf{HTTP/2} del TLS, questo va a inserirsi sempre al livello application, ma al di sotto del protocollo HTTP stesso. Si a quindi che è il TLS ad interagire con il socket TCP, offrendo un socket TLS al livello HTTP soprastante;
+	\item Infine vediamo, solo a scopo di esempio, come la stessa semantica è implementata in \textbf{HTTP/3} su QUIC: in questo caso si ha che il protocollo di livello trasporto utilizzato è l'UDP, al di sopra del cui è il QUIC a offrire servizio di trasporto affidabile all'HTTP/3. Il TLS risulta implementato direttamente dentro QUIC.
+\end{itemize}
 
 \subsubsection{Suite di cifratura}
 La \textbf{suite} di cifratura è formata da un insieme di algoritmi crittografici e per la generazione di chiavi, cioè:
@@ -354,7 +366,7 @@ Il problema che però ci interessa è come avviene la scelta e la comunicazione 
 \begin{enumerate}
 	\item Prevederemo quindi in fase di handshake che il client comunichi al server quali suite di cifratura è capace di usare;
 	\item Il server risponderà inviando la suite di cifratura scelta fra quelle supportate dal client. Seguirà il certificato del server.
-	# finisci a casa
+	\item Il client potrà quindi controllare il certificato server ricevuto, generare le chiavi attraverso la suite scelta, e iniziare ad effettuare richieste di livello application. 
 \end{enumerate}
 
 \subsection{IP Sec}
@@ -418,7 +430,7 @@ ESP auth
 \begin{itemize}
 	\item Il \textbf{trailer ESP} rapprsenta padding per gli algoritmi di cifratura a blocchi;
 	\item L'\textbf{header ESP} contiene l'SPI, così che il ricevitore possa elaborare il datagramma (gestendo le sue SA), e il numero di sequenza (per evitare attacchi di replay);
-	\item L'\textbf{auth ESP} contiene il MAC dellp'intero datagramma ESP.
+	\item L'\textbf{auth ESP} contiene il MAC dell'intero datagramma ESP.
 \end{itemize}
 
 \end{document}
