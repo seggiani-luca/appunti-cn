@@ -1,0 +1,424 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 26-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Continuiamo a trattare la sicurezza in rete, in particolare guardando al livello delle applicazioni.
+
+\subsection{Sicurezza delle applicazioni}
+Nello stack protocollare visto finora (livello fisico, datalink, network, trasporto e applicazione) la sicurezza è distibuita a tutti i livelli, cioè implementata ad ogni livello.
+
+Vediamo adesso come questi livelli di sicurezza interagiscono nell'implementazione di un'applicazione.
+Prendiamo in particolare come esempio un'applicazione di \textit{e-mail} (abbiamo trattato applicazioni di questo tipo in 6.1).
+
+\subsubsection{Confidenzialità}
+Poniamo che Francesca voglia inviare una mail a Maurizio, assicurandone la \textbf{confidenzialità}.
+Abbiamo visto in 23.4 e 23.5 rispettivamente gli approcci di crittografia a chiave \textbf{simmetrica} e a chiave \textbf{pubblica}.
+
+L'approccio che possiamo pensare di usare è quello di:
+\begin{enumerate}
+	\item Generare una chiave di \textit{sessione} $K_S$, da usare con crittografia a chiave simmetria;
+	\item Cifrare la chiave di sessione con la chiave pubblica di Maurizio, per ottenere $K^+_B(K_S)$;
+	\item Cifrare il messaggio vero e proprio, ottenendo $K_S(m)$;
+	\item A questo punto inviare sia $K_S(m)$ che $K^+_B(K_S)$.
+\end{enumerate}
+
+Questo approccio ci permette di ottenere il meglio di entrambi i mondi: la chiave pubblica è più sicura ma più lenta, mentre la chiave simmetrica è più veloce. Criptando la chiave simmetrica con chiave pubblica si assicura la confidenzialità, ma impiegando il carico della crittografia a chiave pubblica su stringhe più brevi (una chiave di alcune centinaaia di bit contro un intero messaggio).
+
+\subsubsection{Integrità e autenticazione}
+Introduciamo nel nostro modello \textbf{integrità} dei messaggi e \textbf{autenticazione}.
+
+A questo punto possiamo pensare che Francesca dovrà:
+\begin{enumerate}
+	\item Firmare digitalmente l'hash del suo messaggio con la sua chiave privata, ottenendo $K^-_A(H(m))$, fornendo come abbiamo visto in 24.1.5 integrità e autenticazione;
+	\item A questo punto basterà inviare sia il messaggio (in chiaro o criptato), e la firma $K^-_A(H(m))$.
+\end{enumerate}
+
+L'approccio ancora migliore, che combina gli ultimi 3 fattori visti, è quello criptare sia la firma che il messaggio, assicurando quindi \textit{confidenzialità} oltre che a \textit{integrità} e \textit{autenticazione}.
+
+\subsection{TLS}
+Veniamo quindi al \textbf{TLS} (\textit{Transport Layer Security}), un protocollo di sicurezza implementato al di sopra del livello trasporto, supportato dalla maggior parte dei server e browser (gli web server forniscono pagine su TLS sull aporta 443).
+
+TLS fornisce:
+\begin{itemize}
+	\item \textbf{Confidenzialità}: attraverso crittografia simmetrica;
+	\item \textbf{Integrità}: attraverso hashing crittografico;
+	\item \textbf{Autenticazione}: attraverso crittografia a chiave pubblica.
+\end{itemize}
+
+\subsubsection{Componenti del TLS}
+Vediamo quelli che sono i componenti di cui abbiamo bisogno per implementare un protocollo TLS:
+\begin{itemize}
+	\item \textbf{Handshaking}: gli interlocutori dovranno scambiare certificati o chiavi privati per autenticarsi, e scambiarsi o creare un \textit{segreto condiviso};
+	\item \textbf{Derivazione di chiavi}: gli interlocutori useranno il segreto condiviso per derivare una serie di \textit{chiavi} crittografiche. Notiamo che questo è necessario in quanto preferiamo usare crittografia a chiave simmetrica (più efficiente);
+	\item \textbf{Trasferimento dati}: i dati verranno inviati in modalità stream, cioè come una serie di record;
+	\item \textbf{Closure}: messaggi speciali dovranno essere scambiati per chiudere la connessione.
+\end{itemize}
+
+\subsubsection{Handshaking TLS}
+L'handshaking TLS si svolge a grandi linee come segue:
+\begin{enumerate}
+	\item Un interlocutore stabilisce una connessione TCP con l'altro;
+	\item Segue una fase di autenticazione dove si verifica l'identità dell'altro interlocutore;
+	\item Quindi si invia una \textit{master secret key} (MS), usata per generare tutte le altre chiavi sulla sessione TLS.
+
+		Si ritiene errato usare la stessa chiave per più funzioni crittografiche, per cui si generano a partire dal MS 4 chiavi:
+		\begin{itemize}
+			\item $K_C$: la chiave di cifratura per i dati che vanno dal client al server;
+			\item $M_C$: la chiave MAC per i dati dal client al server;
+			\item $K_S$: la chiave di cifratura per i dati che vanno dal server al client;
+			\item $M_S$: la chiave MAC per i dati dal server al client.
+		\end{itemize}
+
+		Tali chiavi vengono ricavate da una funzione di derivazione (\textbf{KDF}, \textit{Key Derivation Function}).
+\end{enumerate}
+
+\subsubsection{Crittografia dei dati}
+Abbiamo detto che i dati che viaggiano su sessioni TLS sono suddivisi in \textbf{record}.
+I record TLS suddividano effettivamente l'astrazione del bytestream offerta dal TCP in unità meno granulari, composte dalla tripla criptata:
+$$
+K_C( \text{ \lstinline|length : data : mac| } )
+$$
+ad esempio nel caso di dati inviati da client a server.
+Queste triple sono quindi composte da:
+\begin{itemize}
+	\item La \textbf{lunghezza} del record (campo \lstinline|length|);
+	\item I \textbf{dati} veri e propri (campo \lstinline|data|);
+	\item Il codice \textbf{MAC} (campo \lstinline|mac|), ottenuto in questo caso a partire dalla chiave $M_C$.
+\end{itemize}
+
+I tipi di attacchi a cui potrebbe sembrare suscettibile questo approccio sono:
+\begin{itemize}
+	\item Attacchi di \textit{riordinamento} dei messaggi, dove un man-in-the-middle intercetta segmenti TCP e li riordina (manipolando i numeri di sequenza dell'header TCP, che sono in chiaro);
+	\item Attacchi di \textit{replay}, dove si ripetono record già inviati secondo un procedimento simile al precedente.
+\end{itemize}
+
+Il TLS risolve tali vulnerabilità introducendo \textit{numeri di sequenza TLS}, cioè numeri di sequenza a livello TLS, crittografati e inclusi dentro il MAC.
+
+Una soluzione alternativa è quello di utilizzo del \textit{nonce}, visto in 24.2.
+
+\subsubsection{Chiusura di connessione}
+Un attocco possibile che non abbiamo considerato è il cosiddetto \textit{truncation attack}, dove l'attaccante (per noi Giuseppina) crea un segmento di chiusura TCP fasullo, provocando la terminazione forzata della connessione fra i 2 interlocutori.
+
+Per risolvere questo problema aggiungiamo alla nostra tripla un campo type, che permette di discriminare fra messaggi normali (0) e messaggi di chiusura(1):
+$$
+K_C( \text{ \lstinline|length : type : data : mac| } )
+$$
+
+Questo signfica che la connessione TCP non può essere chiusa finché non si chiude la connessione TLS soprastante, dove le richieste di terminazinoe avvengono in maniera criptata.
+
+\subsubsection{Posizionamento del TLS}
+Può essere interessante vedere dove il TLS si posiziona a livello di stack protocollare:
+
+# grafico HTTP/2 HTTP/2 con TLS HTTP/3 (QUIC su UDP)
+
+\subsubsection{Suite di cifratura}
+La \textbf{suite} di cifratura è formata da un insieme di algoritmi crittografici e per la generazione di chiavi, cioè:
+\begin{itemize}
+	\item Un algoritmo per la generazione di chiavi;
+	\item Un algoritmo di crittografia a chiave pubblica;
+	\item Un algoritmo di crittografia a chiave simmetrica;
+	\item Un algoritmo di MAC.
+\end{itemize}
+
+TLS 1.3 (del 2018) fornisce 5 scelte per le suite, mentre il vecchio TLS 1.2 (del 2008) ne forniva ben 37.
+
+Il problema che però ci interessa è come avviene la scelta e la comunicazione della suite scelta fra host in comunicazione.
+\begin{enumerate}
+	\item Prevederemo quindi in fase di handshake che il client comunichi al server quali suite di cifratura è capace di usare;
+	\item Il server risponderà inviando la suite di cifratura scelta fra quelle supportate dal client. Seguirà il certificato del server.
+	# finisci a casa
+\end{enumerate}
+
+\subsection{IP Sec}
+\textbf{IP Sec} (da \textit{Internet Protocol Security}) è una suite di protocolli di sicurezza che lavorano al livello IP, permettendo crittografia, autenticazione ed integrità a livello datagramma.
+
+In questo, IP Sec riguarda sia il traffico utente che quello di controllo (DNS, ecc...).
+
+IP Sec opera in 2 modalità:
+\begin{itemize}
+	\item Modalità \textbf{trasporto}: solo i payload dei \textit{datagrammi} vengono crittografati e autenticati;
+	\item Modalità \textbf{tunnel}: l'intero datagramma viene crittografato e autenticato, e quindi incapsulato in un nuovo datagramma con un nuovo header IP, che quindi \textit{"tunnellizza"} il vecchio datagramma.
+\end{itemize}
+
+\subsubsection{IP Sec e VPN}
+Spesso le istituzioni vogliono sfruttare reti private per ragioni di sicurezza. Questo però risulta molto dispendioso in termini di costi di infrastruttura.
+
+Sfruttando una \textbf{VPN} (\textit{Virtual Private Network}), il traffico di un'istituzione può invece viaggiare sull'internet pubblico (dopo essere stato criptato).
+
+L'idea del VPN è quindi quello di creare reti effettivamente \textbf{private}, ma il cui traffico viaggia interamente all'interno dell'internet \textit{pubblico}, ma in forma criptata.
+Questo permette ad esempio ad \textit{esterni} di connettersi ad una rete privata da remoto: il traffico sarebbe comunque viaggiato sull'internet pubblico.
+
+\subsubsection{Estensioni di IP}
+Per realizzare queste funzionalità dobbiamo quindi estendere il protocollo IP.Esistono due protocolli principali in questo merito:
+\begin{itemize}
+	\item Protocollo \textbf{AH} (\textit{Authentication Header}): fornisce autenticazione e integrità dati, ma non confidenzialità;
+	\item Protocollo \textbf{ESP} (\textit{Encapsulation Security Protocol}): fornisce autenticazione, integrità dati e confidenzialità. Sarà;
+\end{itemize}
+
+Estendere l'IP significa effettivamente renderlo \textit{stateful}: dobbiamo realizzare delle \textbf{SA} (\textit{Security Associations}) fra \textit{endpoint} (solitamente router) prima di effettuare le trasmissioni vere e proprie.
+Queste associazioni sono \textit{direzionali} (dal trasmettitore al ricevitore).
+Abbiamo quindi che gli endpoint mantengono informazioni riguardo allo \textit{stato} dell'SA (da cui \textit{stateful}).
+
+Vediamo nel dettaglio quali lqueste informazioni possono essere:
+\begin{itemize}
+	\item Un identificatore su 32 bit, detto \textbf{SPI} (\textit{Security Parameter Index});
+	\item L'interfaccia SA di origine (quella del trasmettitore);
+	\item L'interfaccia SA di destinazione (quella del ricevitore);
+	\item Il tipo di crittografia usato;
+	\item La chiave crittografica usata;
+	\item Il tipo di controllo di integrità usato;
+	\item La chiave di autenticazione usata.
+\end{itemize}
+
+\subsubsection{Datagramma IP Sec}
+Un datagramma ESP è incluso all'interno di un datagramma IP (in \textit{tunneling}).
+Presenta quindi i seguenti campi:
+\begin{lstlisting}[style=codestyle]	
+new IP header
+ESP header
+	- SPI
+	- Seq# 
+orig. IP header
+orig. IP payload
+ESP trailer
+	- padding
+	- pad length
+	- next header
+ESP auth
+\end{lstlisting}
+
+\begin{itemize}
+	\item Il \textbf{trailer ESP} rapprsenta padding per gli algoritmi di cifratura a blocchi;
+	\item L'\textbf{header ESP} contiene l'SPI, così che il ricevitore possa elaborare il datagramma (gestendo le sue SA), e il numero di sequenza (per evitare attacchi di replay);
+	\item L'\textbf{auth ESP} contiene il MAC dellp'intero datagramma ESP.
+\end{itemize}
+
+\end{document}
