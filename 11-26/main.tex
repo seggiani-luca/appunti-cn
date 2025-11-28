@@ -392,14 +392,14 @@ Questo permette ad esempio ad \textit{esterni} di connettersi ad una rete privat
 Per realizzare queste funzionalità dobbiamo quindi estendere il protocollo IP.Esistono due protocolli principali in questo merito:
 \begin{itemize}
 	\item Protocollo \textbf{AH} (\textit{Authentication Header}): fornisce autenticazione e integrità dati, ma non confidenzialità;
-	\item Protocollo \textbf{ESP} (\textit{Encapsulation Security Protocol}): fornisce autenticazione, integrità dati e confidenzialità. Sarà;
+	\item Protocollo \textbf{ESP} (\textit{Encapsulation Security Protocol}): fornisce autenticazione, integrità dati e confidenzialità. Sarà questo il protocollo che andremo a studiare;
 \end{itemize}
 
 Estendere l'IP significa effettivamente renderlo \textit{stateful}: dobbiamo realizzare delle \textbf{SA} (\textit{Security Associations}) fra \textit{endpoint} (solitamente router) prima di effettuare le trasmissioni vere e proprie.
 Queste associazioni sono \textit{direzionali} (dal trasmettitore al ricevitore).
 Abbiamo quindi che gli endpoint mantengono informazioni riguardo allo \textit{stato} dell'SA (da cui \textit{stateful}).
 
-Vediamo nel dettaglio quali lqueste informazioni possono essere:
+Vediamo nel dettaglio quali queste informazioni possono essere:
 \begin{itemize}
 	\item Un identificatore su 32 bit, detto \textbf{SPI} (\textit{Security Parameter Index});
 	\item L'interfaccia SA di origine (quella del trasmettitore);

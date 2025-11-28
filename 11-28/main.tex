@@ -1,0 +1,390 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 28-11-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsubsection{Funzionamento dell'IP Sec}
+Riassumiamo il comportamento dell'IP Sec con protocollo \textbf{ESP} (\textit{Encapsulation Security Protocol}), come introdotto nella scorsa lezione.
+
+Abbiamo detto che una qualsiasi connessione criptata fra router avviene mantenendo un identificatore da entrambi i lati, detto \textbf{SPI} (\textit{Security Parameter Index}). Questo indicizza un database locale ad entrambi i router che mantiene le informazioni relative alla connessione sicura.
+
+Quello che fa il router trasmettitore quando vuole inviare un datagramma è quindi:
+\begin{enumerate}
+	\item Prendere il datagramma originale e aggiungere una certa quantità di \textit{padding}. Questo è necessario in quanto si utilizzano algoritmi di cifratura a blocchi, e la dimensione del datagramma da criptare deve quindi essere multiplo della dimensione del blocco;
+	\item Il datagramma così esteso viene quindi criptato secondo la chiave contenuta nella SA della connessione;
+	\item Al datagramma criptato sono aggiunti due campi: il \textit{SPI}, per indicizzare i parametri della connessione sicura nel router di arrivo, e il \textbf{numero di sequenza}. Quest'ultimo è necessario per evitare attacchi di replay;
+	\item Perché il numero di sequenza sia utile, dobbiamo autenticare l'intero messaggio, sfruttando il classico algoritmo \textit{MAC} e concatenando il codice di autenticazione ottenuto al datagramma criptato.
+
+		Abbiamo quindi a questo punto che header e payload del datagramma originale sono \textit{criptati}, mentre lo stesso datagramma criptato, SPI, numero di sequenza e codice MAC sono solo \textit{autenticati};
+	\item Quest'intera stringa autenticata viene quindi incapsulata in un nuovo datagramma IP (\textit{tunneling}), con il suo header che sarà in chiaro. Questo non ci preoccupa in quanto il numero di sequenza ESP è autenticato, e quindi siamo al sicuro da attacchi replay.
+\end{enumerate}
+
+Il router ricevitore potrà quindi ricevere il pacchetto, vedere ed autenticare SPI e numero di sequenza (che sono autenticati ma in chiaro), rilevare le corrispondenti informazioni nell'SA e provvedere a decifrare il datagramma.
+
+\subsubsection{Database IP Sec}
+Vediamo nel dettaglio i database di cui i router equipaggiati per l'ESP hanno bisogno.
+\begin{itemize}
+	\item \textbf{SPD} (\textit{Security Policy Database}): per ogni datagramma, permette di determinare se IP Sec deve essere usato, e in tal caso quale SA usare. In sostanza, contiene informazioni riguardo a \textit{cosa} fare coi datagrammi; 
+	\item \textbf{SAD} (\textit{Security Association Database}): mantiene informazioni riguardo alle SA, cioè riguardo allo stato della connessione sicura. In questo, contiene informazioni riguardo a \textit{come} elaborare i datagrammi. 
+\end{itemize}
+
+\subsection{Firewall}
+Introduciamo il concetto di \textbf{firewall}. Questo è un particolare software che si occupa di isolare la rete locale di un'organizzazione dal resto di internet, permettendo l'accesso selettivo solo ad alcuni pacchetti, e bloccando gli altri.
+
+La motivazione del firewall è quella di:
+\begin{itemize}
+	\item Prevenire attacchi di tipo \textbf{DoS} (\textit{Denial of Service}), dove si mira a sovraccaricare i server con richieste SYN fasulle che non lasciano spazio a connessioni TCP effettive;
+	\item Prevenire \textbf{modifiche/accessi illegali} ai dati sulla rete interne: ad esempio un attaccante potrebbe mirare a sostituire pagine web, o arrivare a fare attacchi \textit{ransomware}, ecc...
+	\item Permettere solo \textbf{accessi autorizzati} alla rete interna, cioè prmettere solo ad alcuni utenti/host autentcati di accedere alla rete locale dall'esterno.
+\end{itemize}
+
+Esistono 3 tipi fondamentali di firewall:
+\begin{itemize}
+	\item Filtri pacchetti \textbf{stateless};
+	\item Filtri pacchetti \textbf{stateful};
+	\item \textbf{Gateway} applicazione.
+\end{itemize}
+
+\subsubsection{Filtraggio stateless}
+Il filtraggio \textbf{stateless} dei pacchetti consiste nel controllare gli accessi su base \textit{pacchetto per pacchetto}, controllando i campi all'interno del pacchetto come ad esempio:
+\begin{itemize}
+	\item Indirizzi IP sorgente e destinazione;
+	\item Numeri di porta TCP/UDP sorgente e destinazione;
+	\item Tipo di messaggio ICMP;
+	\item Bit SYN e ACK TCP (abbiamo detto per gli attacchi DoS questo è particolarmente importante).
+\end{itemize}
+
+Per implementare questo approccio si sfruttano le cosiddette \textbf{ACL} (\textit{Access Control Lists}), cioè tabelle di regole applicate \textit{dal basso verso l'alto} ai pacchetti in entrata. 
+
+Abbiamo che il funzionamento di queste tabelle ricorda molto l'OpenFlow, già discusso in 19.3.1 (si hanno coppie match/action dove l'unica action è scartare i pacchetti).
+
+L'ultima regola dell'ACL determina il tipo di firewall. In particolare si ha:
+\begin{itemize}
+	\item Se l'ultima regola blocca tutte le connessioni, il firewall si dice \textbf{inclusivo}, cioè si devono \textit{includere} tutte le connessioni che vogliamo mantenere, mentre le altre vengono bloccate di default. 
+
+		Questo approccio è scomodo in quanto bisogna definire tutte le connessioni che si vogliono mantenere;
+	\item Se l'ultima regola permette tutte le connessioni, il firewall si dice \textbf{esclusivo}, cioè si devono \textit{escludere} tutte le connessioni che non vogliamo mantenere, mentre le altre vengono permesse di default.
+
+		Questo approccio è più comodo di quello inclusivo (si definiscono meno regole), ma più pericoloso in quanto si ptorebbero tralasciare connessioni che invece vogliamo bloccare.
+\end{itemize}
+
+\subsubsection{Filtraggio stateful}
+Il filtraggio \textbf{stateful} dei pacchetti si pone come un'estensione del filtraggio stateless appena visto.
+
+In questo è uno strumento più pesante, che tiene conto non solo dei campi di ogni pacchetto, ma anche delle connessioni TCP correntemente attive.
+Deve quindi mantenere stato, con un suo database di connessioni TCP attive.
+
+Può quindi tenere conto dell'ordine dei pacchetti SYN/FIN nel corso di vita delle connessioni TCP, ed effettuare ad esempio chiusure di connessioni dopo un certo timeout.
+
+La tabella \textbf{ACL} va quindi complicata con entrate relative allo stato di connessione (nel caso più semplice, un entrata che segnala se la connessione a cui la regola si riferisce deve essere aperta o meno).
+
+\subsubsection{Gateway applicazione}
+Gli \textbf{application gateway} (tradotto \textit{gateway applicazione}) permettono il filtraggio sulla base non solo dei campi IP (livello network) o TCP/UDP (livello transport), ma anche dei campi di livello \textit{application}.
+
+Questo permette di imporre regole al livello applicazione, come ad esempio permettere la connessione solo ad alcuni utenti, e negarla ad altri.
+
+Otteniamo questa soluzione imponendo agli utenti di accedere a determinate applicazioni solo attraverso gateway specifici, e poi configurando i router della rete per permettere l'accesso in rete solamente a qui gatewey (negando le altre connessioni).
+Spesso il gateway coesiste con il router, anche se funzionalmente sono entità separate.
+
+\par\smallskip
+
+Sia firewall che gateway hanno le loro limitazioni.
+\begin{itemize}
+	\item Ad esempio, i gateway applicazione richiedono configurazione specifica delle applicazioni client (ad esempio inserimento manuale dell'indirizzo IP gateway);
+	\item L'\textit{IP spoofing} può sempre essere usato per ingannare il firewall e farlo credere che il pacchetto in entrata provenga da una fonte diversa da quella effettiva;
+\end{itemize}
+
+\subsection{IDS}
+Gli \textbf{IDS} (\textit{Intrusion Detection Systems}) rappresentano un evoluzione delle semplici tecniche di filtraggio pacchetti.
+
+Risulta, come abbiamo visto, complicato rilevare attacchi informatici controllando solo i singoli pacchetti, o anche tenendo traccia dello stato delle connessioni.
+Un'IDS risolve questo problema realizzando la cosiddetta \textit{deep packet inspection}, cioè l'ispezione profonda del contenuto dei pacchetti, in maniera simile ad un antivirus.
+Questo permette agli IDS di risultare resilienti ad attacchi di natura più sofisticata, come ad esempio:
+\begin{itemize}
+	\item Attacchi di \textbf{port scanning}, dove si mira a mappare le porte aperte di un host;
+	\item Attacchi di \textbf{network mapping}, dove si mira a mappare l'intera rete per gli host attivi (magari seguendo con un attacco di port scanning su ogni host per rilevare le porte aperte);
+	\item Attacchi di \textbf{DoS}, in maniera più efficiente che con un semplice firewall.
+\end{itemize}
+
+La dislocazione degli IDS è solitamente fatta in più siti, cioè si mira a distribuire il carico dell'analisi del traffico di rete su più \textit{sensori} IDS posti in diversi punti della rete.
+La densità di sensori IDS dovrà essere maggiore nelle regioni dove si concentrano gli host utenti.
+
+Quando si dislocano servizi di IDS è utile distinguere fra:
+\begin{itemize}
+	\item La \textit{rete interna}, dove abbiamo detto conviene massimizzare la presenza di sensori IDS;
+	\item La \textit{zona demilitarizzata}, dove risiedono server DNS, web server, server di posta, ecc... dell'organizzazione. Per questi vogliamo massimizzare l'efficienza nell'accesso a Internet, e quindi preferiamo minimizzare i controlli.
+\end{itemize}
+
+\par\medskip
+
+Abbiamo quindi visto le basi della sicurezza in rete, partendo dalle basi della crittografia, passando ai sistemi di autenticazione e di controllo integrità dei messaggi. Abbiamo poi visto come queste soluzioni vengono effettivamente applicate a livello application (ad esempio PGP), e quindi a livello network (con IP Sec). Infine, abbiamo vsito soluzioni di sicurezza operative come i firewall e gli IDS.
+
+\subsection{Reti wireless}
+Abbiamo finora parlato di soluzioni \textit{wired}, cioè dove gli host erano cablati e stazionari.
+Al tempo attuale, però, la grande maggioranza di collegamenti ad Internet avvengono attraverso link di tipo \textit{wireless}, cioè senza fili, dove gli host possono muoversi liberamente e restare connessi alla rete.
+
+Le due problematiche che andiamo ad incontrare sono quindi:
+\begin{itemize}
+	\item \textbf{Wireless}, cioè l'assenza di mezzi fisici e l'uso di mezzi basati sull'etere;
+	\item \textbf{Mobilità}, cioè la capacità degli host di spostarsi nello spazio, anche su lunghe distanze, mantenendo attive le loro connessioni.
+\end{itemize}
+
+\subsubsection{Elementi di una rete wireless}
+Una rete wireless si aggancia ad una preesistente infrastruttura cablata, da cui si fornisce un certo \textit{access point} wireless (sia questo un antenna telefonica o un access point WiFi, ecc...).
+Gli accesso point vengono detti anche \textbf{base station} (\textit{stazioni base}), e fungono da \textit{relay} (o \textit{bridge}) fra le reti cablate e le reti wireless, cioè fra tecnologie e quindi mezzi di accesso diversi fra di loro.
+
+I dispositivi sulla rete wireless sono gli \textit{host wireless}. Notiamo che il fatto che questi si trovino su una rete wireless non significa necessariamente che sono mobili (cioè che si spostano nello spazio). Ad esempio, un portatile in una rete d'istituto è solitamente stazionario, mentre un telefono cellulare può spostarsi nello spazio velocemente e su lunghe distanze, sempre restando collegato alla rete.
+
+\subsubsection{Classificazione dei link wireless}
+Possiamo classificare i link wireless su diverse caratteristiche ortogonali:
+\begin{itemize}
+	\item L'\textbf{area di copertura}, cioè la dimensione della regione spaziale che il link è capace di coprire e servire. In questo aspetto possiamo distinguere fra più tipi di rete wireless:
+		\begin{itemize}
+			\item Reti \textit{short-range}, cioè a corto raggio, per interni (dai 10 m ai 30 m) ed esterni (dai 50 m ai 200 m). Ad esempio, queste sono reti per le abitazioni o per istituzioni,	quindi interi edifici, ecc...
+				
+				Fanno parte di questa categoria tecnologie come il Bluetooth (standard IEEE 802.15, dal bitrate particolarmente basso e basso consumo energetico) e il WiFi (standard IEEE 802.11);
+			\item Reti \textit{medium-range}, sempre per esterni, che vanno dai 200 m ai 400 Km.
+
+				Fanno parte di questa categorie tecnologie come quelle appartenenti all'odierna 5G. Esistono anche tecnologie WiFi di tipo medium-range (802.11 af, ah), pensate per applicazioni IoT a basso bitrate ma che richidono grande scalabilità.
+			\item Reti \textit{long-range}, anche queste sempre per esterni, che vanno dai 4 Km ai 15 Km circa.
+
+				Fanno parte di questa categorie tecnologie come quelle appartenenti al 4G LTE. 
+		\end{itemize}
+	\item Il \textbf{bitrate}, cioè la frequenza di bit che il link è capace di trasmettere (avevamo già ampiamente discusso questo aspetto parlando delle reti wired).
+\end{itemize}
+
+\subsubsection{Handoff}
+Notiamo che le reti mobili devono permettere funzionalità di \textbf{handoff}, cioè di transizione degli host da una base station all'altra, in maniera dinamica e coordinata fra host e base station.
+
+\subsubsection{Reti ad hoc}
+Inoltre, notiamo che le reti wireless possono operare in maniera \textbf{ad hoc}, dove non esistono stazioni base, e gli host possono parlare fra di loro solamente in maniera P2P.
+In questo modo i nodi della rete si organizzano autonomamente in una rete (non c'è chiaramente accesso a reti esterne), e instradano pacchetti attraverso loro stessi.
+
+\end{document}
