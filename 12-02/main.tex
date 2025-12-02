@@ -1,0 +1,393 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 02-12-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+\subsubsection{Numero di hop}
+Continuiamo la discussione delle reti mobili, introducendo una nuova caratteristica ortogonale: il \textbf{numero di hop} necessari per completare un percorso ricevitore-trasmetittore.
+
+\subsubsection{Classificazione delle reti wireless}
+Noto il numero di hop (se uno o più di uno), e dividendo fra reti ad hoc (vist in 26.3.4) o basate su infrastruttura locale, possiamo fare la seguente classificazione ortogonale:
+
+\begin{table}[h!]
+	\center \rowcolors{2}{white}{black!10}
+	\begin{tabular} { c | p{5cm} p{5cm} }
+		& \bfseries Hop singolo & \bfseries Hop multiplo \\
+		\hline
+		\bfseries A infrastruttura & Gli host si connettono alle stazioni base, che quindi si connettono ad una rete più grande (\textit{WiFi}, \textit{reti celullari}) & Gli host devono passare attraverso più nodi wireless per connettersi ad internet (\textit{reti di sensori}) \\
+	\bfseries Ad hoc & Non c'è stazione base (e quindi connessione ad Internet), i dispositivi si coordinano fra di loro (\textit{Bluetooth}, \textit{reti ad hoc}) & Non c'è stazione base (e quindi connessione ad Internet), e i dispositivi devono attraversare più hop per raggiungere l'un l'altro (reti \textit{MANET} e \textit{VANET}) 
+	\end{tabular}
+\end{table}
+
+Noi in particolare tratteremo le reti \textit{single hop} basate su infrastruttura, cioè reti WiFi e reti cellulari.
+
+\subsubsection{Caratteristiche del mezzo wireless}
+Prendiamoci un momento per analizzare le caratteristiche del \textbf{mezzo wireless} stesso, e in particolare le differenze dai mezzi cablati a cui siamo abituati.
+
+\begin{itemize}
+	\item Notiamo innanzitutto che la \textbf{potenza di trasmissione} è molto minore, e viene persa man di mano che il segnale si propaga nello spazio (il cosiddetto \textit{path loss});
+	\item Esiste \textbf{interferenza} fra più fonti: ad esempio, la banda ISM a 2.4 GHz è pubblica, e condivisa da diversi dispositivi (WiFi e reti cellulari);
+	\item \textbf{Propagazione multipath}: i segnali radio si riflettono, arrivando alla destinazione a tempi leggermente diversi.
+\end{itemize}
+
+Diversi tipi di trasmettitori sul mezzo wireless possono dedicare più energia alla trasmissione del singolo bit: questo solitamente si traduce in una maggiore sicurezza della trasmissione effettiva del bit, ma di contropartita in una riduzione del bitrate (al pari dell'energia usata).
+
+\subsubsection{Metriche per la qualità del segnale}
+Abbiamo a disposizione 2 metriche principali per la valutazione della qualità del segnale su un mezzo:
+\begin{itemize}
+	\item \textbf{SNR} (\textit{Signal-to-Noise Ratio}): rappresenta il rapporto fra la potenza del segnale ricevuto e la potenza del rumore ricevuto, dove il rumore è l'interferenza che si aggiunge al segnale in fase di trasmissione e propagazione. Chiaramente, più l'SNR è grande, maggiore è la qualità del mezzo;
+	\item \textbf{BER} (\textit{Bit Error Rate}): rappresenta la frequenza di bit persi sul mezzo. Chiaramente, più il BER è piccolo, maggiore è la qualità del mezzo.
+\end{itemize}
+
+Esiste quindi una relazione fra potenza spesa per bit, SNR e BER, che è sostanzialmente:
+$$
+\text{aumenta potenza per bit} \rightarrow \text{aumenta l'SNR} \rightarrow \text{diminuisce il BER}
+$$
+
+Nel caso non si possa aumentare la potenza per bit, o comunque l'SNR sia fisso, è invece necessario agire sul protcollo di livello fisico usato per raggiungere i requisiti sul BER (chiaramente perdendo in throughput).
+
+Infine, notiamo che l'SNR può cambiare dinamicamente nel caso di reti mobili (cioè quando gli host si spostano all'interno della rete).
+Chiaramente, può essere utile in questo caso (ma anche nel caso di reti wireless non mobili) prevedere sistemi \textit{adattivi}, che modulano il bitrate sulla base dell'SNR effettivo rilevato.
+
+\subsubsection{Problema del nodo nascosto}
+Per farci un'idea del tipo di problematiche che si possono incontrare sfruttando il mezzo wireless, ipotizziamo la seguente situazione:
+\begin{itemize}
+	\item Un nodo $B$ può sentire altri due nodi, $A$ e $C$;
+	\item I nodi $A$ e $C$ non possono sentirsi fra di loro (magari per via di un ostacolo, o solamente per causa della perdita di segnale causata per path loss).
+\end{itemize}
+
+Il risultato di questa situazione è che $A$ e $C$ possono provare contemporaneamente a parlare con $B$, e non hanno modo di rilevare tale collisione, in quanto non possono parlare fra di loro.
+
+\subsection{IEEE 802.11 Wireless LAN}
+Lo standard \textbf{IEEE 802.11 Wireless LAN}, noto anche col nome commerciale \textit{Wi-Fi} è stato uno dei primi standard (dal 1999) per la trasmissione di dati su mezzo wireless fra computer (in un epoca dove le reti mobili erano già distribuite).
+
+Tutti usano \textit{CSMA/CA} per il MAC, e prevedono modalità sia \textit{ad infrastruttura} che \textit{ad hoc}.
+
+Il bitrate andava da 10 Mbps circa delle prime versioni, ai 46 Gbps di WiFi 7.
+
+Le frequenze operative sono state storicamente 2 principali:
+\begin{itemize}
+	\item 2.4 GHz ISM, una banda pubblica che veniva largamente utilizzata;
+	\item 5 GHz, introdotta per risolvere i problemi di affollamento dati dalla banda a 2.4 GHz.
+\end{itemize}
+
+Il raggio di copertura va dai 30 ai 70 metri circa, con l'eccezioni delle reti medium range (le af e le ah) che si trovano intorno al kilometro (sacrificando però il bitrate, che è intorno ai 350 Mpbs).
+Per riuscire a raggiungere tali raggi di copertura si trasmette su frequenze che vanno dai 54-790 MHz (vecchie frequenze televisive) per ah, e 900 MHz per af.
+
+\par\smallskip
+
+La configuraione ad infrastruttura base del Wi-Fi si basa su \textit{access point}, detti nella nomenclatura \textbf{BSS} (\textit{Basic Service Set}) (anche se noi li chiameremo comunque \textit{access point}), a loro volta collegati a switch o router che quindi instradano i dati sulla rete internet.
+Gli host parlano quindi coi BSS, e attraverso questi raggiungono la rete Internet.
+Nel caso di Wi-Fi in modalità ad hoc, invece, gli host parlano direttamente fra di loro.
+
+\subsubsection{Associazione agli access point}
+La banda dedicata al Wi-Fi viene suddivisa in canali a frequenze diverse: per ogni AP, l'amministratore dovrà scegliere una banda. Nulla nega che pià AP adiacenti abbiano collisioni (scelgano la stesso canale).
+
+In ogni caso, per potersi connettere un host Wi-Fi dovrà \textbf{associarsi} con un AP.
+Ciò che farà sarà \textit{scannerizzare} i diversi canali, mettendosi in ascolto di frame \textit{beacon} (dalla parola inglese per \textit{faro}).
+I frame beacon contengono il nome dell'AP (\textbf{SSID}), e l'indirizzo \textbf{MAC} dell'access point.
+Notiamo che possono venire rilevati più di un AP su diversi canali, ed è quindi necessario un criterio di scelta: quello più semplice è scegliere l'access point che ha potenza maggiore.
+A questo punto si può portare avanti un passo di \textbf{autenticazione}, e quindi provvedere a passare sulla rete Internet, ad esempio ottenere un indirizzo IP tramite DHCP.
+
+\subsubsection{Accesso mulitplo IEEE 802.11}
+Lo scopo del \textbf{MAC IEEE 802.11} è evitare le \textit{collisioni}, cioè situazioni in cui 2 o più nodi trasmettono contemporaneamente.
+802.11 sfrutta il CSMA/CA (non CSMA/CD come Ethernet!), già visto in 13.1.5, per il rilevamento preventivo sul mezzo condiviso prima delle trasmissioni, e il successivo recupero dopo collisioni.
+
+In particolare, il funzionamento del trasmettitore sarà: 
+\begin{enumerate}
+	\item Il trasmettitore aspetta che il mezzo resti libero per un certo tempo detto \textbf{DIFS} (\textit{Distributed InterFrame Space});
+	\item Se il canale è rilevato libero si trasmette l'intero frame;
+	\item Se il canale è rilevato occupato allora:
+		\begin{itemize}
+			\item Si imposta un tempo di backoff casuale;
+			\item Si aspetta tale tempo di backoff;
+			\item Se non si riceve un ACK si aumenta l'intervallo di backoff e si torna al passo 3.
+		\end{itemize}
+\end{enumerate}
+
+Il ricevitore si comporterà invece come segue:
+\begin{enumerate}
+	\item Se il nodo viene ricevuto in sicurezza (senza collisioni), si aspetta un certo tempo detto \textbf{SIFS} (\textit{Short InterFrame Space});
+	\item Si invia l'ACK.
+\end{enumerate}
+
+Il SIFS deve essere minore del DIFS: questo è per avvantaggiare il ricevitore in caso di collisioni (cioè avvantaggiare trasmissioni già avvenute a metà).
+
+\subsubsection{Scelta del backoff}
+Per l'intervallo di backoff, questo viene scelto uniformemente fra 0 e $CW - 1$, dove $CW$ è la cosiddetta \textbf{contention window}.
+Inizialmente, $CW$ vale $CW_\text{min}$. Per ogni ACK perso CW viene moltiplicato per 2, fino ad un certo valore $CW_\text{max}$.
+
+\subsubsection{Differenza fra MAC Ethernet e 802.11}
+Notiamo ulteriormente le differenze fra i protocolli MAC di Ethernet e 802.11.
+Nel caso di 802.11, sfruttiamo \textit{collision avoidance}: prevediamo che sarà impossibile rilevare collisioni in corso sul mezzo wireless, e fondiamo il nostro rilevamento errori su segnali di ACK.
+Ethernet, di contro, implementa \textit{collision detection}: le collisioni vengono rilevate elettricamente attraverso segnali di jam.
+
+Questo ci permette di risolvere il problema del nodo nascosto, introdotto in 27.0.5: se il nodo centrale (avevamo detto $C$) non invia ACK agli altri nodi, questi sanno che una collisione è avvenuta, e possono entrare nelle loro fasi di backoff senza dover direttamente parlare l'uno con l'altro.
+
+\subsubsection{Virtual carrier sensing}
+Una soluzione usata in 802.11 è il \textbf{virtual carrier sensing}.
+In questo caso l'idea è che il trasmettitore \textit{"prenoti"} il canale per l'invio di frame dati, usando frame di \textit{prenotazione}.
+
+\begin{enumerate}
+	\item Il primo frame inviato è l'\textbf{RTS} (\textit{Request-To-Send}), inviato via CSMA all'AP;
+	\item L'AP risponde con un frame \textbf{CTS} (\textit{Clear-To-Send}). Questo CTS ha 2 scopi:
+		\begin{itemize}
+			\item Viene ricevuto dall'host originale, che sa quindi di poter iniziare la sua trasmissione di dati;
+			\item Anche gli altri host collegati all'AP rilevano il segnale, e differiscono le loro comunicazioni fino al termine di quella dell'host originale.
+				
+				Per fare ciò ci dotiamo di un nuovo timer, detto \textbf{NAV} (\textit{Network Allocation Vector}), che viene caricato col tempo durata del frame CTS originale. Finché il NAV è attivo, ogni successiva trasmissione viene differita. 
+		\end{itemize}
+\end{enumerate}
+
+\subsubsection{Frame IEEE 802.11}
+Vediamo quindi la struttura di un \textbf{frame IEEE 802.11}:
+\begin{lstlisting}[style=codestyle]	
+2 byte				2 byte 		6 byte 	6 byte 	6 byte
+frame control duration	addr. 1	addr. 2	addr. 3
+2 byte			2 byte	0 - 2312 byte	4 byte
+seq control	addr. 4	payload				crc
+\end{lstlisting}
+Notiamo la presenza dei capmi:
+\begin{itemize}
+	\item Il \lstinline|frame control| contiene informazioni sulla versione del protocollo, tipo del frame, ecc...
+	\item Il campo \lstinline|duration| contiene la durata della trasmissione richiesta nel caso di CTS o RTS;
+	\item Si hanno poi 4 campi di indirizzo:
+		\begin{enumerate}
+			\item Indirizzo MAC dell'host o dell'AP che deve ricevere il frame;
+			\item Indirizzo MAC dell'host o dell'AP che invia il frame;
+			\item Indirizzo MAC dell'interfaccia router a cui l'AP è agganciato;
+			\item Usato in modalitt ad hoc.
+		\end{enumerate}
+	\item \lstinline|seq control| è un numero di sequenza usato per l'RDT;
+	\item Segue il payload vero e proprio, che va dagli 0 a i 2312 byte;
+	\item Infine abbiamo un campo \lstinline|crc| per il CRC.
+\end{itemize}
+
+\end{document}
