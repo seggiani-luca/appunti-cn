@@ -1,0 +1,331 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[a4paper, margin=8em]{geometry}
+
+% usa i pacchetti per la scrittura in italiano
+\usepackage[french,italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\frenchspacing 
+
+% usa i pacchetti per la formattazione matematica
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+
+% usa altri pacchetti
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{standalone}
+
+\usepackage{colortbl}
+
+\usepackage{xstring}
+\usepackage{karnaugh-map}
+
+% imposta il titolo
+\title{Appunti Reti Informatiche}
+\author{Luca Seggiani}
+\date{2025}
+
+% imposta lo stile
+% usa helvetica
+\usepackage[scaled]{helvet}
+% usa palatino
+\usepackage{palatino}
+% usa un font monospazio guardabile
+\usepackage{lmodern}
+
+\renewcommand{\rmdefault}{ppl}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+
+% circuiti
+\usepackage{circuitikz}
+\usetikzlibrary{babel}
+
+% testo cerchiato
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% disponi il titolo
+\makeatletter
+\renewcommand{\maketitle} {
+	\begin{center} 
+		\begin{minipage}[t]{.8\textwidth}
+			\textsf{\huge\bfseries \@title} 
+		\end{minipage}%
+		\begin{minipage}[t]{.2\textwidth}
+			\raggedleft \vspace{-1.65em}
+			\textsf{\small \@author} \vfill
+			\textsf{\small \@date}
+		\end{minipage}
+		\par
+	\end{center}
+
+	\thispagestyle{empty}
+	\pagestyle{fancy}
+}
+\makeatother
+
+% disponi teoremi
+\usepackage{tcolorbox}
+\newtcolorbox[auto counter, number within=section]{theorem}[2][]{%
+	colback=blue!10, 
+	colframe=blue!40!black, 
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries, 
+	title=Teorema~\thetcbcounter: #2, 
+	#1
+}
+
+% disponi definizioni
+\newtcolorbox[auto counter, number within=section]{definition}[2][]{%
+	colback=red!10,
+	colframe=red!40!black,
+	sharp corners=northwest,
+	fonttitle=\sffamily\bfseries,
+	title=Definizione~\thetcbcounter: #2,
+	#1
+}
+
+% disponi codice
+\usepackage{listings}
+\usepackage[table]{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{codestyle}{
+		backgroundcolor=\color{black!5}, 
+		commentstyle=\color{codegreen},
+		keywordstyle=\bfseries\color{magenta},
+		numberstyle=\sffamily\tiny\color{black!60},
+		stringstyle=\color{green!50!black},
+		basicstyle=\ttfamily\footnotesize,
+		breakatwhitespace=false,         
+		breaklines=true,                 
+		captionpos=b,                    
+		keepspaces=true,                 
+		numbers=left,                    
+		numbersep=5pt,                  
+		showspaces=false,                
+		showstringspaces=false,
+		showtabs=false,                  
+		tabsize=2
+}
+
+\lstdefinestyle{shellstyle}{
+		backgroundcolor=\color{black!5}, 
+		basicstyle=\ttfamily\footnotesize\color{black}, 
+		commentstyle=\color{black}, 
+		keywordstyle=\color{black},
+		numberstyle=\color{black!5},
+		stringstyle=\color{black}, 
+		showspaces=false,
+		showstringspaces=false, 
+		showtabs=false, 
+		tabsize=2, 
+		numbers=none, 
+		breaklines=true
+}
+
+
+\lstdefinelanguage{assembler}{ 
+  keywords={AAA, AAD, AAM, AAS, ADC, ADCB, ADCW, ADCL, ADD, ADDB, ADDW, ADDL, AND, ANDB, ANDW, ANDL,
+        ARPL, BOUND, BSF, BSFL, BSFW, BSR, BSRL, BSRW, BSWAP, BT, BTC, BTCB, BTCW, BTCL, BTR, 
+        BTRB, BTRW, BTRL, BTS, BTSB, BTSW, BTSL, CALL, CBW, CDQ, CLC, CLD, CLI, CLTS, CMC, CMP,
+        CMPB, CMPW, CMPL, CMPS, CMPSB, CMPSD, CMPSW, CMPXCHG, CMPXCHGB, CMPXCHGW, CMPXCHGL,
+        CMPXCHG8B, CPUID, CWDE, DAA, DAS, DEC, DECB, DECW, DECL, DIV, DIVB, DIVW, DIVL, ENTER,
+        HLT, IDIV, IDIVB, IDIVW, IDIVL, IMUL, IMULB, IMULW, IMULL, IN, INB, INW, INL, INC, INCB,
+        INCW, INCL, INS, INSB, INSD, INSW, INT, INT3, INTO, INVD, INVLPG, IRET, IRETD, JA, JAE,
+        JB, JBE, JC, JCXZ, JE, JECXZ, JG, JGE, JL, JLE, JMP, JNA, JNAE, JNB, JNBE, JNC, JNE, JNG,
+        JNGE, JNL, JNLE, JNO, JNP, JNS, JNZ, JO, JP, JPE, JPO, JS, JZ, LAHF, LAR, LCALL, LDS,
+        LEA, LEAVE, LES, LFS, LGDT, LGS, LIDT, LMSW, LOCK, LODSB, LODSD, LODSW, LOOP, LOOPE,
+        LOOPNE, LSL, LSS, LTR, MOV, MOVB, MOVW, MOVL, MOVSB, MOVSD, MOVSW, MOVSX, MOVSXB,
+        MOVSXW, MOVSXL, MOVZX, MOVZXB, MOVZXW, MOVZXL, MUL, MULB, MULW, MULL, NEG, NEGB, NEGW,
+        NEGL, NOP, NOT, NOTB, NOTW, NOTL, OR, ORB, ORW, ORL, OUT, OUTB, OUTW, OUTL, OUTSB, OUTSD,
+        OUTSW, POP, POPL, POPW, POPB, POPA, POPAD, POPF, POPFD, PUSH, PUSHL, PUSHW, PUSHB, PUSHA, 
+				PUSHAD, PUSHF, PUSHFD, RCL, RCLB, RCLW, MOVSL, MOVSB, MOVSW, STOSL, STOSB, STOSW, LODSB, LODSW,
+				LODSL, INSB, INSW, INSL, OUTSB, OUTSL, OUTSW
+        RCLL, RCR, RCRB, RCRW, RCRL, RDMSR, RDPMC, RDTSC, REP, REPE, REPNE, RET, ROL, ROLB, ROLW,
+        ROLL, ROR, RORB, RORW, RORL, SAHF, SAL, SALB, SALW, SALL, SAR, SARB, SARW, SARL, SBB,
+        SBBB, SBBW, SBBL, SCASB, SCASD, SCASW, SETA, SETAE, SETB, SETBE, SETC, SETE, SETG, SETGE,
+        SETL, SETLE, SETNA, SETNAE, SETNB, SETNBE, SETNC, SETNE, SETNG, SETNGE, SETNL, SETNLE,
+        SETNO, SETNP, SETNS, SETNZ, SETO, SETP, SETPE, SETPO, SETS, SETZ, SGDT, SHL, SHLB, SHLW,
+        SHLL, SHLD, SHR, SHRB, SHRW, SHRL, SHRD, SIDT, SLDT, SMSW, STC, STD, STI, STOSB, STOSD,
+        STOSW, STR, SUB, SUBB, SUBW, SUBL, TEST, TESTB, TESTW, TESTL, VERR, VERW, WAIT, WBINVD,
+        XADD, XADDB, XADDW, XADDL, XCHG, XCHGB, XCHGW, XCHGL, XLAT, XLATB, XOR, XORB, XORW, XORL},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{language=assembler, style=codestyle}
+
+% disponi sezioni
+\usepackage{titlesec}
+
+\titleformat{\section}
+	{\sffamily\Large\bfseries} 
+	{\thesection}{1em}{} 
+\titleformat{\subsection}
+	{\sffamily\large\bfseries}   
+	{\thesubsection}{1em}{} 
+\titleformat{\subsubsection}
+	{\sffamily\normalsize\bfseries} 
+	{\thesubsubsection}{1em}{}
+
+% tikz
+\usepackage{tikz}
+
+% float
+\usepackage{float}
+
+% grafici
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+
+% disponi alberi
+\usepackage{forest}
+
+\forestset{
+	rectstyle/.style={
+		for tree={rectangle,draw,font=\large\sffamily}
+	},
+	roundstyle/.style={
+		for tree={circle,draw,font=\large}
+	}
+}
+
+% disponi algoritmi
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmo}
+\makeatother
+
+% disponi numeri di pagina
+\usepackage{fancyhdr}
+\fancyhf{} 
+\fancyfoot[L]{\sffamily{\thepage}}
+
+\makeatletter
+\fancyhead[L]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@title \ \@date}}} 
+\fancyhead[R]{\raisebox{1ex}[0pt][0pt]{\sffamily{\@author}}}
+\makeatother
+
+\begin{document}
+% sezione (data)
+\section{Lezione del 05-12-25}
+
+% stili pagina
+\thispagestyle{empty}
+\pagestyle{fancy}
+
+% testo
+Continuiamo a trattare la famiglia di tecnologie IEEE 802.11.
+
+\subsubsection{Mobilità in 802.11}
+Iniziamo a vedere come le tecnologie 802.11 implementano la \textbf{mobilità}.
+Ciò che vogliamo è che, per un host che si sposta in una rete con più AP (collegati a diversi switch o almeno a diverse porte fisiche di switch), il subnet IP di appartenenza resti costante.
+
+Ricordiamo di aver parlato delle capabilità di \textit{self-learning} della rete: gli switch \textit{"apprendono"} che un host è raggiungibile ad una certa porta fisica, e quindi inoltrano pacchetti destinati a tale host attraverso quella porta.
+Ricordiamo anche che le entrate nella tabella di switching hanno time-to-live, per cui verranno resettate dopo un certo periodo di tempo, rimettendo l'host effettivamente sulla rete.
+
+\subsubsection{Funzionalità avanzate di 802.11}
+802.11 prevede anche alcune funzionalità più \textbf{avanzate}, fra cui notiamo:
+\begin{itemize}
+	\item \textbf{Adattamento di bitrate}: AP e nodi mobili possono cambiare la loro frequenza di trasmissione in maniera dinamica, cambiando le loro tecniche di modulazione a livello fisico. Queste, in praticolare, sono \textit{QAM256} a 8 Mbps, \textit{QAM16} a 4 Mbps e \textit{BPSK} a 1Mbps, con diverse curve di correlazione SNR\/BER:
+		\begin{center}
+			\includegraphics[scale=0.38]{../figures/80211_phys.png}
+		\end{center}
+
+		Notiamo che ciò che l'utente finale vorrebbe è chiaramente il massimo bitrate possibile, ma questo non è sempre possibile in quanto non solo si possono avere caratteristiche di rete più o meno sfavorevoli, ma tali caratteristiche si comportano in maniera non esattamente intuitiva (diverse tecnologie hanno fasce "ottime" di trasmissione, il raggio di trasmissione non è esattamente sferico, ecc...).
+		
+		Si sceglie quindi di valutare la qualità della trasmissione in tempo reale, e variare adattivamente il protocollo di livello fisico (e quindi il bitrate), partendo da quello con bitrate maggiore.
+		Nel dettaglio:
+		\begin{enumerate}
+			\item Si parte con il protocollo di bitrate massimo (diciamo QAM256);
+			\item Si valuta il BER: mentre il dispositivo si allontana dall'AP, il SNR diminuisce e il BER aumenta;
+			\item Quando il BER supera una certa soglia si passa al protocollo di bitrate immediatamente minore (diciamo QAM16). In questo modo il BER diminuisce, e il processo può essere iterato per raggiungere il protocollo ottimo date le caratteristiche di rete. 
+		\end{enumerate}
+	\item \textbf{Risparmio energetico}: a partire dai primi anni '90 si sono iniziate a sviluppare tecnologie che avevano bisogno di effettuare \textit{risparmio energetico} (dispositivi portatili a batteria, ecc...). Per questo 802.11 prevede alcune funzionalità che supportano tali necessità.
+
+		I nodi possono inviare frame che informano l'AP che hanno intenzione di \textit{"dormire"} fino al successivo frame di beaconing.
+		A questo punto:
+		\begin{itemize}
+			\item L'AP saprà di non dover trasmettere frame a questi nodi, e si occuperà di bufferizzarli;
+			\item Il nodo andrà in risparmio energetico fino al successivo frame di beaconing (che verrà ricevuto dalla NIC secondo interruzione, e quindi sveglierà il dispositivo anche se questo era in stato di HALT). 
+		\end{itemize}
+
+		Quando l'AP preparerà un frame di beaconing, si comporterà come segue:
+		\begin{itemize}
+			\item Includerà nel frame una lista di nodi associati ai frame per tali nodi che sono stati bufferizzati e devono essere inviati;
+			\item I nodi riceveranno tale frame di beacnoing. Quindi resteranno svegli per ricevere tali frame, nel caso ne abbiano, o torneranno in risparmio energetico in attesa di un altro frame di beaconing, e così via. 
+		\end{itemize}
+\end{itemize}
+
+\subsection{PAN}
+Se con lo standard IEEE 802.11 abbiamo studiato le reti LAN wireless, adesso vogliamo studiare le reti \textbf{PAN} (\textit{Personal Area Network}). Come tecnologia di esempio, in questo caso, usiamo \textit{Bluetooth}.
+
+Bluetooth è una tecnologia di trasmissione wireless a piccolo raggio di copertura, inizialmente pensata per rimpiazzare i cavi come mezzo di trasmissione fra dispositivi. 
+Si basa su TDM (Visto in 12.3.1), a slot da 625 microsecondi. 
+
+\subsubsection{Frequency hopping}
+Bluetooh sfrutta il \textbf{frequency hopping}: il trasmettitore sfrutta 79 canali di frequenze, cambiando frequenza da slot a slot in un ordine pseudo casuale noto sia a ricevitori che a trasmettitori.
+
+\subsubsection{Risparmio energetico in Bluetooth}
+Il \textbf{risparmio energetico} è parte integrante di Bluetooth: è prevista infatti una funzionalità di \textit{parking}, dove un dispositivo può \textit{"parcheggiarsi"} (un procedimento simile a quello dell'\textit{"addormentarsi"} dei dispositivi WiFi), e svegliarsi in seguito per risparmiare batteria.
+
+\subsubsection{Bootstrapping in Bluetooth}
+Bluetooth è pensato per essere \textit{self-starting}, e infatti prevede un processo di \textbf{bootstrapping} che porta alla formazione di piccole reti ad hoc formate da dispositivi.
+
+\subsection{Reti cellulari}
+Le \textbf{reti cellulari}, inizialmente pensate per la trasmissione telefonica, sono oggi reti globali usate per l'accesso ad internet su lunge distanze. 
+
+Esistono diverse famiglie di standard, con nomi noti al pubblico (3G, 4G, 5G), sviluppati da consorzi di compagnie del settore.
+
+Vediamo quindi le similarità principali fra l'Internet cablato e quello mobile:
+\begin{itemize}
+	\item Esiste una distinzione fra edge e core della rete, ma entrambi appartengono allo stesso operatore;
+	\item Si parla di rete cellulare globale: una rete di reti;
+	\item C'è un uso diffuso dei protocolli studiati: HTTP, DNS, TCP, UDP, IP, NAT, separazione dei piani dati/controllo, SDN, Ethernet, tunneling, ecc...;
+	\item La rete mobile è interconnessa a Internet cablato;
+\end{itemize}
+e quindi le differenze:
+\begin{itemize}
+	\item Il livello di collegamento wireless differente;
+	\item La mobilità è visto come un servizio di prima classe;
+	\item Esiste un “identità” dell’utente (tramite SIM);
+	\item Cambia il modello di business: gli utenti si abbonano a un operatore cellulare;
+	\item C'è una forte nozione di “rete domestica” rispetto al roaming in reti visitate;
+	\item Esiste accesso globale, ma con infrastruttura di autenticazione e accordi di interconnessione tra operatori.
+	\end{itemize}
+
+\subsubsection{Elementi dell'architettura 4G}
+Vediamo quindi la struttura di una rete mobile, prendendo come esempio lo standard \textbf{4G}.
+
+Prevediamo una \textbf{base station} (\textit{eNode-B}), non dissimile dagli AP WiFi ma su scala vastamente piià grande.
+La BS è quindi connessa ad una rete di router che va a formare l'infrastruttura messa a disposizione della rete dalla compagnia che gestisce la rete mobile.
+In tale rete prevediamo almeno due gateway:
+\begin{itemize}
+	\item Un \textbf{serving gateway} (\textit{S-GW}), che si occupa di servire i singoli utenti della rete, sfruttando almeno 2 database:
+		\begin{itemize}
+			\item Il \textbf{MME} (\textit{Mobility Management Entity}), che gestisce la mobilità sulla rete;
+			\item L'\textbf{HSS} (\textit{Home Subcriber Service}), che si occupa di gestire l'autenticazione degli utenti alla rete. 
+		\end{itemize}
+	\item Un \textbf{PDN gateway} (\textit{P-GW}), che si occupa di fornire l'accesso all'Internet vero e proprio.
+\end{itemize}
+
+Fra S-GW e P-GW sono previsti diversi protocollo ad-hoc, che al livello \textit{data plane} implementano tunneling IP: l'obiettivo è quello di usare protocolli nuovi al livello fisico e link, e i buon vecchi protocolli livello transport e application a cui siamo abituati per facilitare la mobilità. 
+
+# dice l'anastasi fallo te
+
+\end{document}
